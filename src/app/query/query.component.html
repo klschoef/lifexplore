@@ -1,0 +1,63 @@
+
+<div class="queryarea">
+    <a routerLink="/query"><img class="logo" src="assets/lifeXplore_.png"></a>
+    <select [(ngModel)]="selectedDataset" (change)="resetPageAndPerformQuery()">
+      <option *ngFor="let d of datasets" [ngValue]="d.id">{{d.name}}</option>
+    </select> 
+    <input type="text" id="queryinput" name="queryinput" ngModel #inputfield [(ngModel)]="queryinput" (keyup.enter)="performNewTextQuery()" (focus)="onQueryInputFocus()" (blur)="onQueryInputBlur()" autofocus/>
+    <button class="searchButton" (click)="performNewTextQuery()">Search</button>
+    <button class="historyToggle" (click)="toggleHistorySelect()">History</button>
+    <button class="resetButton" (click)="resetQuery()">Reset</button>
+    <div class="historySelect" #historyDiv>
+      <select [(ngModel)]="selectedHistoryEntry" value="" (change)="performHistoryQuery()">
+        <option value="-1" selected disabled>-- Search History --</option>
+        <option *ngFor="let h of history(); let i = index" [ngValue]="i">{{h}}</option>
+      </select>
+    </div>
+</div>
+  
+<div class="queryarea">
+  Pages: 
+  <mat-button-toggle-group [(ngModel)]="selectedPage">
+    <mat-button-toggle *ngFor="let p of pages" [value]="p" (click)="performQuery()" [disabled]="totalReturnedResults == 0">{{p}}</mat-button-toggle> 
+  </mat-button-toggle-group>
+</div>
+    
+<br/>
+
+<div class="videopreview" #videopreview>
+  <img [src]="videopreviewimage" class="videopreviewimage" width="2200">
+  <button (click)="closeVideoPreview()">Close</button>
+</div>
+  
+<div (mouseover)="showButtons = i" (mouseleave)="showButtons = -1" class="queryresult" *ngFor="let item of queryresults; let i = index">
+  <img src="{{item}}" width="320" height="180">
+  <div class="lefttopcorner">
+    <span *ngIf="showButtons === i && this.queryresult_frame[i] !== 'summary'" class="resultnum">{{this.queryresult_frame[i]}}</span>
+  </div>
+  <div class="righttopcorner">
+      <span class="label">
+          <a [routerLink]="['/video',this.queryresult_videoid[i],this.queryresult_frame[i]]" target="_blank">{{this.queryresult_videoid[i]}}</a>
+      </span>
+  </div>
+  <div class="leftbottomcorner">
+    <button *ngIf="showButtons === i" (click)="showVideoPreview(i)" class="resultaction">Video-Preview</button>
+    <button *ngIf="showButtons === i" (click)="showVideoShots(this.queryresult_videoid[i],this.queryresult_frame[i])" class="resultaction">Shotlist</button>
+    <button *ngIf="showButtons === i" (click)="performSimilarityQueryForIndex(i)" class="resultaction">Similar</button>
+  </div>
+  <div class="rightbottomcorner">
+      <button *ngIf="showButtons === i && !this.isVideoResult(this.querydataset)" class="submitbutton" (click)="submitResult(i)">Submit</button>
+  </div>
+</div>
+  
+
+<div class="statusbar">
+  CLIP server: <button class="{{clipService.connectionState}}" (click)="checkCLIPConnection()">{{clipService.connectionState}}</button>
+  Node server: <button class="{{nodeService.connectionState}}" (click)="checkNodeConnection()">{{nodeService.connectionState}}</button>
+  VBS Server: <button class="{{vbsService.vbsServerState}}" (click)="checkVBSServerConnection()">{{vbsService.vbsServerState}}</button>
+  <span class="help">KEYBOARD: <b>1-9</b>: goto page, <b>left/right/tab</b>: switch page, <b>e</b>: extend query, <b>q</b>: edit query, <b>x</b>: reset query</span>
+</div>
+  
+<br/>&nbsp;
+<br/>&nbsp;
+<br/>&nbsp;
