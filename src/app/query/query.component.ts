@@ -348,7 +348,8 @@ export class QueryComponent implements AfterViewInit {
   }
   
   performTextQuery() {
-    if (this.clipService.connectionState === WSServerStatus.CONNECTED) {
+    if (this.clipService.connectionState === WSServerStatus.CONNECTED ||
+        this.nodeService.connectionState === WSServerStatus.CONNECTED) {
       if (this.previousQuery !== undefined && this.previousQuery.type === 'textquery' && this.previousQuery.query !== this.queryinput) {
         this.selectedPage = '1';
       }
@@ -365,7 +366,11 @@ export class QueryComponent implements AfterViewInit {
       };
       this.previousQuery = msg;
 
-      this.sendToCLIPServer(msg);
+      if (this.nodeService.connectionState === WSServerStatus.CONNECTED) {
+        this.sendToNodeServer(msg);
+      } else {
+        this.sendToCLIPServer(msg);
+      }
       this.saveToHistory(msg);
 
       let queryEvent:QueryEvent = {
