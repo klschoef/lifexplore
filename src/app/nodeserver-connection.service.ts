@@ -60,7 +60,7 @@ export class NodeServerConnectionService {
             obs.next(new MessageEvent('message', msg));
           }
           ws.onmessage = (msg) => {
-            console.log('message from node-server');
+            console.log('message from node-server: ' + msg);
             obs.next(msg);
           };
           ws.onerror = (e) => {

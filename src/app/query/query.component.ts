@@ -107,9 +107,10 @@ export class QueryComponent implements AfterViewInit {
       if ('wsstatus' in msg) { 
         console.log('qc: node-notification: connected');
       } else {
-        let result = msg.content;
-        console.log("qc: response from node-server: " + result[0]);
-        this.handleNodeMessage(result[0]);
+        //let result = msg.content;
+        console.log("qc: response from node-server: " + msg);
+        //this.handleNodeMessage(result[0]);
+        this.handleCLIPMessage(msg);
       }
     });
 
