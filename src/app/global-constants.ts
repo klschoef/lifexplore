@@ -67,7 +67,7 @@ export class GlobalConstants {
     public static keyframeBaseURL: string = this.dataHost;
 
     public static maxResultsToReturn = 1200; //10000;
-    public static resultsPerPage = 100;
+    public static resultsPerPage = 42;
 }
 
 export function twoDigits(str:string):string {

@@ -21,6 +21,7 @@
   <mat-button-toggle-group [(ngModel)]="selectedPage">
     <mat-button-toggle *ngFor="let p of pages" [value]="p" (click)="performQuery()" [disabled]="totalReturnedResults == 0">{{p}}</mat-button-toggle> 
   </mat-button-toggle-group>
+  <span *ngIf="this.totalReturnedResults > 0">({{this.totalReturnedResults}} results)</span>
 </div>
     
 <br/>

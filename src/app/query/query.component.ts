@@ -109,8 +109,12 @@ export class QueryComponent implements AfterViewInit {
       } else {
         //let result = msg.content;
         console.log("qc: response from node-server: " + msg);
-        //this.handleNodeMessage(result[0]);
-        this.handleCLIPMessage(msg);
+        if ("scores" in msg) {
+          this.handleCLIPMessage(msg); 
+        } else {
+          //this.handleNodeMessage(msg);
+          this.handleCLIPMessage(msg); 
+        }
       }
     });
 
@@ -624,7 +628,7 @@ export class QueryComponent implements AfterViewInit {
     this.totalReturnedResults = qresults.totalresults; //totally existing results
     //create pages array
     this.pages = [];
-    for (let i = 1; i < this.totalReturnedResults / this.resultsPerPage; i++) {
+    for (let i = 1; i <= this.totalReturnedResults / qresults.num; i++) {
       this.pages.push(i.toString());
     }
     //populate images
@@ -639,7 +643,9 @@ export class QueryComponent implements AfterViewInit {
     for (let i = 0; i < qresults.results.length; i++) {
       let e = qresults.results[i];
       this.queryresults.push(keyframeBase + e);
-      this.queryresult_serveridx.push(qresults.resultsidx[i]);
+      if ("resultsidx" in qresults) {
+        this.queryresult_serveridx.push(qresults.resultsidx[i]);
+      }
       this.queryresult_resultnumber.push(resultnum.toString());
       let logResult:QueryResult = {
         item: e,
