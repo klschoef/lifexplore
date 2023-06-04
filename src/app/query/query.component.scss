@@ -1,9 +1,16 @@
 
 
-input[type="text"] {
+//input[type="text"]
+#queryinput {
     font-size: 20px;
     height: 26px;
     width: 57%;
+}
+
+#topicanswer {
+    height: 26px;
+    width: 15%;
+    background-color: rgb(220,220,220);
 }
 
 .queryarea input {

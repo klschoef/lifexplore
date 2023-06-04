@@ -24,7 +24,9 @@ export class QueryComponent implements AfterViewInit {
   
   
   queryinput: string = '';
+  topicanswer: string = '';
   queryresults: Array<string> = [];
+  resultURLs: Array<string> = [];
   queryresult_serveridx: Array<number> = [];
   queryresult_resultnumber: Array<string> = [];
   queryresult_videoid: Array<string> = [];
@@ -49,6 +51,7 @@ export class QueryComponent implements AfterViewInit {
   thumbSize = 'small';
   selectedDataset = 'all';
   selectedHistoryEntry: string | undefined
+  selectedServerRun: string | undefined
   queryFieldHasFocus = false;
   showButtons = -1;
   datasets = [
@@ -327,6 +330,12 @@ export class QueryComponent implements AfterViewInit {
     this.requestVideoSummaries(this.queryresult_videoid[idx]);
   }
 
+  getFilenameFromItem(filepath: string) {
+    const filenameWithExtension: string = filepath.split('/').pop() || '';
+    const filename: string = filenameWithExtension.slice(0, -4);
+    return filename
+  }
+
    /****************************************************************************
    * Queries
    ****************************************************************************/
@@ -447,6 +456,10 @@ export class QueryComponent implements AfterViewInit {
     }
   }
 
+  selectRun() {
+
+  }
+
   performHistoryQuery() {
     console.log(`run hist: ${this.selectedHistoryEntry}`)
     let hist = localStorage.getItem('history')
@@ -562,6 +575,7 @@ export class QueryComponent implements AfterViewInit {
 
   private clearResultArrays() {
     this.queryresults = [];
+    this.resultURLs = [];
     this.queryresult_serveridx = [];
     this.queryresult_resultnumber = [];
     this.queryresult_videoid = [];
@@ -606,6 +620,15 @@ export class QueryComponent implements AfterViewInit {
   }
 
 
+  getTaskInfo() {
+    this.vbsService.getClientTaskInfo(this.vbsService.serverRunIDs[0]);
+  }
+
+  sendTopicAnswer() {
+    this.vbsService.submitText(this.topicanswer)
+  }
+
+
   handleNodeMessage(msg:any) {
     if (msg['summaries']) {
       let summaries = msg['summaries'];
@@ -642,7 +665,8 @@ export class QueryComponent implements AfterViewInit {
     //for (var e of qresults.results) {
     for (let i = 0; i < qresults.results.length; i++) {
       let e = qresults.results[i];
-      this.queryresults.push(keyframeBase + e);
+      this.queryresults.push(e);
+      this.resultURLs.push(keyframeBase + e);
       if ("resultsidx" in qresults) {
         this.queryresult_serveridx.push(qresults.resultsidx[i]);
       }
@@ -681,12 +705,9 @@ export class QueryComponent implements AfterViewInit {
    ****************************************************************************/
 
   submitResult(index: number) {
-    let videoid = this.queryresult_videoid[index];
-    let keyframe = this.queryresults[index];
-    let comps = keyframe.split('_');
-    let frameNumber = comps[comps.length-1].split('.')[0]
-    console.log(`${videoid} - ${keyframe} - ${frameNumber}`);
-    this.vbsService.submitFrame(videoid, parseInt(frameNumber));
+    const imageID = this.getFilenameFromItem(this.resultURLs[index])
+    console.log(`${imageID}`);
+    this.vbsService.submitImageID(imageID);
 
     let queryEvent:QueryEvent = {
       timestamp: getTimestampInSeconds(),

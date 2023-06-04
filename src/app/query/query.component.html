@@ -31,14 +31,14 @@
   <button (click)="closeVideoPreview()">Close</button>
 </div>
   
-<div (mouseover)="showButtons = i" (mouseleave)="showButtons = -1" class="queryresult" *ngFor="let item of queryresults; let i = index">
+<div (mouseover)="showButtons = i" (mouseleave)="showButtons = -1" class="queryresult" *ngFor="let item of resultURLs; let i = index">
   <img src="{{item}}" width="320" height="180">
   <div class="lefttopcorner">
     <span *ngIf="showButtons === i && this.queryresult_frame[i] !== 'summary'" class="resultnum">{{this.queryresult_frame[i]}}</span>
   </div>
   <div class="righttopcorner">
       <span class="label">
-          <a [routerLink]="['/video',this.queryresult_videoid[i],this.queryresult_frame[i]]" target="_blank">{{this.queryresult_videoid[i]}}</a>
+          <a [routerLink]="['/video',this.queryresult_videoid[i],this.queryresult_frame[i]]" target="_blank">{{this.getFilenameFromItem(item)}}</a>
       </span>
   </div>
   <div class="leftbottomcorner">
@@ -50,15 +50,32 @@
       <button *ngIf="showButtons === i && !this.isVideoResult(this.querydataset)" class="submitbutton" (click)="submitResult(i)">Submit</button>
   </div>
 </div>
-  
 
 <div class="statusbar">
+  <span class="{{clipService.connectionState}}">CLIP-Server</span>
+  <span class="{{nodeService.connectionState}}">Node-Server</span>
+  <span class="{{vbsService.vbsServerState}}">DRES-Server</span>
+<!--
   CLIP server: <button class="{{clipService.connectionState}}" (click)="checkCLIPConnection()">{{clipService.connectionState}}</button>
   Node server: <button class="{{nodeService.connectionState}}" (click)="checkNodeConnection()">{{nodeService.connectionState}}</button>
   VBS Server: <button class="{{vbsService.vbsServerState}}" (click)="checkVBSServerConnection()">{{vbsService.vbsServerState}}</button>
+-->
+  
+  <span>
+    <select [(ngModel)]="this.selectedServerRun" value="0" (change)="selectRun()">
+      <option *ngFor="let r of this.vbsService.serverRuns; let i = index" [ngValue]="i" [selected]="(i === 0 && this.selectedServerRun === undefined) || (i === +this.selectedServerRun!)">{{r}}</option>
+    </select>
+  </span>
+
+  <button (click)="getTaskInfo()">TaskInfo</button>
+
+  Topic Answer: 
+  <input type="text" id="topicanswer" name="topicanswer" ngModel #inputfield [(ngModel)]="topicanswer" (keyup.enter)="sendTopicAnswer()" autofocus/>
+  <button class="topicanswerbutton" (click)="sendTopicAnswer()">Send</button>
+
   <span class="help">KEYBOARD: <b>1-9</b>: goto page, <b>left/right/tab</b>: switch page, <b>e</b>: extend query, <b>q</b>: edit query, <b>x</b>: reset query</span>
 </div>
-  
+
 <br/>&nbsp;
 <br/>&nbsp;
 <br/>&nbsp;

@@ -161,6 +161,12 @@ div.shotlist {
     padding: 2px;
 }
 
+.topicanswerbutton {
+    background-color: rgba(0,110,0,0.8);
+    color: white;
+    padding: 2px;
+}
+
 /*.statusbar {
     position: absolute;
     background-color: rgba(73,76,84,1); //lightgray;
@@ -177,7 +183,9 @@ div.shotlist {
     left: 0;
     bottom: 0;
     color: lightgray;
+    overflow: auto;
 }
+  
 
 button[class='disconnected'] {
     background-color: red;
@@ -185,6 +193,20 @@ button[class='disconnected'] {
 }
 
 button[class='connected'] {
+    background-color: green;
+    color: white;
+}
+
+span[class='disconnected'] {
+    margin: 2px;
+    padding: 4px;
+    background-color: red;
+    color: white;
+}
+
+span[class='connected'] {
+    margin: 2px;
+    padding: 4px;
     background-color: green;
     color: white;
 }

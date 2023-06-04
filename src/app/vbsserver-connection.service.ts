@@ -8,6 +8,7 @@ import {LogService} from '../../openapi/dres/api/log.service';
 import {
   ClientRunInfo,
   ClientRunInfoList,
+  ClientTaskInfo,
   LoginRequest,
   QueryEvent,
   QueryResult,
@@ -29,6 +30,9 @@ export class VBSServerConnectionService {
 
   sessionId: string | undefined; 
   vbsServerState: WSServerStatus = WSServerStatus.UNSET;
+
+  serverRuns: Array<string> = [];
+  serverRunIDs: Array<string> = [];
 
   queryEvents: Array<QueryEvent> = [];
   resultLog: QueryResultLog | undefined;
@@ -100,17 +104,42 @@ export class VBSServerConnectionService {
               // === Evaluation Run Info ===
               this.runInfoService.getApiV1ClientRunInfoList(this.sessionId!).subscribe((currentRuns: ClientRunInfoList) => {
               this.println(`Found ${currentRuns.runs.length} ongoing evaluation runs`);
-              currentRuns.runs.forEach((run: ClientRunInfo) => {
+              this.serverRuns = [];
+              this.serverRunIDs = [];
+              currentRuns.runs.forEach((run: ClientRunInfo) => { 
                       this.println(`${run.name} (${run.id}): ${run.status}`);
                       if (run.description) {
-                      this.println(run.description);
-                      this.println('');
+                        this.println(run.description);
+                        this.println('');
+                        this.serverRuns.push(run.description);  
+                      } else {
+                        this.serverRuns.push(run.name);
                       }
+                      this.serverRunIDs.push(run.id);
+
+                      //this.getClientTaskInfo(run.id);
                   });
               });
+
+              
+
           });
 
       });
+  }
+
+  getClientTaskInfo(runId: string) {
+    this.runInfoService.getApiV1ClientRunInfoCurrenttaskWithRunid(runId, this.sessionId!).subscribe((info: ClientTaskInfo) => {
+      console.log(info)
+    })
+  }
+
+  getRunInfoList() {
+    this.runInfoService.getApiV1ClientRunInfoList(this.sessionId!).subscribe((info: ClientRunInfoList) => {
+      for (const r of info.runs) {
+        console.log(r)
+      }
+    })
   }
 
   handleSubmissionResponse(status: SuccessfulSubmissionsStatus, segment: string) {
@@ -143,6 +172,31 @@ export class VBSServerConnectionService {
     return of(null);
   }
 
+  submitImageID(imageID: string) {
+
+    // === Submission ===
+    //'00:00:10:00', // timecode - in this case, we use the timestamp in the form HH:MM:SS:FF
+    this.submissionService.getApiV1Submit(
+      undefined, // collection - does not usually need to be set
+      imageID, // item -  item which is to be submitted
+      undefined, //text - in case the task is not targeting a particular content object but plaintext
+      undefined, // frame - for items with temporal components, such as video
+      undefined, // shot - only one of the time fields needs to be set.
+      undefined, // timecode - in this case, we use the timestamp in the form HH:MM:SS:FF
+      this.sessionId! // the sessionId, as always
+    ).pipe(
+      tap((status: SuccessfulSubmissionsStatus) => {
+        this.handleSubmissionResponse(status, ''+imageID);
+      }), 
+      catchError(err => {
+        return this.handleSubmissionError(err);
+      })
+    ).subscribe()
+    
+  }
+
+
+
   submitFrame(videoid: string, frame: number) {
     // === Submission ===
     //'00:00:10:00', // timecode - in this case, we use the timestamp in the form HH:MM:SS:FF
@@ -164,6 +218,29 @@ export class VBSServerConnectionService {
     ).subscribe()
     
   }
+
+  submitText(text: string) {
+    // === Submission ===
+    //'00:00:10:00', // timecode - in this case, we use the timestamp in the form HH:MM:SS:FF
+    this.submissionService.getApiV1Submit(
+      undefined, // collection - does not usually need to be set
+      undefined, // item -  item which is to be submitted
+      text, //text - in case the task is not targeting a particular content object but plaintext
+      undefined, // frame - for items with temporal components, such as video
+      undefined, // shot - only one of the time fields needs to be set.
+      undefined, // timecode - in this case, we use the timestamp in the form HH:MM:SS:FF
+      this.sessionId! // the sessionId, as always
+    ).pipe(
+      tap((status: SuccessfulSubmissionsStatus) => {
+        this.handleSubmissionResponse(status, 'text:'+text);
+      }), 
+      catchError(err => {
+        return this.handleSubmissionError(err);
+      })
+    ).subscribe()
+    
+  }
+
 
   logout(appComp: AppComponent) {
       // === Graceful logout ===
