@@ -66,7 +66,7 @@ export class GlobalConstants {
 
     public static keyframeBaseURL: string = this.dataHost;
 
-    public static maxResultsToReturn = 1200; //10000;
+    public static maxResultsToReturn = 2000; //10000;
     public static resultsPerPage = 42;
 }
 

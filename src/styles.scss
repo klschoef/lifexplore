@@ -140,17 +140,18 @@ div.shotlist {
     bottom: 0;
 }
 
+
 .resultnum {
     background-color: rgba(255,255,255,0.4);
 }
 
-.resultaction {
+.resultaction, .resultactionL {
     background-color: rgba(255,255,255,0.4);
     color: black;
     padding: 2px;
 }
 
-.submitbutton {
+.submitbutton, .submitbuttonL {
     //background-color: rgba(0,139,139,0.8);
     background-color: rgba(0,110,0,0.8);
     font-size: 16px;
@@ -161,10 +162,11 @@ div.shotlist {
     padding: 2px;
 }
 
-.topicanswerbutton {
-    background-color: rgba(0,110,0,0.8);
-    color: white;
-    padding: 2px;
+.submitbuttonL, .resultactionL {
+    font-size: 20pt;
+    margin: 6px;
+    height: 50px;
+    margin: 6px;
 }
 
 /*.statusbar {

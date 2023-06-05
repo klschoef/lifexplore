@@ -51,6 +51,32 @@
     background-color: lightgray;
 }
 
+.spacer {
+    margin-right: 5%;
+}
+
+.whiteColor {
+    color: white;
+}
+
+.remainingTimeInfo {
+    background-color: red;
+    color: white;
+    font-size: 16pt;
+}
+
+.topicanswerbutton {
+    background-color: rgba(0,110,0,0.8);
+    color: white;
+    padding: 2px;
+    width: 100px;
+}
+
+.grayBackground {
+    background-color: rgba(73,76,84,1); //lightgray;
+    color: lightgray;
+}
+
 .videopreview {
     background-color: rgba(255,255,255,0.75);
     display: none;
@@ -66,3 +92,25 @@
     padding: 10px;
     box-shadow: 5px 10px;
 }
+
+.selected-page {
+    background-color: white;
+    color: black;
+}
+
+/*.full-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+}*/
+
+.full-image {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+  }
+  
+  

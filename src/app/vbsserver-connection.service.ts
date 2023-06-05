@@ -22,6 +22,7 @@ import { NONE_TYPE } from '@angular/compiler';
 import { UrlSegment } from '@angular/router';
 import { catchError, Observable, of, tap } from 'rxjs';
 import { AppComponent } from './app.component';
+import { QueryComponent } from './query/query.component';
 
 @Injectable({
   providedIn: 'root'
@@ -128,10 +129,30 @@ export class VBSServerConnectionService {
       });
   }
 
-  getClientTaskInfo(runId: string) {
+  getClientTaskInfo(runId: string, qcomp: QueryComponent) {
     this.runInfoService.getApiV1ClientRunInfoCurrenttaskWithRunid(runId, this.sessionId!).subscribe((info: ClientTaskInfo) => {
-      console.log(info)
+      //console.log(info)
+      qcomp.statusTaskInfoText = info.name; //+ ', ' + info.id + ", " + info.taskGroup;
+      if (info.running) {
+        qcomp.statusTaskRemainingTime = ' ' + this.createTimestamp(info.remainingTime) + ' ';
+      } else {
+        qcomp.statusTaskRemainingTime = '';
+      }
+      
     })
+  }
+
+  createTimestamp(seconds: number): string {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+  
+    const timestamp = `${this.padZero(hours)}:${this.padZero(minutes)}:${this.padZero(remainingSeconds)}`;
+    return timestamp;
+  }
+  
+  padZero(value: number): string {
+    return value.toString().padStart(2, '0');
   }
 
   getRunInfoList() {

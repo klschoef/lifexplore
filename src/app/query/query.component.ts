@@ -34,8 +34,14 @@ export class QueryComponent implements AfterViewInit {
   queryresult_videopreview: Array<string> = [];
   queryTimestamp: number = 0;
   
+  public statusTaskInfoText: string = ""; //property binding
+  statusTaskRemainingTime: string = ""; //property binding
 
   videopreviewimage: string = '';
+
+  showFullImage: boolean = false;
+  fullImage: string = '';
+  fullImageIndex: number = -1;
 
   previousQuery : any | undefined;
 
@@ -115,8 +121,12 @@ export class QueryComponent implements AfterViewInit {
         if ("scores" in msg) {
           this.handleCLIPMessage(msg); 
         } else {
-          //this.handleNodeMessage(msg);
-          this.handleCLIPMessage(msg); 
+          if ("type" in msg && msg.type == 'metadata') {
+            console.log('received metadata: ' + JSON.stringify(msg));
+          } else {
+            //this.handleNodeMessage(msg);
+            this.handleCLIPMessage(msg);
+          } 
         }
       }
     });
@@ -132,12 +142,44 @@ export class QueryComponent implements AfterViewInit {
         this.handleCLIPMessage(msg);
       }
     });
+
+    document.addEventListener('keydown', this.handleKeyDown);
+
+    //repeatedly retrieve task info
+    setInterval(() => {
+      this.requestTaskInfo();
+    }, 1000);
   }
 
   ngAfterViewInit(): void {
     this.historyDiv.nativeElement.hidden = true;
   }
-  
+
+  ngOnDestroy() {
+    document.removeEventListener('keydown', this.handleKeyDown);
+  }
+
+  handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      this.hideFullImage();
+    }
+  };
+
+  requestTaskInfo() {
+    this.vbsService.getClientTaskInfo(this.vbsService.serverRunIDs[0], this);
+  }
+
+  displayFullImage(url: string, index: number) {
+    this.fullImage = url;
+    this.fullImageIndex = index;
+    this.performMetaDataQuery();
+    this.showFullImage = true;
+  }
+
+  hideFullImage() {
+    this.showFullImage = false;
+    this.fullImage = '';
+  }
 
   toggleHistorySelect() {
     this.historyDiv.nativeElement.hidden = !this.historyDiv.nativeElement.hidden;
@@ -231,8 +273,10 @@ export class QueryComponent implements AfterViewInit {
   handleKeyboardEvent(event: KeyboardEvent) { 
     if (this.queryFieldHasFocus == false) {
       if (event.key == 'ArrowRight' || event.key == 'Tab') {
+        this.hideFullImage();
         this.nextPage();     
       } else if (event.key == "ArrowLeft") {
+        this.hideFullImage();
         this.prevPage();
       } else {
         switch (event.key) {
@@ -292,6 +336,7 @@ export class QueryComponent implements AfterViewInit {
   gotoPage(pnum:string) {
     let testPage = parseInt(pnum);
     if (testPage < this.pages.length && testPage > 0) {
+      this.hideFullImage();
       this.selectedPage = pnum;
       this.performQuery();
     }
@@ -326,7 +371,7 @@ export class QueryComponent implements AfterViewInit {
     this.queryFieldHasFocus = false;
   }
 
-  showVideoPreview(idx:number) {
+  showDaySummary(idx:number) {
     this.requestVideoSummaries(this.queryresult_videoid[idx]);
   }
 
@@ -396,7 +441,7 @@ export class QueryComponent implements AfterViewInit {
       this.vbsService.queryEvents.push(queryEvent);
       
     } else {
-      alert(`CLIP connection down: ${this.clipService.connectionState}. Try reconnecting by pressing the red button!`);
+      console.log(`CLIP or NODE connection down: ${this.clipService.connectionState} ${this.nodeService.connectionState}.`);
     }
   }
 
@@ -510,6 +555,24 @@ export class QueryComponent implements AfterViewInit {
     }
   }
 
+  performMetaDataQuery() {
+    if (this.nodeService.connectionState === WSServerStatus.CONNECTED) {
+      
+      console.log('qc: query metadata for', this.fullImage);
+      let msg = { 
+        type: "metadataquery", 
+        imagepath: this.queryresults[this.fullImageIndex],
+      };
+
+      if (this.nodeService.connectionState === WSServerStatus.CONNECTED) {
+        this.sendToNodeServer(msg);
+      }
+      
+    } else {
+      console.log("nodeService not running");
+    }
+  }
+
   requestVideoSummaries(videoid:string) {
     if (this.nodeService.connectionState === WSServerStatus.CONNECTED) {
       console.log('qc: get video summaries info from database', videoid);
@@ -545,6 +608,7 @@ export class QueryComponent implements AfterViewInit {
   }
 
   performSimilarityQueryForIndex(idx:number) {
+    this.hideFullImage();
     this.selectedPage = '1';
     let serveridx = this.queryresult_serveridx[idx];
     this.performSimilarityQuery(serveridx);
@@ -620,9 +684,6 @@ export class QueryComponent implements AfterViewInit {
   }
 
 
-  getTaskInfo() {
-    this.vbsService.getClientTaskInfo(this.vbsService.serverRunIDs[0]);
-  }
 
   sendTopicAnswer() {
     this.vbsService.submitText(this.topicanswer)
