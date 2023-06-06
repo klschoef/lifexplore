@@ -1,6 +1,6 @@
 
 <div class="queryarea">
-    <a routerLink="/query"><img class="logo" src="assets/lifeXplore_.png"></a>
+    <a routerLink="/query" (click)="reloadComponent()"><img class="logo" src="assets/lifeXplore_.png"></a>
     <select [(ngModel)]="selectedDataset" (change)="resetPageAndPerformQuery()">
       <option *ngFor="let d of datasets" [ngValue]="d.id">{{d.name}}</option>
     </select> 
@@ -40,8 +40,9 @@
   <button (click)="closeVideoPreview()">Close</button>
 </div>
   
+<!-- Result Images -->
 <div (mouseover)="showButtons = i" (mouseleave)="showButtons = -1" class="queryresult" *ngFor="let item of resultURLs; let i = index">
-  <img src="{{item}}" width="320" height="180" (click)="displayFullImage(item, i)">
+  <img src="{{item}}" width="320" height="180" (click)="displayFullImage(item, i)" [ngClass]="{'blueborder': this.showFullImage && this.fullImageIndex == i}">
   <div class="lefttopcorner">
     <span *ngIf="showButtons === i && this.queryresult_frame[i] !== 'summary'" class="resultnum">{{this.queryresult_frame[i]}}</span>
   </div>
@@ -62,6 +63,13 @@
 
 <!-- Full-resolution image -->
 <div class="full-image">
+  <span>
+    <span *ngIf="showFullImage && metadata?.filename"><h3>Filename</h3>{{this.metadata.filename}}</span>
+    <span *ngIf="showFullImage && metadata?.datetime"><h3>Date</h3>{{this.metadata.datetime}}</span>
+    <span *ngIf="showFullImage && metadata?.time_zone"><h3>Time Zone</h3>{{this.metadata.time_zone}}</span>
+    <span *ngIf="showFullImage && metadata?.local_time"><h3>Local Time</h3>{{this.metadata.local_time}}</span>
+    
+  </span>
   <img *ngIf="showFullImage" [src]="fullImage" alt="Full Image" (click)="hideFullImage()">
   <div *ngIf="showFullImage" class="leftbottomcorner">
     <button (click)="performSimilarityQueryForIndex(this.fullImageIndex)" class="resultactionL">Similar</button>

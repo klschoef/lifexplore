@@ -8,6 +8,7 @@ import { Router,ActivatedRoute } from '@angular/router';
 import { query } from '@angular/animations';
 import { QueryEvent, QueryResult, QueryResultLog } from 'openapi/dres';
 
+
 @Component({
   selector: 'app-query',
   templateUrl: './query.component.html',
@@ -33,6 +34,7 @@ export class QueryComponent implements AfterViewInit {
   queryresult_frame: Array<string> = [];
   queryresult_videopreview: Array<string> = [];
   queryTimestamp: number = 0;
+  metadata: any;
   
   public statusTaskInfoText: string = ""; //property binding
   statusTaskRemainingTime: string = ""; //property binding
@@ -121,8 +123,16 @@ export class QueryComponent implements AfterViewInit {
         if ("scores" in msg) {
           this.handleCLIPMessage(msg); 
         } else {
-          if ("type" in msg && msg.type == 'metadata') {
-            console.log('received metadata: ' + JSON.stringify(msg));
+          if ("type" in msg) {
+            let m = JSON.parse(JSON.stringify(msg));
+            if (m.type == 'metadata') {
+              this.metadata = m.results[0];
+              console.log('received metadata: ' + JSON.stringify(msg));
+              if (this.metadata?.location) {
+              }
+            } else {
+              //this.map = null;
+            }
           } else {
             //this.handleNodeMessage(msg);
             this.handleCLIPMessage(msg);
@@ -157,6 +167,10 @@ export class QueryComponent implements AfterViewInit {
 
   ngOnDestroy() {
     document.removeEventListener('keydown', this.handleKeyDown);
+  }
+
+  reloadComponent(): void {
+    window.location.reload();
   }
 
   handleKeyDown = (event: KeyboardEvent) => {
@@ -243,26 +257,34 @@ export class QueryComponent implements AfterViewInit {
   handleKeyboardEventUp(event: KeyboardEvent) { 
     
     if (this.queryFieldHasFocus == false) {
-      if (event.key == 'q') {
+      if (event.key === 'q') {
         this.inputfield.nativeElement.select();
       }
-      else if (event.key == 'e') {
+      else if (event.key === 'e') {
         this.inputfield.nativeElement.focus();
       }  
-      else if (event.key == 'v') {
+      else if (event.key === 'v') {
         this.selectedPage = '1';
         this.selectedDataset = this.selectedDataset.replace('-s','-v');
         this.performTextQuery();
       }
-      else if (event.key == 's') {
+      /*else if (event.key === 's') {
         this.selectedPage = '1';
         this.selectedDataset = this.selectedDataset.replace('-v','-s');
         this.performTextQuery();
-      }
-      else if (event.key == 'x') {
+      }*/
+      else if (event.key === 'x') {
         this.resetQuery();
       }
-      else if (event.key == 'Escape') {
+      else if (event.key === 'Space' || event.key === ' ') {
+        console.log('togglet fullimage ' + this.showFullImage);
+        if (!(this.fullImageIndex >= 0 && this.resultURLs.length)) {
+          this.fullImageIndex = 0;
+        }
+        this.fullImage = this.resultURLs[this.fullImageIndex];
+        this.showFullImage = !this.showFullImage;
+      }
+      else if (event.key === 'Escape') {
         this.closeVideoPreview();
       }
     }
@@ -272,13 +294,36 @@ export class QueryComponent implements AfterViewInit {
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) { 
     if (this.queryFieldHasFocus == false) {
-      if (event.key == 'ArrowRight' || event.key == 'Tab') {
+      if (event.key == 'ArrowRight') {
+        if (this.showFullImage) {
+          if (this.fullImageIndex < this.resultURLs.length-1) {
+            this.fullImage = this.resultURLs[++this.fullImageIndex];
+            this.performMetaDataQuery();
+          }
+        } else {
+          this.hideFullImage();
+          this.nextPage();               
+        }
+      }
+      if (event.key == 'Tab') {
         this.hideFullImage();
         this.nextPage();     
       } else if (event.key == "ArrowLeft") {
-        this.hideFullImage();
-        this.prevPage();
-      } else {
+        if (this.showFullImage) {
+          if (this.fullImageIndex > 0) {
+            this.fullImage = this.resultURLs[--this.fullImageIndex];
+            this.performMetaDataQuery();
+          }
+        } else {
+          this.hideFullImage();
+          this.prevPage();
+        }
+      } else if (event.key == "s" || event.key == "S") {
+        if (this.showFullImage) {
+          this.submitResult(this.fullImageIndex);
+        }
+      }
+      else {
         switch (event.key) {
           case '1':
             this.gotoPage('1');
@@ -387,6 +432,7 @@ export class QueryComponent implements AfterViewInit {
 
 
   performQuery() {
+    this.fullImageIndex = -1;
     //called from the paging buttons
     if (this.file_sim_keyframe && this.file_sim_pathPrefix) {
       this.performFileSimilarityQuery(this.file_sim_keyframe, this.file_sim_pathPrefix);
@@ -629,7 +675,7 @@ export class QueryComponent implements AfterViewInit {
     this.file_sim_pathPrefix = undefined
     this.previousQuery = undefined
     this.selectedPage = '1';
-    this.selectedDataset = 'v3c-s';
+    //this.selectedDataset = 'v3c-s';
     this.pages = ['1'];
     this.clearResultArrays();
     let queryHistory:Array<QueryType> = [];

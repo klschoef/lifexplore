@@ -19,6 +19,7 @@ import { VBSServerConnectionService } from './vbsserver-connection.service';
 import { QueryComponent } from './query/query.component';
 import { CalendarComponent } from './calendar/calendar.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,

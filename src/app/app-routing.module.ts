@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 import { QueryComponent } from './query/query.component';
 
 const routes: Routes = [
-  {path: '', component: AppComponent},
+  {path: '', redirectTo: 'query', pathMatch: 'full'}, // component: AppComponent
   {path: 'query', component: QueryComponent},
   {path: 'filesimilarity/:id/:id2', component: QueryComponent},
   {path: 'day/:id', component: CalendarComponent},
