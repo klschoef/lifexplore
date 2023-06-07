@@ -130,16 +130,20 @@ export class VBSServerConnectionService {
   }
 
   getClientTaskInfo(runId: string, qcomp: QueryComponent) {
-    this.runInfoService.getApiV1ClientRunInfoCurrenttaskWithRunid(runId, this.sessionId!).subscribe((info: ClientTaskInfo) => {
-      //console.log(info)
-      qcomp.statusTaskInfoText = info.name; //+ ', ' + info.id + ", " + info.taskGroup;
-      if (info.running) {
-        qcomp.statusTaskRemainingTime = ' ' + this.createTimestamp(info.remainingTime) + ' ';
-      } else {
-        qcomp.statusTaskRemainingTime = '';
-      }
-      
-    })
+    try {
+      this.runInfoService.getApiV1ClientRunInfoCurrenttaskWithRunid(runId, this.sessionId!).subscribe((info: ClientTaskInfo) => {
+        //console.log(info)
+        qcomp.statusTaskInfoText = info.name; //+ ', ' + info.id + ", " + info.taskGroup;
+        if (info.running) {
+          qcomp.statusTaskRemainingTime = ' ' + this.createTimestamp(info.remainingTime) + ' ';
+        } else {
+          qcomp.statusTaskRemainingTime = '';
+        }
+        
+      })
+    } catch (error) {
+      console.log('issue with task info request');
+    }
   }
 
   createTimestamp(seconds: number): string {

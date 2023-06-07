@@ -294,7 +294,25 @@ export class QueryComponent implements AfterViewInit {
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) { 
     if (this.queryFieldHasFocus == false) {
-      if (event.key == 'ArrowRight') {
+      if (event.key == 'ArrowDown') {
+        if (this.showFullImage) {
+          if (this.fullImageIndex < this.resultURLs.length-GlobalConstants.rowCount) {
+            this.fullImageIndex += GlobalConstants.rowCount;
+            this.fullImage = this.resultURLs[this.fullImageIndex];
+            this.performMetaDataQuery();
+          }
+        }
+      }
+      else if (event.key == 'ArrowUp') {
+        if (this.showFullImage) {
+          if (this.fullImageIndex > GlobalConstants.rowCount) {
+            this.fullImageIndex -= GlobalConstants.rowCount;
+            this.fullImage = this.resultURLs[this.fullImageIndex];
+            this.performMetaDataQuery();
+          }
+        }
+      }
+      else if (event.key == 'ArrowRight') {
         if (this.showFullImage) {
           if (this.fullImageIndex < this.resultURLs.length-1) {
             this.fullImage = this.resultURLs[++this.fullImageIndex];
@@ -305,7 +323,7 @@ export class QueryComponent implements AfterViewInit {
           this.nextPage();               
         }
       }
-      if (event.key == 'Tab') {
+      else if (event.key == 'Tab') {
         this.hideFullImage();
         this.nextPage();     
       } else if (event.key == "ArrowLeft") {
