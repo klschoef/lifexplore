@@ -7,7 +7,7 @@ import { ClipServerConnectionService } from '../clipserver-connection.service';
 import { Router,ActivatedRoute } from '@angular/router';
 import { query } from '@angular/animations';
 import { QueryEvent, QueryResult, QueryResultLog } from 'openapi/dres';
-
+import { LocalConfig } from '../local-config';
 
 @Component({
   selector: 'app-query',
@@ -20,6 +20,8 @@ export class QueryComponent implements AfterViewInit {
   @ViewChild('historyDiv') historyDiv!: ElementRef<HTMLDivElement>;
   @ViewChild('videopreview') videopreview!: ElementRef<HTMLDivElement>;
   
+  localConfig = LocalConfig;
+
   file_sim_keyframe: string | undefined
   file_sim_pathPrefix: string | undefined
   
@@ -50,9 +52,9 @@ export class QueryComponent implements AfterViewInit {
   querydataset: string = '';
   queryBaseURL = this.getBaseURL();
   
-  maxresults = GlobalConstants.maxResultsToReturn; 
+  maxresults = LocalConfig.config_MAX_RESULTS_TO_RETURN; 
   totalReturnedResults = 0; //how many results did our query return in total?
-  resultsPerPage = GlobalConstants.resultsPerPage; 
+  resultsPerPage = LocalConfig.config_RESULTS_PER_PAGE; 
   selectedPage = '1'; //user-selected page
   pages = ['1']
   
@@ -296,8 +298,8 @@ export class QueryComponent implements AfterViewInit {
     if (this.queryFieldHasFocus == false) {
       if (event.key == 'ArrowDown') {
         if (this.showFullImage) {
-          if (this.fullImageIndex < this.resultURLs.length-GlobalConstants.rowCount) {
-            this.fullImageIndex += GlobalConstants.rowCount;
+          if (this.fullImageIndex < this.resultURLs.length - LocalConfig.config_IMAGES_PER_ROW) {
+            this.fullImageIndex += LocalConfig.config_IMAGES_PER_ROW;
             this.fullImage = this.resultURLs[this.fullImageIndex];
             this.performMetaDataQuery();
           }
@@ -305,8 +307,8 @@ export class QueryComponent implements AfterViewInit {
       }
       else if (event.key == 'ArrowUp') {
         if (this.showFullImage) {
-          if (this.fullImageIndex > GlobalConstants.rowCount) {
-            this.fullImageIndex -= GlobalConstants.rowCount;
+          if (this.fullImageIndex > LocalConfig.config_IMAGES_PER_ROW) {
+            this.fullImageIndex -= LocalConfig.config_IMAGES_PER_ROW;
             this.fullImage = this.resultURLs[this.fullImageIndex];
             this.performMetaDataQuery();
           }

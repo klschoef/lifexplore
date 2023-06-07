@@ -43,17 +43,17 @@
 <!-- Result Images -->
 <div (mouseover)="showButtons = i" (mouseleave)="showButtons = -1" class="queryresult" *ngFor="let item of resultURLs; let i = index">
   <!--<img src="{{item}}" width="320" height="180" (click)="displayFullImage(item, i)" [ngClass]="{'blueborder': this.showFullImage && this.fullImageIndex == i}">-->
-  <img src="{{item}}" width="240" height="135" (click)="displayFullImage(item, i)" [ngClass]="{'blueborder': this.showFullImage && this.fullImageIndex == i}">
+  <img src="{{item}}" width="{{localConfig.config_THUMB_WIDTH}}" height="{{localConfig.config_THUMB_HEIGHT}}" (click)="displayFullImage(item, i)" [ngClass]="{'blueborder': this.showFullImage && this.fullImageIndex == i}">
   <div class="lefttopcorner">
     <span *ngIf="showButtons === i && this.queryresult_frame[i] !== 'summary'" class="resultnum">{{this.queryresult_frame[i]}}</span>
   </div>
-  <div class="righttopcorner">
+  <div class="righttopcorner" *ngIf="showButtons === i">
       <span class="label">
           <a [routerLink]="['/video',this.queryresult_videoid[i],this.queryresult_frame[i]]" target="_blank">{{this.getFilenameFromItem(item)}}</a>
       </span>
   </div>
   <div class="leftbottomcorner">
-    <button *ngIf="showButtons === i" (click)="showDaySummary(i)" class="resultaction">Day-Summary</button>
+    <button *ngIf="showButtons === i" (click)="showDaySummary(i)" class="resultaction">Day</button>
     
     <button *ngIf="showButtons === i" (click)="performSimilarityQueryForIndex(i)" class="resultaction">Similar</button>
   </div>
