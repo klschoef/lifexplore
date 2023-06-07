@@ -64,12 +64,16 @@
 
 <!-- Full-resolution image -->
 <div class="full-image">
-  <span>
-    <span *ngIf="showFullImage && metadata?.filename"><h3>Filename</h3>{{this.metadata.filename}}</span>
-    <span *ngIf="showFullImage && metadata?.datetime"><h3>Date</h3>{{this.metadata.datetime}}</span>
-    <span *ngIf="showFullImage && metadata?.time_zone"><h3>Time Zone</h3>{{this.metadata.time_zone}}</span>
-    <span *ngIf="showFullImage && metadata?.local_time"><h3>Local Time</h3>{{this.metadata.local_time}}</span>
-    
+  <span class="container">
+    <span *ngIf="showFullImage && metadata?.filename" class="imageinfo"><h3>Filename</h3>{{this.metadata.filename}}</span>
+    <span *ngIf="showFullImage && metadata?.datetime" class="imageinfo"><h3>Date</h3>{{this.metadata.datetime}}</span>
+    <span *ngIf="showFullImage && metadata?.time_zone" class="imageinfo"><h3>Time Zone</h3>{{this.metadata.time_zone}}</span>
+    <span *ngIf="showFullImage && metadata?.local_time" class="imageinfo"><h3>Local Time</h3>{{this.metadata.local_time}}</span>
+    <span *ngIf="showFullImage && metadata?.weekday" class="imageinfo"><h3>Weekday</h3>{{this.metadata.weekday}}</span>
+    <span *ngIf="showFullImage && metadata?.heart_rate" class="imageinfo"><h3>Heart Rate</h3>{{this.metadata.heart_rate}}</span>
+    <span *ngIf="showFullImage && metadata?.objects" class="imageinfo"><h3>Objects</h3>{{getDetectedObjects(this.metadata.objects)}}</span>
+    <span *ngIf="showFullImage && metadata?.concepts" class="imageinfo"><h3>Concepts</h3>{{getDetectedConcepts(this.metadata.concepts)}}</span>
+    <span *ngIf="showFullImage && metadata?.texts" class="imageinfo"><h3>Texts</h3>{{getDetectedTexts(this.metadata.texts)}}</span>
   </span>
   <img *ngIf="showFullImage" [src]="fullImage" alt="Full Image" (click)="hideFullImage()">
   <div *ngIf="showFullImage" class="leftbottomcorner">

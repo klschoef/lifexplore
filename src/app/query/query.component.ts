@@ -9,6 +9,23 @@ import { query } from '@angular/animations';
 import { QueryEvent, QueryResult, QueryResultLog } from 'openapi/dres';
 import { LocalConfig } from '../local-config';
 
+
+
+interface JsonObjects {
+  object: string;
+  score: number;
+  bbox: number[];
+}
+
+interface JsonConcepts {
+  concept: string;
+  score: number;
+}
+
+interface JsonTexts {
+  text: string;
+}
+
 @Component({
   selector: 'app-query',
   templateUrl: './query.component.html',
@@ -255,6 +272,22 @@ export class QueryComponent implements AfterViewInit {
     //return formatAsTime(frame, this.fps, withFrames);
   }
 
+
+  getDetectedObjects(jsonObjects: JsonObjects[]): string {
+    const objectNames: string[] = jsonObjects.map((obj) => obj.object);
+    return objectNames.join(', ');
+  }
+
+  getDetectedConcepts(jsonConcepts: JsonConcepts[]): string {
+    const conceptNames: string[] = jsonConcepts.map((obj) => obj.concept);
+    return conceptNames.join(', ');
+  }
+
+  getDetectedTexts(jsonTexts: JsonTexts[]): string {
+    const textNames: string[] = jsonTexts.map((obj) => obj.text);
+    return textNames.join(', ');
+  }
+
   @HostListener('document:keyup', ['$event'])
   handleKeyboardEventUp(event: KeyboardEvent) { 
     
@@ -453,6 +486,7 @@ export class QueryComponent implements AfterViewInit {
 
   performQuery() {
     this.fullImageIndex = -1;
+    this.showFullImage = false;
     //called from the paging buttons
     if (this.file_sim_keyframe && this.file_sim_pathPrefix) {
       this.performFileSimilarityQuery(this.file_sim_keyframe, this.file_sim_pathPrefix);
