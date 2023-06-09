@@ -1,8 +1,8 @@
 
 <div class="queryarea">
     <a routerLink="/query" (click)="reloadComponent()"><img class="logo" src="assets/lifeXplore_.png"></a>
-    <select [(ngModel)]="selectedDataset" (change)="resetPageAndPerformQuery()">
-      <option *ngFor="let d of datasets" [ngValue]="d.id">{{d.name}}</option>
+    <select [(ngModel)]="queryMode" (change)="resetPageAndPerformQuery()">
+      <option *ngFor="let d of queryModes" [ngValue]="d.id">{{d.name}}</option>
     </select> 
     <input type="text" id="queryinput" name="queryinput" ngModel #inputfield [(ngModel)]="queryinput" (keyup.enter)="performNewTextQuery()" (focus)="onQueryInputFocus()" (blur)="onQueryInputBlur()" autofocus/>
     <button class="searchButton" (click)="performNewTextQuery()">Search</button>

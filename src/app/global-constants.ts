@@ -27,7 +27,7 @@ export interface QueryType {
   maxresults: number; 
   resultsperpage: number; 
   selectedpage: string; 
-  dataset: string; 
+  queryMode: string; 
 }
 
 /*

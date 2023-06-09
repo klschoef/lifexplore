@@ -81,16 +81,15 @@ export class QueryComponent implements AfterViewInit {
   pages = ['1']
   
   thumbSize = 'small';
-  selectedDataset = 'all';
+  queryMode = 'all';
   selectedHistoryEntry: string | undefined
   selectedServerRun: string | undefined
   queryFieldHasFocus = false;
   showButtons = -1;
-  datasets = [
-    {id: 'all', name: 'All days'},
-    {id: 'v3c-v', name: 'Videos: V3C'},
-    {id: 'marine-s', name: 'Shots: Marine'},
-    {id: 'marine-v', name: 'Videos: Marine'} 
+  queryModes = [
+    {id: 'all', name: 'All Images'},
+    {id: 'first', name: 'First Image/Day'},
+    {id: 'distinctive', name: 'Distinctive Images'}
   ];
     
   constructor(
@@ -232,7 +231,7 @@ export class QueryComponent implements AfterViewInit {
       let histj:[QueryType] = JSON.parse(hist);
       for (let i=0; i < histj.length; i++) {
         let ho = histj[i];
-        historyList.push(`${ho.type}: ${ho.query} (${ho.dataset})`)
+        historyList.push(`${ho.type}: ${ho.query} (${ho.queryMode})`)
       }
     }
     return historyList; //JSON.parse(hist!);
@@ -249,7 +248,7 @@ export class QueryComponent implements AfterViewInit {
       let containedPos = -1;
       let i = 0;
       for (let qh of queryHistory) {
-        if (qh.query === msg.query && qh.dataset === msg.dataset) {
+        if (qh.query === msg.query && qh.queryMode === msg.queryMode) {
           containedPos = i;
           break;
         }
@@ -302,16 +301,6 @@ export class QueryComponent implements AfterViewInit {
       else if (event.key === 'e') {
         this.inputfield.nativeElement.focus();
       }  
-      else if (event.key === 'v') {
-        this.selectedPage = '1';
-        this.selectedDataset = this.selectedDataset.replace('-s','-v');
-        this.performTextQuery();
-      }
-      /*else if (event.key === 's') {
-        this.selectedPage = '1';
-        this.selectedDataset = this.selectedDataset.replace('-v','-s');
-        this.performTextQuery();
-      }*/
       else if (event.key === 'x') {
         this.resetQuery();
       }
@@ -444,25 +433,12 @@ export class QueryComponent implements AfterViewInit {
     }
   }
 
-  getBaseURLFromKey(selDat: string) {
-    return GlobalConstants.keyframeBaseURL;
-  }
-
   getBaseURL() {
-    return this.getBaseURLFromKey(this.selectedDataset);
+    return GlobalConstants.keyframeBaseURL;
   }
 
   isVideoResult(dataset: string): boolean {
     return dataset.endsWith('v');
-  }
-
-  getIDPartNums() {
-    if (this.selectedDataset == 'marine-v' || this.selectedDataset == 'marine-s') {
-      return 3; 
-    }
-    else { //if (this.selectedDataset == 'v3c-v' || this.selectedDataset == 'v3c-v') {
-      return 1;
-    }
   }
 
   onQueryInputFocus() {
@@ -486,6 +462,11 @@ export class QueryComponent implements AfterViewInit {
    /****************************************************************************
    * Queries
    ****************************************************************************/
+
+  resetPageAndPerformQuery() {
+    this.selectedPage = '1';
+    this.performTextQuery();
+  }
 
 
   performQuery() {
@@ -527,7 +508,7 @@ export class QueryComponent implements AfterViewInit {
         maxresults: this.maxresults,
         resultsperpage: this.resultsPerPage, 
         selectedpage: this.selectedPage, 
-        dataset: this.selectedDataset
+        queryMode: this.queryMode
       };
       this.previousQuery = msg;
 
@@ -562,7 +543,7 @@ export class QueryComponent implements AfterViewInit {
         maxresults: this.maxresults,
         resultsperpage: this.resultsPerPage, 
         selectedpage: this.selectedPage, 
-        dataset: this.selectedDataset
+        queryMode: this.queryMode
       };
       this.previousQuery = msg;
 
@@ -590,7 +571,7 @@ export class QueryComponent implements AfterViewInit {
         maxresults: this.maxresults,
         resultsperpage: this.resultsPerPage, 
         selectedpage: this.selectedPage,
-        dataset: this.selectedDataset 
+        queryMode: this.queryMode
       };
       this.previousQuery = msg;
 
@@ -619,7 +600,6 @@ export class QueryComponent implements AfterViewInit {
       let msg: QueryType = queryHistory[parseInt(this.selectedHistoryEntry!)];
       if (msg.type === 'textquery') {
         this.queryinput = msg.query;
-        this.selectedDataset = msg.dataset;
         this.selectedPage = msg.selectedpage;
         this.previousQuery = undefined;
         this.file_sim_keyframe = undefined;
@@ -653,7 +633,6 @@ export class QueryComponent implements AfterViewInit {
       let msg: QueryType = queryHistory[0];
       if (msg.type === 'textquery') {
         this.queryinput = msg.query;
-        this.selectedDataset = msg.dataset;
         this.selectedPage = msg.selectedpage;
       }
 
@@ -718,11 +697,6 @@ export class QueryComponent implements AfterViewInit {
     this.selectedPage = '1';
     let serveridx = this.queryresult_serveridx[idx];
     this.performSimilarityQuery(serveridx);
-  }
-
-  resetPageAndPerformQuery() {
-    this.selectedPage = '1';
-    this.performTextQuery();
   }
 
   resetQuery() {
@@ -826,7 +800,7 @@ export class QueryComponent implements AfterViewInit {
 
     let resultnum = (parseInt(this.selectedPage) - 1) * this.resultsPerPage + 1;
     this.querydataset = qresults.dataset;
-    let keyframeBase = this.getBaseURLFromKey(qresults.dataset);
+    let keyframeBase = this.getBaseURL();
     
     let logResults:Array<QueryResult> = [];
     //for (var e of qresults.results) {
