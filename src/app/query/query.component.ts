@@ -39,6 +39,8 @@ export class QueryComponent implements AfterViewInit {
   
   localConfig = LocalConfig;
 
+  paramFilename: string | undefined;
+
   file_sim_keyframe: string | undefined
   file_sim_pathPrefix: string | undefined
   
@@ -58,6 +60,8 @@ export class QueryComponent implements AfterViewInit {
   public statusTaskInfoText: string = ""; //property binding
   statusTaskRemainingTime: string = ""; //property binding
 
+  nodeServerInfo: string | undefined;
+
   videopreviewimage: string = '';
 
   showFullImage: boolean = false;
@@ -72,6 +76,7 @@ export class QueryComponent implements AfterViewInit {
   maxresults = LocalConfig.config_MAX_RESULTS_TO_RETURN; 
   totalReturnedResults = 0; //how many results did our query return in total?
   resultsPerPage = LocalConfig.config_RESULTS_PER_PAGE; 
+  MAX_RESULTS_TO_DISPLAY = GlobalConstants.MAX_RESULTS_TO_DISPLAY;
   selectedPage = '1'; //user-selected page
   pages = ['1']
   
@@ -100,19 +105,14 @@ export class QueryComponent implements AfterViewInit {
   ngOnInit() {
     console.log('query component (qc) initated');
 
-    this.route.paramMap.subscribe(paraMap => {
-      this.file_sim_keyframe = paraMap.get('id')?.toString();
-      if (this.file_sim_keyframe) {
-        console.log(`qc: ${this.file_sim_keyframe}`);
-      }
-      this.file_sim_pathPrefix = paraMap.get('id2')?.toString();
-      if (this.file_sim_pathPrefix) {
-        console.log(`qc: ${this.file_sim_pathPrefix}`);
-        if (this.file_sim_pathPrefix === 'thumbsXL') {
-          this.selectedDataset = 'v3c-s';
-        } else if (this.file_sim_pathPrefix === 'thumbsmXL') {
-          this.selectedDataset = 'marine-s';
-        }
+    //read parameters
+    this.route.params.subscribe(params => {
+      if ('filename' in params) {
+        this.paramFilename = params['filename'];
+        this.queryinput = '-fn ' + this.paramFilename;
+        setTimeout(() => {
+          this.performQuery();
+        }, 250);
       }
     });
 
@@ -134,6 +134,8 @@ export class QueryComponent implements AfterViewInit {
     }
 
     this.nodeService.messages.subscribe(msg => {
+      this.nodeServerInfo = undefined; 
+
       if ('wsstatus' in msg) { 
         console.log('qc: node-notification: connected');
       } else {
@@ -149,8 +151,9 @@ export class QueryComponent implements AfterViewInit {
               console.log('received metadata: ' + JSON.stringify(msg));
               if (this.metadata?.location) {
               }
-            } else {
-              //this.map = null;
+            } else if (m.type === 'info'){
+              console.log(m.message);
+              this.nodeServerInfo = m.message;
             }
           } else {
             //this.handleNodeMessage(msg);
@@ -178,6 +181,7 @@ export class QueryComponent implements AfterViewInit {
     setInterval(() => {
       this.requestTaskInfo();
     }, 1000);
+
   }
 
   ngAfterViewInit(): void {
@@ -487,6 +491,7 @@ export class QueryComponent implements AfterViewInit {
   performQuery() {
     this.fullImageIndex = -1;
     this.showFullImage = false;
+    this.nodeServerInfo = "processing query, please wait...";
     //called from the paging buttons
     if (this.file_sim_keyframe && this.file_sim_pathPrefix) {
       this.performFileSimilarityQuery(this.file_sim_keyframe, this.file_sim_pathPrefix);
@@ -503,6 +508,7 @@ export class QueryComponent implements AfterViewInit {
     this.previousQuery = undefined;
     this.file_sim_keyframe = undefined;
     this.file_sim_pathPrefix = undefined;
+    this.nodeServerInfo = "processing query, please wait...";
     this.performQuery();
   }
   

@@ -30,7 +30,8 @@
     </mat-button-toggle>
   </mat-button-toggle-group>
   
-  <span *ngIf="this.totalReturnedResults > 0">({{this.totalReturnedResults}} results)</span>
+  <span *ngIf="this.totalReturnedResults > 0">&nbsp; ({{this.totalReturnedResults}} results)</span>
+  <span *ngIf="this.totalReturnedResults > this.MAX_RESULTS_TO_DISPLAY">...only {{this.MAX_RESULTS_TO_DISPLAY}} are shown</span>
 </div>
     
 <br/>
@@ -41,15 +42,15 @@
 </div>
   
 <!-- Result Images -->
-<div (mouseover)="showButtons = i" (mouseleave)="showButtons = -1" class="queryresult" *ngFor="let item of resultURLs; let i = index">
+<div (mouseover)="showButtons = i" (mouseleave)="showButtons = -1" class="queryresult" *ngFor="let item of resultURLs | slice:0:MAX_RESULTS_TO_DISPLAY; let i = index">
   <!--<img src="{{item}}" width="320" height="180" (click)="displayFullImage(item, i)" [ngClass]="{'blueborder': this.showFullImage && this.fullImageIndex == i}">-->
-  <img src="{{item}}" width="{{localConfig.config_THUMB_WIDTH}}" height="{{localConfig.config_THUMB_HEIGHT}}" (click)="displayFullImage(item, i)" [ngClass]="{'blueborder': this.showFullImage && this.fullImageIndex == i}">
+  <img src="{{item}}" width="{{localConfig.config_THUMB_WIDTH}}" height="{{localConfig.config_THUMB_HEIGHT}}" style="cursor:pointer" (click)="displayFullImage(item, i)" [ngClass]="{'blueborder': this.showFullImage && this.fullImageIndex == i}">
   <div class="lefttopcorner">
     <span *ngIf="showButtons === i && this.queryresult_frame[i] !== 'summary'" class="resultnum">{{this.queryresult_frame[i]}}</span>
   </div>
   <div class="righttopcorner" *ngIf="showButtons === i">
       <span class="label">
-          <a [routerLink]="['/video',this.queryresult_videoid[i],this.queryresult_frame[i]]" target="_blank">{{this.getFilenameFromItem(item)}}</a>
+          <a [routerLink]="['/query',this.getFilenameFromItem(item).substring(0,8)]" target="_new">{{this.getFilenameFromItem(item)}}</a>
       </span>
   </div>
   <div class="leftbottomcorner">
@@ -58,14 +59,19 @@
     <button *ngIf="showButtons === i" (click)="performSimilarityQueryForIndex(i)" class="resultaction">Similar</button>
   </div>
   <div class="rightbottomcorner">
-      <button *ngIf="showButtons === i && !this.isVideoResult(this.querydataset)" class="submitbutton" (click)="submitResult(i)">Submit</button>
+      <!-- <button *ngIf="showButtons === i && !this.isVideoResult(this.querydataset)" class="submitbutton" (click)="submitResult(i)">Submit</button> -->
+      <button *ngIf="showButtons === i" class="submitbutton" (click)="submitResult(i)">Submit</button>
   </div>
 </div>
 
 <!-- Full-resolution image -->
-<div class="full-image">
-  <span class="container">
-    <span *ngIf="showFullImage && metadata?.filename" class="imageinfo"><h3>Filename</h3>{{this.metadata.filename}}</span>
+<div *ngIf="showFullImage" class="full-image">
+  <span *ngIf="showFullImage" class="container">
+    <span *ngIf="showFullImage && metadata?.filename" class="imageinfo"><h3>Filename</h3>{{this.metadata.filename}}
+      <a *ngIf="showFullImage && metadata?.filename" [routerLink]="['/query',this.metadata.filename.substring(0,8)]" target="_blank" class="dayLink">D</a>
+      <a *ngIf="showFullImage && metadata?.filename" [routerLink]="['/query',this.metadata.filename.substring(0,11)]" target="_blank" class="hourLink">H</a>
+      <a *ngIf="showFullImage && metadata?.filename" [routerLink]="['/query',this.metadata.filename.substring(0,13)]" target="_blank" class="minuteLink">M</a>
+    </span>
     <span *ngIf="showFullImage && metadata?.datetime" class="imageinfo"><h3>Date</h3>{{this.metadata.datetime}}</span>
     <span *ngIf="showFullImage && metadata?.time_zone" class="imageinfo"><h3>Time Zone</h3>{{this.metadata.time_zone}}</span>
     <span *ngIf="showFullImage && metadata?.local_time" class="imageinfo"><h3>Local Time</h3>{{this.metadata.local_time}}</span>
@@ -82,6 +88,10 @@
   <div *ngIf="showFullImage" class="rightbottomcorner">
       <button class="submitbuttonL" (click)="submitResult(this.fullImageIndex)">Submit</button>
   </div>
+</div>
+
+<div *ngIf="nodeServerInfo !== undefined" class="full-message">
+  {{nodeServerInfo}}
 </div>
 
 <div class="statusbar">

@@ -7,6 +7,7 @@ import { QueryComponent } from './query/query.component';
 const routes: Routes = [
   {path: '', redirectTo: 'query', pathMatch: 'full'}, // component: AppComponent
   {path: 'query', component: QueryComponent},
+  {path: 'query/:filename', component: QueryComponent},
   {path: 'filesimilarity/:id/:id2', component: QueryComponent},
   {path: 'day/:id', component: CalendarComponent},
 ];

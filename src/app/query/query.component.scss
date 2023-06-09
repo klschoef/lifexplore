@@ -119,5 +119,33 @@
     transform: translate(-50%, -50%);
     z-index: 9999;
   }
-  
+
+.full-message {
+    padding: 40px;
+    background-color: #ffffe0;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    font-size: 20pt;
+  }
+
+.dayLink {
+    background-color: #6bb6ff;
+    color: white;
+    font-size: larger;
+}
+ 
+.hourLink {
+    background-color: #3498db;
+    color: white;
+    font-size: larger;
+}
+
+.minuteLink {
+    background-color: #0066cc;
+    color: white;
+    font-size: larger;
+}
   
