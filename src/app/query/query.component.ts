@@ -88,8 +88,9 @@ export class QueryComponent implements AfterViewInit {
   showButtons = -1;
   queryModes = [
     {id: 'all', name: 'All Images'},
-    {id: 'first', name: 'First Image/Day'},
-    {id: 'distinctive', name: 'Distinctive Images'}
+    {id: 'distinctive', name: 'Less Duplicates'},
+    {id: 'moredistinctive', name: 'Distinctive Images'},
+    {id: 'first', name: 'First Image/Day'}
   ];
     
   constructor(
@@ -601,17 +602,20 @@ export class QueryComponent implements AfterViewInit {
       if (msg.type === 'textquery') {
         this.queryinput = msg.query;
         this.selectedPage = msg.selectedpage;
+        this.queryMode = msg.queryMode;
         this.previousQuery = undefined;
         this.file_sim_keyframe = undefined;
         this.file_sim_pathPrefix = undefined;
+
+        this.performQuery();
       }
       else if (msg.type === 'file-similarityquery') {
         this.previousQuery = undefined;
         this.queryinput = '';
       }
 
-      this.sendToCLIPServer(msg);
-      this.saveToHistory(msg);
+      //this.sendToCLIPServer(msg);
+      //this.saveToHistory(msg);
       
       this.selectedHistoryEntry = "-1";
       this.historyDiv.nativeElement.hidden = true;

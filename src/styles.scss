@@ -177,6 +177,12 @@ div.shotlist {
     margin: 6px;
 }
 
+.non-flex-item {
+    //flex: none;
+    flex-basis: 100%;
+    float: left;
+}
+
 /*.statusbar {
     position: absolute;
     background-color: rgba(73,76,84,1); //lightgray;
