@@ -626,7 +626,7 @@ export class QueryComponent implements AfterViewInit {
       };
       this.previousQuery = msg;
 
-      this.nodeServerInfo = 'processing similarity query, please wait...';
+      this.nodeServerInfo = 'processing similarity query, please wait...please also note that the query input field does not work for this search/tab, unfortunately.';
       this.sendToCLIPServer(msg);
       this.saveToHistory(msg);
 

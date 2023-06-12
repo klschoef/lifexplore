@@ -69,7 +69,7 @@
 
 <!-- Full-resolution image -->
 <div *ngIf="showFullImage" class="full-image">
-  <img *ngIf="showFullImage" [src]="fullImage" alt="Full Image" (click)="hideFullImage()">
+  <img *ngIf="showFullImage" [src]="fullImage" height="720" alt="Full Image" (click)="hideFullImage()">
   <span *ngIf="showFullImage" class="full-image-infos">
     <span *ngIf="showFullImage && metadata?.filename" class="imageinfo"><b>Filename:</b>&nbsp;{{this.metadata.filename}}
       <a *ngIf="showFullImage && metadata?.filename" [routerLink]="['/query',this.metadata.filename.substring(0,8)]" target="_blank" class="dayLink">D</a>
