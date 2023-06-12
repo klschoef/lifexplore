@@ -46,6 +46,7 @@ export class QueryComponent implements AfterViewInit {
   
   
   queryinput: string = '';
+  queryinput2: string = '';
   topicanswer: string = '';
   queryresults: Array<string> = [];
   resultURLs: Array<string> = [];
@@ -316,14 +317,14 @@ export class QueryComponent implements AfterViewInit {
 
   delFromQuery(prefix:string, name:string) {
     if (this.queryinput.includes('-' + prefix + ' ')) {
-      if (this.queryinput.indexOf('- ' + prefix + ' ' + name + ' ') >= 0) {
-        this.queryinput = this.queryinput.replace('- ' + prefix + ' ' + name + ' ', '');
-      } else if (this.queryinput.indexOf('- ' + prefix + ' ' + name) >= 0) {
-        this.queryinput = this.queryinput.replace('- ' + prefix + ' ' + name, '');
+      if (this.queryinput.indexOf('-' + prefix + ' ' + name + ' ') >= 0) {
+        this.queryinput = this.queryinput.replace('-' + prefix + ' ' + name + ' ', '');
       } else if (this.queryinput.indexOf(name + ',') >= 0) {
         this.queryinput = this.queryinput.replace(name + ',', '');
-      } else if (this.queryinput.indexOf(', ' + name) >= 0) {
-        this.queryinput = this.queryinput.replace(', ' + name, '');
+      } else if (this.queryinput.indexOf(',' + name) >= 0) {
+        this.queryinput = this.queryinput.replace(',' + name, '');
+      } else if (this.queryinput.indexOf('-' + prefix + ' ' + name) >= 0) {
+        this.queryinput = this.queryinput.replace('-' + prefix + ' ' + name, '');
       } else if (this.queryinput.indexOf(name + ' ') >= 0) {
         this.queryinput = this.queryinput.replace(name + ' ', ' ');
       }
@@ -625,6 +626,7 @@ export class QueryComponent implements AfterViewInit {
       };
       this.previousQuery = msg;
 
+      this.nodeServerInfo = 'processing similarity query, please wait...';
       this.sendToCLIPServer(msg);
       this.saveToHistory(msg);
 
@@ -757,6 +759,7 @@ export class QueryComponent implements AfterViewInit {
   }
 
   resetQuery() {
+    this.nodeServerInfo = undefined;
     this.vbsService.submitLog();
     this.vbsService.saveLogLocally();
     this.queryinput = '';
@@ -844,7 +847,9 @@ export class QueryComponent implements AfterViewInit {
   handleCLIPMessage(qresults:any) {
     console.log(qresults);
     
-    
+    if (qresults.totalresults === 0) {
+      this.nodeServerInfo = 'The query returned 0 results!';
+    }
 
     this.totalReturnedResults = qresults.totalresults; //totally existing results
     //create pages array
@@ -890,6 +895,7 @@ export class QueryComponent implements AfterViewInit {
     }
     this.vbsService.resultLog = log;
 
+    this.nodeServerInfo = undefined;
   }
 
   closeWebSocketCLIP() {

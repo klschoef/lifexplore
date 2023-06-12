@@ -64,14 +64,14 @@ export class VBSServerConnectionService {
 
   saveLogLocally() {
     if (this.resultLog) {
-      let log = localStorage.getItem('VBSQueryLog');
+      let log = localStorage.getItem('LSCQueryLog');
       if (log) {
         let loga = JSON.parse(log);
         loga.push(this.resultLog)
-        localStorage.setItem('VBSQueryLog',JSON.stringify(loga));
+        localStorage.setItem('LSCQueryLog',JSON.stringify(loga));
       } else {
         let loga  = [this.resultLog];
-        localStorage.setItem('VBSQueryLog',JSON.stringify(loga));
+        localStorage.setItem('LSCQueryLog',JSON.stringify(loga));
       }
     }
   }

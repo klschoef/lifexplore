@@ -109,9 +109,12 @@
         <a class="delButton" (click)="delFromQuery('t',obj.text)">+</a>
       </span>
     </span>
+    <button (click)="clearQuery()">Clear query input</button>
+    <button class="searchButton" (click)="performNewTextQuery()">Search again</button>
   </span>
   <div *ngIf="showFullImage" class="leftbottomcorner">
-    <button (click)="performSimilarityQueryForIndex(this.fullImageIndex)" class="resultactionL">Similar</button>
+    <!--<button (click)="performSimilarityQueryForIndex(this.fullImageIndex)" class="resultactionL">Similar</button>-->
+    <a [routerLink]="['/filesimilarity',queryresults[this.fullImageIndex]]" target="_new" class="resultactionL">Similar</a>
   </div>
   <div *ngIf="showFullImage" class="rightbottomcorner">
       <button class="submitbuttonL" (click)="submitResult(this.fullImageIndex)">Submit</button>
