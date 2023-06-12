@@ -9,12 +9,13 @@
 #queryinput {
     font-size: 20px;
     height: 26px;
-    width: 30%;
+    width: 60%;
 }
 
 #topicanswer {
+    font-size: 20px;
     height: 26px;
-    width: 15%;
+    width: 25%;
     background-color: rgb(220,220,220);
 }
 
@@ -39,11 +40,12 @@
 .searchButton {
     background-color: rgb(227, 227, 158);
     color: black;
-    margin-right: 40px;
 }
 
 .resetButton {
     background-color: red;
+    color: white;
+    margin-right: 40px;
 }
 
 .historySelect {
@@ -58,6 +60,10 @@
 
 .spacer {
     margin-right: 40px;
+}
+
+.spacer2 {
+    margin-right: 18%;
 }
 
 .whiteColor {
@@ -114,11 +120,29 @@
     padding: 10px;
     background-color: white;
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 30%;
+    left: 40%;
+    transform: translate(-40%, -30%);
     z-index: 9999;
+    display: flex;
   }
+
+.full-image-infos {
+    display: flex;
+    flex-direction: column;
+}
+
+.addButton, .delButton {
+    background-color: green;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    padding: 3px;
+}
+
+.delButton {
+    background-color: red;
+}
 
 .full-message {
     padding: 40px;
@@ -129,6 +153,17 @@
     transform: translate(-50%, -50%);
     z-index: 9999;
     font-size: 20pt;
+  }
+
+  .full-help {
+    padding: 40px;
+    background-color: #ffffe0;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    font-size: 12pt;
   }
 
 .dayLink {

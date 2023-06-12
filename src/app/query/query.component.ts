@@ -65,6 +65,7 @@ export class QueryComponent implements AfterViewInit {
   videopreviewimage: string = '';
 
   showFullImage: boolean = false;
+  showHelpActive: boolean = false;
   fullImage: string = '';
   fullImageIndex: number = -1;
 
@@ -112,6 +113,14 @@ export class QueryComponent implements AfterViewInit {
         this.queryinput = '-fn ' + this.paramFilename;
         setTimeout(() => {
           this.performQuery();
+        }, 250);
+      }
+      else if ('similarto' in params) {
+        let filepath = params['similarto'];
+        //this.queryinput = '-sim ' + filepath;
+        setTimeout(() => {
+          //this.performQuery();
+          this.performFileSimilarityQuery(filepath, '');
         }, 250);
       }
     });
@@ -225,6 +234,10 @@ export class QueryComponent implements AfterViewInit {
     }*/
   }
 
+  showHelp() {
+    this.showHelpActive = !this.showHelpActive;
+  }
+
   history() {
     let historyList = [];
     let hist = localStorage.getItem('history')
@@ -270,6 +283,17 @@ export class QueryComponent implements AfterViewInit {
     }
   }
 
+  filenameToDate(fn:string):string {
+    let yyyy = fn.substring(0,4);
+    let MM = fn.substring(4,6);
+    let dd = fn.substring(6,8);
+    let hh = fn.substring(9,11);
+    let mm = fn.substring(11,13);
+    let ss = fn.substring(13,15);
+
+    return dd + '.' + MM + '.' + yyyy + ' ' + hh + ':' + mm + ':' + ss;
+  }
+
   asTimeLabel(frame:string, withFrames:boolean=true) {
     console.log('TODO: need FPS in query component!')
     return frame;
@@ -280,6 +304,30 @@ export class QueryComponent implements AfterViewInit {
   getDetectedObjects(jsonObjects: JsonObjects[]): string {
     const objectNames: string[] = jsonObjects.map((obj) => obj.object);
     return objectNames.join(', ');
+  }
+
+  addToQuery(prefix:string, name:string) {
+    if (this.queryinput.includes('-' + prefix + ' ')) {
+      this.queryinput = this.queryinput.replace('-' + prefix + ' ', '-' + prefix + ' ' + name + ',');
+    } else {
+      this.queryinput = '-' + prefix + ' ' + name + ' ' + this.queryinput;
+    }
+  }
+
+  delFromQuery(prefix:string, name:string) {
+    if (this.queryinput.includes('-' + prefix + ' ')) {
+      if (this.queryinput.indexOf('- ' + prefix + ' ' + name + ' ') >= 0) {
+        this.queryinput = this.queryinput.replace('- ' + prefix + ' ' + name + ' ', '');
+      } else if (this.queryinput.indexOf('- ' + prefix + ' ' + name) >= 0) {
+        this.queryinput = this.queryinput.replace('- ' + prefix + ' ' + name, '');
+      } else if (this.queryinput.indexOf(name + ',') >= 0) {
+        this.queryinput = this.queryinput.replace(name + ',', '');
+      } else if (this.queryinput.indexOf(', ' + name) >= 0) {
+        this.queryinput = this.queryinput.replace(', ' + name, '');
+      } else if (this.queryinput.indexOf(name + ' ') >= 0) {
+        this.queryinput = this.queryinput.replace(name + ' ', ' ');
+      }
+    }
   }
 
   getDetectedConcepts(jsonConcepts: JsonConcepts[]): string {
@@ -466,6 +514,7 @@ export class QueryComponent implements AfterViewInit {
 
   resetPageAndPerformQuery() {
     this.selectedPage = '1';
+    this.nodeServerInfo = "processing query, please wait...";
     this.performTextQuery();
   }
 
@@ -570,8 +619,8 @@ export class QueryComponent implements AfterViewInit {
         query: keyframe,
         pathprefix: pathprefix, 
         maxresults: this.maxresults,
-        resultsperpage: this.resultsPerPage, 
-        selectedpage: this.selectedPage,
+        resultsperpage: this.maxresults, //this.resultsPerPage, 
+        selectedpage: "1", //this.selectedPage,
         queryMode: this.queryMode
       };
       this.previousQuery = msg;
@@ -606,7 +655,7 @@ export class QueryComponent implements AfterViewInit {
         this.previousQuery = undefined;
         this.file_sim_keyframe = undefined;
         this.file_sim_pathPrefix = undefined;
-
+        this.nodeServerInfo = "processing query, please wait...";
         this.performQuery();
       }
       else if (msg.type === 'file-similarityquery') {
@@ -701,6 +750,10 @@ export class QueryComponent implements AfterViewInit {
     this.selectedPage = '1';
     let serveridx = this.queryresult_serveridx[idx];
     this.performSimilarityQuery(serveridx);
+  }
+
+  clearQuery() {
+    this.queryinput = '';
   }
 
   resetQuery() {

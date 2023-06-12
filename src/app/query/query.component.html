@@ -6,8 +6,10 @@
     </select> 
     <input type="text" id="queryinput" name="queryinput" ngModel #inputfield [(ngModel)]="queryinput" (keyup.enter)="performNewTextQuery()" (focus)="onQueryInputFocus()" (blur)="onQueryInputBlur()" autofocus/>
     <button class="searchButton" (click)="performNewTextQuery()">Search</button>
+    <button (click)="clearQuery()">x</button>
+    <button class="resetButton" (click)="resetQuery()">x</button>
     <button class="historyToggle" (click)="toggleHistorySelect()">History</button>
-    <button class="resetButton" (click)="resetQuery()">Reset</button>
+    <button class="helpButton" (click)="showHelp()">Help</button>
     <div class="historySelect" #historyDiv>
       <select [(ngModel)]="selectedHistoryEntry" value="" (change)="performHistoryQuery()">
         <option value="-1" selected disabled>-- Search History --</option>
@@ -50,14 +52,14 @@
   </div>
   <div class="righttopcorner" *ngIf="showButtons === i">
       <span class="label">
-          <a [routerLink]="['/query',this.getFilenameFromItem(item).substring(0,8)]" target="_new">{{this.getFilenameFromItem(item)}}</a>
+          <a [routerLink]="['/query',this.getFilenameFromItem(item).substring(0,8)]" target="_new">{{filenameToDate(this.getFilenameFromItem(item))}}</a>
       </span>
   </div>
   <div class="leftbottomcorner">
-    <button *ngIf="showButtons === i" (click)="showDaySummary(i)" class="resultaction">Day</button>
+    <!--<button *ngIf="showButtons === i" (click)="showDaySummary(i)" class="resultaction">Day</button>-->
     
-    <!--<button *ngIf="showButtons === i" (click)="performSimilarityQueryForIndex(i)" class="resultaction">Similar</button>-->
-    <button *ngIf="showButtons === i" (click)="performFileSimilarityQuery(queryresults[i],'')" class="resultaction">Similar</button>
+    <!--<button *ngIf="showButtons === i" (click)="performFileSimilarityQuery(queryresults[i],'')" class="resultaction">Similar</button>-->
+    <a *ngIf="showButtons === i" [routerLink]="['/filesimilarity',queryresults[i]]" target="_new" class="resultaction">Similar</a>
   </div>
   <div class="rightbottomcorner">
       <!-- <button *ngIf="showButtons === i && !this.isVideoResult(this.querydataset)" class="submitbutton" (click)="submitResult(i)">Submit</button> -->
@@ -67,22 +69,47 @@
 
 <!-- Full-resolution image -->
 <div *ngIf="showFullImage" class="full-image">
-  <span *ngIf="showFullImage" class="container">
-    <span *ngIf="showFullImage && metadata?.filename" class="imageinfo"><h3>Filename</h3>{{this.metadata.filename}}
+  <img *ngIf="showFullImage" [src]="fullImage" alt="Full Image" (click)="hideFullImage()">
+  <span *ngIf="showFullImage" class="full-image-infos">
+    <span *ngIf="showFullImage && metadata?.filename" class="imageinfo"><b>Filename:</b>&nbsp;{{this.metadata.filename}}
       <a *ngIf="showFullImage && metadata?.filename" [routerLink]="['/query',this.metadata.filename.substring(0,8)]" target="_blank" class="dayLink">D</a>
       <a *ngIf="showFullImage && metadata?.filename" [routerLink]="['/query',this.metadata.filename.substring(0,11)]" target="_blank" class="hourLink">H</a>
       <a *ngIf="showFullImage && metadata?.filename" [routerLink]="['/query',this.metadata.filename.substring(0,13)]" target="_blank" class="minuteLink">M</a>
     </span>
-    <span *ngIf="showFullImage && metadata?.datetime" class="imageinfo"><h3>Date</h3>{{this.metadata.datetime}}</span>
-    <span *ngIf="showFullImage && metadata?.time_zone" class="imageinfo"><h3>Time Zone</h3>{{this.metadata.time_zone}}</span>
-    <span *ngIf="showFullImage && metadata?.local_time" class="imageinfo"><h3>Local Time</h3>{{this.metadata.local_time}}</span>
-    <span *ngIf="showFullImage && metadata?.weekday" class="imageinfo"><h3>Weekday</h3>{{this.metadata.weekday}}</span>
-    <span *ngIf="showFullImage && metadata?.heart_rate" class="imageinfo"><h3>Heart Rate</h3>{{this.metadata.heart_rate}}</span>
-    <span *ngIf="showFullImage && metadata?.objects" class="imageinfo"><h3>Objects</h3>{{getDetectedObjects(this.metadata.objects)}}</span>
-    <span *ngIf="showFullImage && metadata?.concepts" class="imageinfo"><h3>Concepts</h3>{{getDetectedConcepts(this.metadata.concepts)}}</span>
-    <span *ngIf="showFullImage && metadata?.texts" class="imageinfo"><h3>Texts</h3>{{getDetectedTexts(this.metadata.texts)}}</span>
+    <span *ngIf="showFullImage && metadata?.datetime" class="imageinfo"><b>Date:</b>&nbsp;{{this.metadata.datetime}}</span>
+    <span *ngIf="showFullImage && metadata?.time_zone" class="imageinfo"><b>Time Zone:</b>&nbsp;{{this.metadata.time_zone}}</span>
+    <span *ngIf="showFullImage && metadata?.local_time" class="imageinfo"><b>Local Time:</b>&nbsp;{{this.metadata.local_time}}</span>
+    <span *ngIf="showFullImage && metadata?.weekday" class="imageinfo"><b>Weekday:</b>&nbsp;{{this.metadata.weekday}}</span>
+    <span *ngIf="showFullImage && metadata?.heart_rate" class="imageinfo"><b>Heart Rate:</b>&nbsp;{{this.metadata.heart_rate}}</span>
+    <span *ngIf="showFullImage && metadata?.objects" class="imageinfo"><b>Objects:</b>&nbsp;
+      <span *ngFor="let obj of this.metadata.objects">
+        {{obj.object}} 
+        <a class="addButton" (click)="addToQuery('o',obj.object)">+</a>
+        <a class="delButton" (click)="delFromQuery('o',obj.object)">-</a>
+      </span>
+    </span>
+    <span *ngIf="showFullImage && metadata?.concepts" class="imageinfo"><b>Concepts:</b>&nbsp;
+      <span *ngFor="let obj of this.metadata.concepts">
+        {{obj.concept}} 
+        <a class="addButton" (click)="addToQuery('c',obj.concept)">+</a>
+        <a class="delButton" (click)="delFromQuery('c',obj.concept)">-</a>
+      </span>
+    </span>
+    <span *ngIf="showFullImage && metadata?.places" class="imageinfo"><b>Places:</b>&nbsp;
+      <span *ngFor="let obj of this.metadata.places">
+        {{obj.place}} 
+        <a class="addButton" (click)="addToQuery('p',obj.place)">+</a>
+        <a class="delButton" (click)="delFromQuery('p',obj.place)">-</a>
+      </span>
+    </span>
+    <span *ngIf="showFullImage && metadata?.texts" class="imageinfo"><b>Texts:</b>&nbsp;
+      <span *ngFor="let obj of this.metadata.texts">
+        {{obj.text}} 
+        <a class="addButton" (click)="addToQuery('t',obj.text)">+</a>
+        <a class="delButton" (click)="delFromQuery('t',obj.text)">+</a>
+      </span>
+    </span>
   </span>
-  <img *ngIf="showFullImage" [src]="fullImage" alt="Full Image" (click)="hideFullImage()">
   <div *ngIf="showFullImage" class="leftbottomcorner">
     <button (click)="performSimilarityQueryForIndex(this.fullImageIndex)" class="resultactionL">Similar</button>
   </div>
@@ -93,6 +120,49 @@
 
 <div *ngIf="nodeServerInfo !== undefined" class="full-message">
   {{nodeServerInfo}}
+  <button (click)="nodeServerInfo = undefined">Close</button>
+</div>
+
+<div *ngIf="showHelpActive === true" class="full-help">
+  <h4>CLIP Query</h4>
+  Just enter any text to perform a CLIP query.
+
+  <h4>Database Query</h4>
+  Use any of the following parameters to (additionally) query the database and filter content:
+  <ul>
+    <li><b>-o</b>&nbsp; <i>object(s)</i> (COCO)</li>
+    <li><b>-c</b>&nbsp; <i>concepts(s)</i> (ImageNet 1K)</li>
+    <li><b>-p</b>&nbsp; <i>places(s)</i> (Places365)</li>
+    <li><b>-t</b>&nbsp; <i>text(s)</i></li>
+    <li><b>-fn</b>&nbsp; <i>filename (or a part of it)</i></li>
+  </ul>
+
+  <h4>Result Limits</h4>
+  <ul>
+    <li>Use <b>All Images</b> to display all available images for a query.</li>
+    <li>Use <b>Less Duplicates</b> to filter out temporally consecutive images in the result set hat are very similar.</li>
+    <li>Use <b>Distinctive</b> to filter out temporally consecutive images in the result set that are similar.</li>
+    <li>Use <b>First Image/Day</b> to display only the first image of the day in the result set.</li>
+  </ul>
+
+  <h4>Thumbnail Actions</h4>
+  <ul>
+    <li>Click thumbnail (or press space) to open <b>full-screen</b> view.</li>
+    <li>Click <b>Date</b> to perform a <b>full day</b> query in a new tab.</li>
+    <li>Click <b>Similar</b> to perform a <b>similarity query</b> in a new tab.</li>
+    <li>Click <b>Submit</b> to send image to <b>DRES</b>.</li>
+  </ul>
+  
+  <h4>Keyboard Shortcuts</h4>
+  <ul>
+    <li><b>left/right/tab</b>: switch page</li>
+    <li><b>1-9</b>: goto page</li>
+    <li><b>e</b>: extend query</li>
+    <li><b>q</b>: edit query</li>
+    <li><b>x</b>: reset query</li>
+    <li><b>Space/Esc</b>: close full-screen view of image</li>
+  </ul>
+  <button (click)="showHelpActive = false">Close</button>
 </div>
 
 <div class="statusbar">
@@ -105,7 +175,7 @@
   VBS Server: <button class="{{vbsService.vbsServerState}}" (click)="checkVBSServerConnection()">{{vbsService.vbsServerState}}</button>
 -->
   
-  <span class="spacer">&nbsp;</span>
+  <span class="spacer2">&nbsp;</span>
 
   <span class="whiteColor">Topic Answer:</span> 
   <input type="text" id="topicanswer" name="topicanswer" ngModel #inputfield [(ngModel)]="topicanswer" (keyup.enter)="sendTopicAnswer()" autofocus/>
@@ -123,7 +193,6 @@
   &nbsp;
   <span class="remainingTimeInfo">{{statusTaskRemainingTime}}</span>
 
-  <span class="help">KEYBOARD: <b>1-9</b>: goto page, <b>left/right/tab</b>: switch page, <b>e</b>: extend query, <b>q</b>: edit query, <b>x</b>: reset query</span>
 </div>
 
 <span class="non-flex-item">
