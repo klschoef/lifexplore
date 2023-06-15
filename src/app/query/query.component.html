@@ -181,7 +181,7 @@
   <span class="spacer2">&nbsp;</span>
 
   <span class="whiteColor">Topic Answer:</span> 
-  <input type="text" id="topicanswer" name="topicanswer" ngModel #inputfield [(ngModel)]="topicanswer" (keyup.enter)="sendTopicAnswer()" autofocus/>
+  <input type="text" id="topicanswer" name="topicanswer" ngModel #inputfield [(ngModel)]="topicanswer" (keyup.enter)="sendTopicAnswer()" autofocus (focus)="onAnswerInputFocus()" (blur)="onAnswerInputBlur()" />
   <button class="topicanswerbutton" (click)="sendTopicAnswer()">Submit</button>
 
   <span class="spacer">&nbsp;</span>

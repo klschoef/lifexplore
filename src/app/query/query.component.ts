@@ -87,6 +87,7 @@ export class QueryComponent implements AfterViewInit {
   selectedHistoryEntry: string | undefined
   selectedServerRun: string | undefined
   queryFieldHasFocus = false;
+  answerFieldHasFocus = false;
   showButtons = -1;
   queryModes = [
     {id: 'all', name: 'All Images'},
@@ -355,12 +356,14 @@ export class QueryComponent implements AfterViewInit {
         this.resetQuery();
       }
       else if (event.key === 'Space' || event.key === ' ') {
-        console.log('togglet fullimage ' + this.showFullImage);
-        if (!(this.fullImageIndex >= 0 && this.resultURLs.length)) {
-          this.fullImageIndex = 0;
+        if (this.answerFieldHasFocus == false) {
+          console.log('togglet fullimage ' + this.showFullImage);
+          if (!(this.fullImageIndex >= 0 && this.resultURLs.length)) {
+            this.fullImageIndex = 0;
+          }
+          this.fullImage = this.resultURLs[this.fullImageIndex];
+          this.showFullImage = !this.showFullImage;
         }
-        this.fullImage = this.resultURLs[this.fullImageIndex];
-        this.showFullImage = !this.showFullImage;
       }
       else if (event.key === 'Escape') {
         this.closeVideoPreview();
@@ -498,6 +501,15 @@ export class QueryComponent implements AfterViewInit {
   onQueryInputBlur() {
     this.queryFieldHasFocus = false;
   }
+
+  onAnswerInputFocus() {
+    this.answerFieldHasFocus = true;
+  }
+
+  onAnswerInputBlur() {
+    this.answerFieldHasFocus = false
+  }
+
 
   showDaySummary(idx:number) {
     this.requestVideoSummaries(this.queryresult_videoid[idx]);

@@ -58,7 +58,7 @@ export class VBSServerConnectionService {
             catchError((err) => {
               return of(`Failed to submit segment to DRES due to a HTTP error (${err.status}).`)
             })
-        );
+        ).subscribe();
       }
   }
 
