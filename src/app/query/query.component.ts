@@ -345,7 +345,7 @@ export class QueryComponent implements AfterViewInit {
   @HostListener('document:keyup', ['$event'])
   handleKeyboardEventUp(event: KeyboardEvent) { 
     
-    if (this.queryFieldHasFocus == false) {
+    if (this.queryFieldHasFocus == false && this.answerFieldHasFocus == false) {
       if (event.key === 'q') {
         this.inputfield.nativeElement.select();
       }
@@ -356,14 +356,12 @@ export class QueryComponent implements AfterViewInit {
         this.resetQuery();
       }
       else if (event.key === 'Space' || event.key === ' ') {
-        if (this.answerFieldHasFocus == false) {
           console.log('togglet fullimage ' + this.showFullImage);
           if (!(this.fullImageIndex >= 0 && this.resultURLs.length)) {
             this.fullImageIndex = 0;
           }
           this.fullImage = this.resultURLs[this.fullImageIndex];
           this.showFullImage = !this.showFullImage;
-        }
       }
       else if (event.key === 'Escape') {
         this.closeVideoPreview();
@@ -374,7 +372,7 @@ export class QueryComponent implements AfterViewInit {
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) { 
-    if (this.queryFieldHasFocus == false) {
+    if (this.queryFieldHasFocus == false && this.answerFieldHasFocus == false) {
       if (event.key == 'ArrowDown') {
         if (this.showFullImage) {
           if (this.fullImageIndex < this.resultURLs.length - LocalConfig.config_IMAGES_PER_ROW) {
