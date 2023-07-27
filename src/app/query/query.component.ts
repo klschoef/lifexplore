@@ -56,6 +56,7 @@ export class QueryComponent implements AfterViewInit {
   queryresult_frame: Array<string> = [];
   queryresult_videopreview: Array<string> = [];
   queryTimestamp: number = 0;
+  queryType: string = '';
   metadata: any;
   
   public statusTaskInfoText: string = ""; //property binding
@@ -573,9 +574,13 @@ export class QueryComponent implements AfterViewInit {
       };
       this.previousQuery = msg;
 
+      this.queryTimestamp = getTimestampInSeconds();
+
       if (this.nodeService.connectionState === WSServerStatus.CONNECTED) {
+        this.queryType = 'database/joint';
         this.sendToNodeServer(msg);
       } else {
+        this.queryType = 'CLIP';
         this.sendToCLIPServer(msg);
       }
       this.saveToHistory(msg);
@@ -608,6 +613,9 @@ export class QueryComponent implements AfterViewInit {
       };
       this.previousQuery = msg;
 
+      this.queryTimestamp = getTimestampInSeconds();
+      this.queryType = 'CLIP similarity';
+
       this.sendToCLIPServer(msg);
       this.saveToHistory(msg);
 
@@ -635,6 +643,9 @@ export class QueryComponent implements AfterViewInit {
         queryMode: this.queryMode
       };
       this.previousQuery = msg;
+
+      this.queryTimestamp = getTimestampInSeconds();
+      this.queryType = 'CLIP file-similarity';
 
       this.nodeServerInfo = 'processing similarity query, please wait...please also note that the query input field does not work for this search/tab, unfortunately.';
       this.sendToCLIPServer(msg);
@@ -675,6 +686,9 @@ export class QueryComponent implements AfterViewInit {
         this.queryinput = '';
       }
 
+      this.queryTimestamp = getTimestampInSeconds();
+      this.queryType = 'history';
+
       //this.sendToCLIPServer(msg);
       //this.saveToHistory(msg);
       
@@ -700,6 +714,9 @@ export class QueryComponent implements AfterViewInit {
         this.queryinput = msg.query;
         this.selectedPage = msg.selectedpage;
       }
+
+      this.queryTimestamp = getTimestampInSeconds();
+      this.queryType = 'history last';
 
       this.sendToCLIPServer(msg);
     }
@@ -742,7 +759,6 @@ export class QueryComponent implements AfterViewInit {
       content: msg
     };
     this.clipService.messages.next(message);
-    this.queryTimestamp = getTimestampInSeconds();
   }
 
   sendToNodeServer(msg:any) {
@@ -796,6 +812,7 @@ export class QueryComponent implements AfterViewInit {
     this.queryresult_frame = [];
     this.queryresult_videopreview = [];
     this.queryTimestamp = 0;
+    this.queryType = '';
     this.vbsService.queryEvents = []
     this.vbsService.resultLog = undefined
   }
@@ -898,8 +915,8 @@ export class QueryComponent implements AfterViewInit {
     //create and send log
     let log : QueryResultLog = {
       timestamp: this.queryTimestamp,
-      sortType: 'rankingModel',
-      resultSetAvailability: this.resultsPerPage.toString(), //top-k, for me: all return items 
+      sortType: 'rankingModel @ ' + this.queryType,
+      resultSetAvailability: '' + Math.min(this.resultsPerPage, qresults.totalresults), //top-k, for me: all return items 
       results: logResults,
       events: this.vbsService.queryEvents
     }
