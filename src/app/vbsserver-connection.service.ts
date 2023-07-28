@@ -24,6 +24,33 @@ import { catchError, Observable, of, tap } from 'rxjs';
 import { AppComponent } from './app.component';
 import { QueryComponent } from './query/query.component';
 
+export enum GUIActionType {
+  TEXTQUERY = 'TEXTQUERY',
+  SIMILARITY = 'SIMILARITY',
+  FILESIMILARITY = 'FILESIMILARITY',
+  HISTORYQUERY = 'HISTORYQUERY', 
+  INSPECTFULLIMAGE = 'INSPECTFULLIMAGE',
+  HIDEFULLIMAGE = 'HIDEFULLIMAGE',
+  NEXTPAGE = 'NEXTPAGE',
+  PREVPAGE = 'PREVPAGE',
+  SHOWHELP = 'SHOWHELP',
+  RESETQUERY = 'RESETQUERY',
+  SUBMIT = 'SUBMIT',
+  SUBMITANSWER = 'SUBMITANSWER', 
+  CLEARQUERY = 'CLEARQUERY'
+}
+
+export interface GUIAction { 
+  timestamp: number;
+  actionType: GUIActionType;
+  page?: string;
+  info?: string; 
+  item?: number; 
+  results?: Array<string>;
+}
+
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -36,7 +63,8 @@ export class VBSServerConnectionService {
   serverRunIDs: Array<string> = [];
 
   queryEvents: Array<QueryEvent> = [];
-  resultLog: QueryResultLog | undefined;
+  resultLog: Array<QueryResultLog>  = [];
+  interactionLog: Array<GUIAction> = [];
 
   constructor(
     private userService: UserService,
@@ -49,9 +77,9 @@ export class VBSServerConnectionService {
   }
 
   submitLog() {
-    if (this.resultLog && this.queryEvents) {
-      this.resultLog.events = this.queryEvents;
-      this.logService.postApiV1LogResult(this.sessionId!, this.resultLog).pipe(
+    if (this.resultLog.length > 0 && this.queryEvents.length > 0) {
+      this.resultLog[this.resultLog.length-1].events = this.queryEvents;
+      this.logService.postApiV1LogResult(this.sessionId!, this.resultLog[this.resultLog.length-1]).pipe(
             tap(o => {
               console.log(`Successfully submitted result log to DRES!`);
             }),
@@ -62,17 +90,31 @@ export class VBSServerConnectionService {
       }
   }
 
-  saveLogLocally() {
-    if (this.resultLog) {
-      let log = localStorage.getItem('LSCQueryLog');
-      if (log) {
-        let loga = JSON.parse(log);
-        loga.push(this.resultLog)
-        localStorage.setItem('LSCQueryLog',JSON.stringify(loga));
-      } else {
-        let loga  = [this.resultLog];
-        localStorage.setItem('LSCQueryLog',JSON.stringify(loga));
-      }
+  addToLogInLocalStorage(name:string, myLog:any) {
+    let log = localStorage.getItem(name);
+    if (log) {
+      let loga = JSON.parse(log);
+      loga.push(myLog);
+      localStorage.setItem(name,JSON.stringify(loga));
+    } else {
+      let loga  = [myLog];
+      localStorage.setItem(name,JSON.stringify(loga));
+    }
+  }
+
+  saveLogLocallyAndClear() {
+    if (this.resultLog.length > 0) {
+      this.addToLogInLocalStorage('LSCResultLog', this.resultLog);
+      this.resultLog = [];
+    }
+    if (this.queryEvents.length > 0) {
+      this.addToLogInLocalStorage('LSCQueryEvents', this.queryEvents);
+      this.queryEvents = [];
+    }
+    if (this.interactionLog.length > 0) {
+      console.log(`interactionlog has ${this.interactionLog.length} entries`);
+      this.addToLogInLocalStorage('LSCInteractionLog', this.interactionLog);
+      this.interactionLog = [];
     }
   }
 

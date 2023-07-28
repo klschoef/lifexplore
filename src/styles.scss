@@ -145,10 +145,18 @@ div.shotlist {
     background-color: rgba(255,255,255,0.4);
 }
 
-.resultaction, .resultactionL {
-    background-color: rgba(255,255,255,0.4);
-    color: black;
-    padding: 2px;
+.resultaction {
+    background-color: darkblue;
+    color: white;
+    padding: 4px;
+    border: 1px darkgray solid;
+}
+
+.resultactionL {
+    background-color: darkblue;
+    color: white;
+    padding: 6px;
+    border: 2px darkgray solid;
 }
 
 .submitbutton, .submitbuttonL {

@@ -1,13 +1,13 @@
 
 <div class="queryarea">
-    <a routerLink="/query" (click)="reloadComponent()"><img class="logo" src="assets/lifeXplore_.png"></a>
+    <a routerLink="/query" (click)="resetQuery()"><img class="logo" src="assets/lifeXplore_.png"></a>
     <select [(ngModel)]="queryMode" (change)="resetPageAndPerformQuery()">
       <option *ngFor="let d of queryModes" [ngValue]="d.id">{{d.name}}</option>
     </select> 
     <input type="text" id="queryinput" name="queryinput" ngModel #inputfield [(ngModel)]="queryinput" (keyup.enter)="performNewTextQuery()" (focus)="onQueryInputFocus()" (blur)="onQueryInputBlur()" autofocus/>
     <button class="searchButton" (click)="performNewTextQuery()">Search</button>
     <button (click)="clearQuery()">x</button>
-    <button class="resetButton" (click)="resetQuery()">x</button>
+    <button class="resetButton" (click)="resetQuery()">Reset</button>
     <button class="historyToggle" (click)="toggleHistorySelect()">History</button>
     <button class="helpButton" (click)="showHelp()">Help</button>
     <div class="historySelect" #historyDiv>
