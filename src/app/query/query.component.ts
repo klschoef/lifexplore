@@ -840,6 +840,36 @@ export class QueryComponent implements AfterViewInit {
     }
   }
 
+  performConceptsQuery() {
+    if (this.nodeService.connectionState === WSServerStatus.CONNECTED) {
+      
+      console.log('qc: query concepts');
+      let msg = { 
+        type: "concepts"
+      };
+
+      this.sendToNodeServer(msg);
+      
+    } else {
+      console.log("nodeService not running");
+    }
+  }
+
+  performPlacesQuery() {
+    if (this.nodeService.connectionState === WSServerStatus.CONNECTED) {
+      
+      console.log('qc: query places');
+      let msg = { 
+        type: "places"
+      };
+
+      this.sendToNodeServer(msg);
+      
+    } else {
+      console.log("nodeService not running");
+    }
+  }
+
   performMetaDataQuery() {
     if (this.nodeService.connectionState === WSServerStatus.CONNECTED) {
       
