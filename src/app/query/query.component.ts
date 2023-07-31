@@ -166,6 +166,8 @@ export class QueryComponent implements AfterViewInit {
             } else if (m.type === 'info'){
               console.log(m.message);
               this.nodeServerInfo = m.message;
+            } else if (m.type === 'objects') {
+              console.log(m);
             }
           } else {
             //this.handleNodeMessage(msg);
@@ -823,6 +825,21 @@ export class QueryComponent implements AfterViewInit {
     }
   }
 
+  performObjectsQuery() {
+    if (this.nodeService.connectionState === WSServerStatus.CONNECTED) {
+      
+      console.log('qc: query objects');
+      let msg = { 
+        type: "objects"
+      };
+
+      this.sendToNodeServer(msg);
+      
+    } else {
+      console.log("nodeService not running");
+    }
+  }
+
   performMetaDataQuery() {
     if (this.nodeService.connectionState === WSServerStatus.CONNECTED) {
       
@@ -831,10 +848,8 @@ export class QueryComponent implements AfterViewInit {
         type: "metadataquery", 
         imagepath: this.queryresults[this.fullImageIndex],
       };
-
-      if (this.nodeService.connectionState === WSServerStatus.CONNECTED) {
-        this.sendToNodeServer(msg);
-      }
+      
+      this.sendToNodeServer(msg);
       
     } else {
       console.log("nodeService not running");
