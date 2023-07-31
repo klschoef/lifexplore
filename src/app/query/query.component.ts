@@ -621,6 +621,7 @@ export class QueryComponent implements AfterViewInit {
       this.queryBaseURL = this.getBaseURL();
       let msg = { 
         type: "textquery", 
+        clientId: "direct", 
         query: this.queryinput,
         maxresults: this.maxresults,
         resultsperpage: this.resultsPerPage, 
@@ -670,6 +671,7 @@ export class QueryComponent implements AfterViewInit {
       this.queryBaseURL = this.getBaseURL();
       let msg = { 
         type: "similarityquery", 
+        clientId: "direct", 
         query: serveridx.toString(),
         maxresults: this.maxresults,
         resultsperpage: this.resultsPerPage, 
@@ -709,7 +711,8 @@ export class QueryComponent implements AfterViewInit {
 
       console.log('file-similarity-query for ', keyframe);
       let msg = { 
-        type: "file-similarityquery", 
+        type: "file-similarityquery",
+        clientId: "direct",  
         query: keyframe,
         pathprefix: pathprefix, 
         maxresults: this.maxresults,
