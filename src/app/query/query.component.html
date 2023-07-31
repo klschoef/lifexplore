@@ -133,10 +133,14 @@
   <h4>Database Query</h4>
   Use any of the following parameters to (additionally) query the database and filter content:
   <ul>
+    <li><b>-y</b>&nbsp; <i>year (4 digits; e.g., 2023)</i></li>
+    <li><b>-m</b>&nbsp; <i>month (2 digits; e.g., 04)</i></li>
+    <li><b>-d</b>&nbsp; <i>day (2 digits; e.g., 23)</i></li>
+    <li><b>-wd</b>&nbsp; <i>Weekday (e.g., sunday)</i></li>
+    <li><b>-t</b>&nbsp; <i>text(s)</i></li>
     <li><b>-o</b>&nbsp; <i>object(s)</i> (COCO)</li>
     <li><b>-c</b>&nbsp; <i>concepts(s)</i> (ImageNet 1K)</li>
     <li><b>-p</b>&nbsp; <i>places(s)</i> (Places365)</li>
-    <li><b>-t</b>&nbsp; <i>text(s)</i></li>
     <li><b>-fn</b>&nbsp; <i>filename (or a part of it)</i></li>
   </ul>
 
@@ -177,6 +181,9 @@
   Node server: <button class="{{nodeService.connectionState}}" (click)="checkNodeConnection()">{{nodeService.connectionState}}</button>
   VBS Server: <button class="{{vbsService.vbsServerState}}" (click)="checkVBSServerConnection()">{{vbsService.vbsServerState}}</button>
 -->
+
+  &nbsp; 
+  <span>User: {{vbsService.activeUsername}}</span>
   
   <span class="spacer2">&nbsp;</span>
 
@@ -195,6 +202,7 @@
   <span>{{statusTaskInfoText}}</span>
   &nbsp;
   <span class="remainingTimeInfo">{{statusTaskRemainingTime}}</span>
+  
 
 </div>
 

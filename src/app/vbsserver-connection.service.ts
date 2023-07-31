@@ -66,6 +66,8 @@ export class VBSServerConnectionService {
   resultLog: Array<QueryResultLog>  = [];
   interactionLog: Array<GUIAction> = [];
 
+  activeUsername: string = '';
+
   constructor(
     private userService: UserService,
     private runInfoService: ClientRunInfoService,
@@ -73,6 +75,11 @@ export class VBSServerConnectionService {
     private logService: LogService
   ) {
     this.println(`VBSServerConnectionService created`);
+    if (localStorage.getItem("LSCusername")) {
+      this.activeUsername = localStorage.getItem("LSCusername")!;
+    } else {
+      this.activeUsername = GlobalConstants.configUSER;
+    }
     this.connect();
   }
 
@@ -122,14 +129,16 @@ export class VBSServerConnectionService {
 
       // === Handshake / Login ===
       this.userService.postApiV1Login({
-        username: GlobalConstants.configUSER,
-        password: GlobalConstants.configPASS
+        username: localStorage.getItem("LSCusername") ? localStorage.getItem("LSCusername")! : GlobalConstants.configUSER,
+        password: localStorage.getItem("LSCpassword") ? localStorage.getItem("LSCusername")! : GlobalConstants.configPASS
       } as LoginRequest)
       .subscribe((login: UserDetails) => {
           this.println('Login successful\n' +
           `user: ${login.username}\n` +
           `role: ${login.role}` +
           `session: ${login.sessionId}`);
+
+          this.activeUsername = login.username + " (logged in)";
 
           // Successful login
           this.vbsServerState = WSServerStatus.CONNECTED;
