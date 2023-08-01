@@ -1,0 +1,19 @@
+
+<div class="queryarea">
+    <a routerLink="/query"><img class="logo" src="assets/lifeXplore_.png"></a>
+</div>
+
+
+
+<div class="queryresult" style="margin:10px">
+    <ng-container *ngFor="let e of this.entities">
+        <h1><a [routerLink]="getBackLink(e.name)" target="_blank">{{ e.name }}</a></h1>
+        <ng-container *ngFor="let im of e.examples">
+            <a [routerLink]="['/query', {filename: im}]" target="_blank">
+                <img [src]="this.getBaseURL() + im.substring(0,6) + '/' + im.substring(6,8) + '/' + im" width="140" height="104">
+            </a>
+        </ng-container>
+         {{e.count}} items 
+    </ng-container>
+    
+</div>

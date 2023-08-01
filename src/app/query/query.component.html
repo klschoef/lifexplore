@@ -81,28 +81,28 @@
     <span *ngIf="showFullImage && metadata?.local_time" class="imageinfo"><b>Local Time:</b>&nbsp;{{this.metadata.local_time}}</span>
     <span *ngIf="showFullImage && metadata?.weekday" class="imageinfo"><b>Weekday:</b>&nbsp;{{this.metadata.weekday}}</span>
     <span *ngIf="showFullImage && metadata?.heart_rate" class="imageinfo"><b>Heart Rate:</b>&nbsp;{{this.metadata.heart_rate}}</span>
-    <span *ngIf="showFullImage && metadata?.objects" class="imageinfo"><b>Objects:</b>&nbsp;
+    <span *ngIf="showFullImage && metadata?.objects" class="imageinfo"><b><a [routerLink]="['/info/objects']">Objects</a>:</b>&nbsp;
       <span *ngFor="let obj of this.metadata.objects">
         {{obj.object}} 
         <a class="addButton" (click)="addToQuery('o',obj.object)">+</a>
         <a class="delButton" (click)="delFromQuery('o',obj.object)">-</a>
       </span>
     </span>
-    <span *ngIf="showFullImage && metadata?.concepts" class="imageinfo"><b>Concepts:</b>&nbsp;
+    <span *ngIf="showFullImage && metadata?.concepts" class="imageinfo"><b><a [routerLink]="['/info/concepts']">Concepts</a>:</b>&nbsp;
       <span *ngFor="let obj of this.metadata.concepts">
         {{obj.concept}} 
         <a class="addButton" (click)="addToQuery('c',obj.concept)">+</a>
         <a class="delButton" (click)="delFromQuery('c',obj.concept)">-</a>
       </span>
     </span>
-    <span *ngIf="showFullImage && metadata?.places" class="imageinfo"><b>Places:</b>&nbsp;
+    <span *ngIf="showFullImage && metadata?.places" class="imageinfo"><b><a [routerLink]="['/info/places']">Places</a>:</b>&nbsp;
       <span *ngFor="let obj of this.metadata.places">
         {{obj.place}} 
         <a class="addButton" (click)="addToQuery('p',obj.place)">+</a>
         <a class="delButton" (click)="delFromQuery('p',obj.place)">-</a>
       </span>
     </span>
-    <span *ngIf="showFullImage && metadata?.texts" class="imageinfo"><b>Texts:</b>&nbsp;
+    <span *ngIf="showFullImage && metadata?.texts" class="imageinfo"><b><a [routerLink]="['/info/texts']">Texts</a>:</b>&nbsp;
       <span *ngFor="let obj of this.metadata.texts">
         {{obj.text}} 
         <a class="addButton" (click)="addToQuery('t',obj.text)">+</a>
@@ -137,10 +137,10 @@
     <li><b>-m</b>&nbsp; <i>month (2 digits; e.g., 04)</i></li>
     <li><b>-d</b>&nbsp; <i>day (2 digits; e.g., 23)</i></li>
     <li><b>-wd</b>&nbsp; <i>Weekday (e.g., sunday)</i></li>
-    <li><b>-t</b>&nbsp; <i>recognized texts (e.g., volvo)</i></li>
-    <li><b>-o</b>&nbsp; <i>recognized objects</i> (COCO dataset; e.g., bottle)</li><button (click)="performObjectsQuery()">info</button>
-    <li><b>-c</b>&nbsp; <i>recognized concepts</i> (ImageNet 1K dataset; e.g., dining_table)</li><button (click)="performConceptsQuery()">info</button>
-    <li><b>-p</b>&nbsp; <i>recognized places</i> (Places365 dataset; e.g., shopping_mall)</li><button (click)="performPlacesQuery()">info</button>
+    <li><b>-t</b>&nbsp; <i>recognized <a [routerLink]="['/info/texts']">texts</a> (e.g., volvo)</i></li>
+    <li><b>-o</b>&nbsp; <i>recognized <a [routerLink]="['/info/objects']">objects</a></i> (COCO dataset; e.g., bottle)</li>
+    <li><b>-c</b>&nbsp; <i>recognized <a [routerLink]="['/info/concepts']">concepts</a></i> (ImageNet 1K dataset; e.g., dining_table)</li>
+    <li><b>-p</b>&nbsp; <i>recognized <a [routerLink]="['/info/places']">places</a></i> (Places365 dataset; e.g., shopping_mall)</li>
     <li><b>-fn</b>&nbsp; <i>filename (or a part of it)</i></li>
   </ul>
 

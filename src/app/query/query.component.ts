@@ -39,8 +39,6 @@ export class QueryComponent implements AfterViewInit {
   
   localConfig = LocalConfig;
 
-  paramFilename: string | undefined;
-
   file_sim_keyframe: string | undefined
   file_sim_pathPrefix: string | undefined
   
@@ -112,8 +110,36 @@ export class QueryComponent implements AfterViewInit {
     //read parameters
     this.route.params.subscribe(params => {
       if ('filename' in params) {
-        this.paramFilename = params['filename'];
-        this.queryinput = '-fn ' + this.paramFilename;
+        let paramFilename = params['filename'];
+        this.queryinput = '-fn ' + paramFilename;
+        setTimeout(() => {
+          this.performQuery();
+        }, 250);
+      }
+      else if ('objects' in params) {
+        let paramObject = params['objects'];
+        this.queryinput = '-o ' + paramObject;
+        setTimeout(() => {
+          this.performQuery();
+        }, 250);
+      }
+      else if ('places' in params) {
+        let paramPlace = params['places'];
+        this.queryinput = '-p ' + paramPlace;
+        setTimeout(() => {
+          this.performQuery();
+        }, 250);
+      }
+      else if ('concepts' in params) {
+        let paramConcept = params['concepts'];
+        this.queryinput = '-c ' + paramConcept;
+        setTimeout(() => {
+          this.performQuery();
+        }, 250);
+      }
+      else if ('texts' in params) {
+        let paramText = params['texts'];
+        this.queryinput = '-t ' + paramText;
         setTimeout(() => {
           this.performQuery();
         }, 250);
@@ -822,51 +848,6 @@ export class QueryComponent implements AfterViewInit {
       this.queryType = 'history last';
 
       this.sendToCLIPServer(msg);
-    }
-  }
-
-  performObjectsQuery() {
-    if (this.nodeService.connectionState === WSServerStatus.CONNECTED) {
-      
-      console.log('qc: query objects');
-      let msg = { 
-        type: "objects"
-      };
-
-      this.sendToNodeServer(msg);
-      
-    } else {
-      console.log("nodeService not running");
-    }
-  }
-
-  performConceptsQuery() {
-    if (this.nodeService.connectionState === WSServerStatus.CONNECTED) {
-      
-      console.log('qc: query concepts');
-      let msg = { 
-        type: "concepts"
-      };
-
-      this.sendToNodeServer(msg);
-      
-    } else {
-      console.log("nodeService not running");
-    }
-  }
-
-  performPlacesQuery() {
-    if (this.nodeService.connectionState === WSServerStatus.CONNECTED) {
-      
-      console.log('qc: query places');
-      let msg = { 
-        type: "places"
-      };
-
-      this.sendToNodeServer(msg);
-      
-    } else {
-      console.log("nodeService not running");
     }
   }
 
