@@ -1051,7 +1051,7 @@ export class QueryComponent implements AfterViewInit {
 
     let resultnum = (parseInt(this.selectedPage) - 1) * this.resultsPerPage + 1;
     this.querydataset = qresults.dataset;
-    let keyframeBase = this.getBaseURL();
+    let keyframeBase = this.getBaseURL(); //TODO + 'thumbs/';
     
     let logResults:Array<QueryResult> = [];
     //for (var e of qresults.results) {

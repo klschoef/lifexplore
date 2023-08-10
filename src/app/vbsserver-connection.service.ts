@@ -130,7 +130,7 @@ export class VBSServerConnectionService {
       // === Handshake / Login ===
       this.userService.postApiV1Login({
         username: localStorage.getItem("LSCusername") ? localStorage.getItem("LSCusername")! : GlobalConstants.configUSER,
-        password: localStorage.getItem("LSCpassword") ? localStorage.getItem("LSCusername")! : GlobalConstants.configPASS
+        password: localStorage.getItem("LSCpassword") ? localStorage.getItem("LSCpassword")! : GlobalConstants.configPASS
       } as LoginRequest)
       .subscribe((login: UserDetails) => {
           this.println('Login successful\n' +
