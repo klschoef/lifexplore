@@ -461,6 +461,7 @@ export class QueryComponent implements AfterViewInit {
             this.performMetaDataQuery();
             this.logFullImageDisplay(this.fullImageIndex, this.fullImage);
           }
+          event.preventDefault(); 
         }
       }
       else if (event.key == 'ArrowUp') {
@@ -471,6 +472,7 @@ export class QueryComponent implements AfterViewInit {
             this.performMetaDataQuery();
             this.logFullImageDisplay(this.fullImageIndex, this.fullImage);
           }
+          event.preventDefault(); 
         }
       }
       else if (event.key == 'ArrowRight') {
@@ -484,6 +486,7 @@ export class QueryComponent implements AfterViewInit {
           this.hideFullImage();
           this.nextPage();               
         }
+        event.preventDefault(); 
       }
       else if (event.key == 'Tab') {
         this.hideFullImage();
@@ -499,6 +502,7 @@ export class QueryComponent implements AfterViewInit {
           this.hideFullImage();
           this.prevPage();
         }
+        event.preventDefault(); 
       } else if (event.key == "s" || event.key == "S") {
         if (this.showFullImage) {
           this.submitResult(this.fullImageIndex);
