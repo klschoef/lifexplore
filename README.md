@@ -2,6 +2,32 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.3.
 
+## Requirements
+- Node.js
+- npm
+- git
+
+## Setup
+1. Clone the repository to your local machine
+```
+git clone https://github.com/klschoef/lifexplore
+```
+2. Install the required dependencies
+```
+npm install
+```
+3. Copy the 'src/app/local-config-example.ts' file to 'src/app/local-config.ts' and adjust the values to your needs.
+4. Install the openapi-generator-cli and the ng-openapi-gen package
+```
+npm install @openapitools/openapi-generator-cli -g
+npm install -g ng-openapi-gen
+```
+5. Generate the TypeScript files with these commands:
+```
+npm run-script gen-dres-client
+npm run-script gen-dres-dev-client
+```
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
