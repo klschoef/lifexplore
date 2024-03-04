@@ -10,7 +10,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 ## Setup
 1. Clone the repository to your local machine
 ```
-git clone https://github.com/klschoef/lifexplore
+git clone git@github.com:klschoef/lifexplore.git
 ```
 2. Install the required dependencies
 ```
