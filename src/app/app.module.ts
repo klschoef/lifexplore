@@ -19,6 +19,10 @@ import { VBSServerConnectionService } from './vbsserver-connection.service';
 import { QueryComponent } from './query/query.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { InfoComponent } from './info/info.component';
+import { QueryHelpDialogComponent } from './features/query-help-dialog/query-help-dialog.component';
+import {
+  ExplDialogsComponentsModule
+} from './features/expl-dialogs/expl-dialogs-components/expl-dialogs-components.module';
 
 
 @NgModule({
@@ -26,7 +30,8 @@ import { InfoComponent } from './info/info.component';
     AppComponent,
     QueryComponent,
     CalendarComponent,
-    InfoComponent
+    InfoComponent,
+    QueryHelpDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -39,10 +44,11 @@ import { InfoComponent } from './info/info.component';
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    BrowserAnimationsModule, 
+    BrowserAnimationsModule,
     MatIconModule,
     MatSliderModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    ExplDialogsComponentsModule
   ],
   providers: [VBSServerConnectionService],
   bootstrap: [AppComponent]

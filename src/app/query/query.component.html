@@ -3,7 +3,7 @@
     <a routerLink="/query" (click)="resetQuery()"><img class="logo" src="assets/lifeXplore_.png"></a>
     <select [(ngModel)]="queryMode" (change)="resetPageAndPerformQuery()">
       <option *ngFor="let d of queryModes" [ngValue]="d.id">{{d.name}}</option>
-    </select> 
+    </select>
     <input type="text" id="queryinput" name="queryinput" ngModel #inputfield [(ngModel)]="queryinput" (keyup.enter)="performNewTextQuery()" (focus)="onQueryInputFocus()" (blur)="onQueryInputBlur()" autofocus/>
     <button class="searchButton" (click)="performNewTextQuery()">Search</button>
     <button (click)="clearQuery()">x</button>
@@ -17,9 +17,9 @@
       </select>
     </div>
 </div>
-  
+
 <div class="queryarea">
-  Pages: 
+  Pages:
   <mat-button-toggle-group [(ngModel)]="selectedPage">
     <mat-button-toggle
       *ngFor="let p of pages"
@@ -31,18 +31,18 @@
       {{ p }}
     </mat-button-toggle>
   </mat-button-toggle-group>
-  
+
   <span *ngIf="this.totalReturnedResults > 0">&nbsp; ({{this.totalReturnedResults}} results)</span>
   <span *ngIf="this.totalReturnedResults > this.MAX_RESULTS_TO_DISPLAY">...only {{this.MAX_RESULTS_TO_DISPLAY}} are shown</span>
 </div>
-    
+
 <br/>
 
 <div class="videopreview" #videopreview>
   <img [src]="videopreviewimage" class="videopreviewimage" width="2200">
   <button (click)="closeVideoPreview()">Close</button>
 </div>
-  
+
 <!-- Result Images -->
 <div (mouseover)="showButtons = i" (mouseleave)="showButtons = -1" class="queryresult" *ngFor="let item of resultURLs | slice:0:MAX_RESULTS_TO_DISPLAY; let i = index">
   <!--<img src="{{item}}" width="320" height="180" (click)="displayFullImage(item, i)" [ngClass]="{'blueborder': this.showFullImage && this.fullImageIndex == i}">-->
@@ -57,7 +57,7 @@
   </div>
   <div class="leftbottomcorner">
     <!--<button *ngIf="showButtons === i" (click)="showDaySummary(i)" class="resultaction">Day</button>-->
-    
+
     <!--<button *ngIf="showButtons === i" (click)="performFileSimilarityQuery(queryresults[i],'')" class="resultaction">Similar</button>-->
     <a *ngIf="showButtons === i" [routerLink]="['/filesimilarity',queryresults[i]]" target="_new" class="resultaction">Similar</a>
   </div>
@@ -83,28 +83,28 @@
     <span *ngIf="showFullImage && metadata?.heart_rate" class="imageinfo"><b>Heart Rate:</b>&nbsp;{{this.metadata.heart_rate}}</span>
     <span *ngIf="showFullImage && metadata?.objects" class="imageinfo"><b><a [routerLink]="['/info/objects']">Objects</a>:</b>&nbsp;
       <span *ngFor="let obj of this.metadata.objects">
-        {{obj.object}} 
+        {{obj.object}}
         <a class="addButton" (click)="addToQuery('o',obj.object)">+</a>
         <a class="delButton" (click)="delFromQuery('o',obj.object)">-</a>
       </span>
     </span>
     <span *ngIf="showFullImage && metadata?.concepts" class="imageinfo"><b><a [routerLink]="['/info/concepts']">Concepts</a>:</b>&nbsp;
       <span *ngFor="let obj of this.metadata.concepts">
-        {{obj.concept}} 
+        {{obj.concept}}
         <a class="addButton" (click)="addToQuery('c',obj.concept)">+</a>
         <a class="delButton" (click)="delFromQuery('c',obj.concept)">-</a>
       </span>
     </span>
     <span *ngIf="showFullImage && metadata?.places" class="imageinfo"><b><a [routerLink]="['/info/places']">Places</a>:</b>&nbsp;
       <span *ngFor="let obj of this.metadata.places">
-        {{obj.place}} 
+        {{obj.place}}
         <a class="addButton" (click)="addToQuery('p',obj.place)">+</a>
         <a class="delButton" (click)="delFromQuery('p',obj.place)">-</a>
       </span>
     </span>
     <span *ngIf="showFullImage && metadata?.texts" class="imageinfo"><b><a [routerLink]="['/info/texts']">Texts</a>:</b>&nbsp;
       <span *ngFor="let obj of this.metadata.texts">
-        {{obj.text}} 
+        {{obj.text}}
         <a class="addButton" (click)="addToQuery('t',obj.text)">+</a>
         <a class="delButton" (click)="delFromQuery('t',obj.text)">+</a>
       </span>
@@ -121,74 +121,22 @@
   </div>
 </div>
 
-<div *ngIf="nodeServerInfo !== undefined" class="full-message">
+<expl-dialog *ngIf="nodeServerInfo !== undefined" title="Info" (clickOnClose)="nodeServerInfo = undefined">
   {{nodeServerInfo}}
-  <button (click)="nodeServerInfo = undefined">Close</button>
-</div>
+</expl-dialog>
 
-<div *ngIf="showHelpActive === true" class="full-help">
-  <h4>CLIP Query</h4>
-  Just enter any text to perform a CLIP query.
+<lx-query-help-dialog *ngIf="showHelpActive" (clickOnClose)="showHelpActive = false"></lx-query-help-dialog>
 
-  <h4>Database Query</h4>
-  Use any of the following parameters to (additionally) query the database and filter content:
-  <ul>
-    <li><b>-y</b>&nbsp; <i>year (4 digits; e.g., 2023)</i></li>
-    <li><b>-m</b>&nbsp; <i>month (2 digits; e.g., 04)</i></li>
-    <li><b>-d</b>&nbsp; <i>day (2 digits; e.g., 23)</i></li>
-    <li><b>-wd</b>&nbsp; <i>Weekday (e.g., sunday)</i></li>
-    <li><b>-t</b>&nbsp; <i>recognized <a [routerLink]="['/info/texts']">texts</a> (e.g., volvo)</i></li>
-    <li><b>-o</b>&nbsp; <i>recognized <a [routerLink]="['/info/objects']">objects</a></i> (COCO dataset; e.g., bottle)</li>
-    <li><b>-c</b>&nbsp; <i>recognized <a [routerLink]="['/info/concepts']">concepts</a></i> (ImageNet 1K dataset; e.g., dining_table)</li>
-    <li><b>-p</b>&nbsp; <i>recognized <a [routerLink]="['/info/places']">places</a></i> (Places365 dataset; e.g., shopping_mall)</li>
-    <li><b>-fn</b>&nbsp; <i>filename (or a part of it)</i></li>
-  </ul>
-
-  <h4>Result Limits</h4>
-  <ul>
-    <li>Use <b>All Images</b> to display all available images for a query.</li>
-    <li>Use <b>Less Duplicates</b> to filter out temporally consecutive images in the result set hat are very similar.</li>
-    <li>Use <b>Distinctive</b> to filter out temporally consecutive images in the result set that are similar.</li>
-    <li>Use <b>First Image/Day</b> to display only the first image of the day in the result set.</li>
-  </ul>
-
-  <h4>Thumbnail Actions</h4>
-  <ul>
-    <li>Click thumbnail (or press space) to open <b>full-screen</b> view.</li>
-    <li>Click <b>Date</b> to perform a <b>full day</b> (or <b>hour</b> or <b>minute</b>) query in a new tab.</li>
-    <li>Click <b>Similar</b> to perform a <b>similarity query</b> in a new tab.</li>
-    <li>Click <b>Submit</b> to send image to <b>DRES</b>.</li>
-  </ul>
-  
-  <h4>Keyboard Shortcuts</h4>
-  <ul>
-    <li><b>left/right/tab</b>: switch page</li>
-    <li><b>1-9</b>: goto page</li>
-    <li><b>e</b>: extend query</li>
-    <li><b>q</b>: edit query</li>
-    <li><b>x</b>: reset query</li>
-    <li><b>Space/Esc</b>: close full-screen view of image</li>
-    <li><b>s</b>: submit results in full-screen view of image</li>
-  </ul>
-  <button (click)="showHelpActive = false">Close</button>
-</div>
-
+<!-- TODO: outsource -->
 <div class="statusbar">
   <span class="{{clipService.connectionState}}">CLIP</span>
   <span class="{{nodeService.connectionState}}">Node</span>
   <span class="{{vbsService.vbsServerState}}">DRES</span>
-<!--
-  CLIP server: <button class="{{clipService.connectionState}}" (click)="checkCLIPConnection()">{{clipService.connectionState}}</button>
-  Node server: <button class="{{nodeService.connectionState}}" (click)="checkNodeConnection()">{{nodeService.connectionState}}</button>
-  VBS Server: <button class="{{vbsService.vbsServerState}}" (click)="checkVBSServerConnection()">{{vbsService.vbsServerState}}</button>
--->
-
-  &nbsp; 
   <span>User: {{vbsService.activeUsername}}</span>
-  
+
   <span class="spacer2">&nbsp;</span>
 
-  <span class="whiteColor">Topic Answer:</span> 
+  <span class="whiteColor">Topic Answer:</span>
   <input type="text" id="topicanswer" name="topicanswer" ngModel #inputfield [(ngModel)]="topicanswer" (keyup.enter)="sendTopicAnswer()" autofocus (focus)="onAnswerInputFocus()" (blur)="onAnswerInputBlur()" />
   <button class="topicanswerbutton" (click)="sendTopicAnswer()">Submit</button>
 
@@ -203,10 +151,9 @@
   <span>{{statusTaskInfoText}}</span>
   &nbsp;
   <span class="remainingTimeInfo">{{statusTaskRemainingTime}}</span>
-  
-
 </div>
 
+<!-- TODO: clarify what is the purpose of this span? -->
 <span class="non-flex-item">
   <br/>&nbsp;<br/>&nbsp;<br/>&nbsp;<br/>&nbsp;<br/>&nbsp;
   <br/>&nbsp;<br/>&nbsp;<br/>&nbsp;<br/>&nbsp;<br/>&nbsp;

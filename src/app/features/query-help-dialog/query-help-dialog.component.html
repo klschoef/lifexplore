@@ -1,0 +1,45 @@
+<expl-dialog title="Help" (clickOnClose)="clickOnClose.emit($event)">
+  <h4>CLIP Query</h4>
+  Just enter any text to perform a CLIP query.
+
+  <h4>Database Query</h4>
+  Use any of the following parameters to (additionally) query the database and filter content:
+  <ul>
+    <li><b>-y</b>&nbsp; <i>year (4 digits; e.g., 2023)</i></li>
+    <li><b>-m</b>&nbsp; <i>month (2 digits; e.g., 04)</i></li>
+    <li><b>-d</b>&nbsp; <i>day (2 digits; e.g., 23)</i></li>
+    <li><b>-wd</b>&nbsp; <i>Weekday (e.g., sunday)</i></li>
+    <li><b>-t</b>&nbsp; <i>recognized <a [routerLink]="['/info/texts']">texts</a> (e.g., volvo)</i></li>
+    <li><b>-o</b>&nbsp; <i>recognized <a [routerLink]="['/info/objects']">objects</a></i> (COCO dataset; e.g., bottle)</li>
+    <li><b>-c</b>&nbsp; <i>recognized <a [routerLink]="['/info/concepts']">concepts</a></i> (ImageNet 1K dataset; e.g., dining_table)</li>
+    <li><b>-p</b>&nbsp; <i>recognized <a [routerLink]="['/info/places']">places</a></i> (Places365 dataset; e.g., shopping_mall)</li>
+    <li><b>-fn</b>&nbsp; <i>filename (or a part of it)</i></li>
+  </ul>
+
+  <h4>Result Limits</h4>
+  <ul>
+    <li>Use <b>All Images</b> to display all available images for a query.</li>
+    <li>Use <b>Less Duplicates</b> to filter out temporally consecutive images in the result set hat are very similar.</li>
+    <li>Use <b>Distinctive</b> to filter out temporally consecutive images in the result set that are similar.</li>
+    <li>Use <b>First Image/Day</b> to display only the first image of the day in the result set.</li>
+  </ul>
+
+  <h4>Thumbnail Actions</h4>
+  <ul>
+    <li>Click thumbnail (or press space) to open <b>full-screen</b> view.</li>
+    <li>Click <b>Date</b> to perform a <b>full day</b> (or <b>hour</b> or <b>minute</b>) query in a new tab.</li>
+    <li>Click <b>Similar</b> to perform a <b>similarity query</b> in a new tab.</li>
+    <li>Click <b>Submit</b> to send image to <b>DRES</b>.</li>
+  </ul>
+
+  <h4>Keyboard Shortcuts</h4>
+  <ul>
+    <li><b>left/right/tab</b>: switch page</li>
+    <li><b>1-9</b>: goto page</li>
+    <li><b>e</b>: extend query</li>
+    <li><b>q</b>: edit query</li>
+    <li><b>x</b>: reset query</li>
+    <li><b>Space/Esc</b>: close full-screen view of image</li>
+    <li><b>s</b>: submit results in full-screen view of image</li>
+  </ul>
+</expl-dialog>

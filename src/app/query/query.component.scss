@@ -161,23 +161,12 @@
     font-size: 20pt;
   }
 
-  .full-help {
-    padding: 40px;
-    background-color: #ffffe0;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
-    font-size: 12pt;
-  }
-
 .dayLink {
     background-color: #6bb6ff;
     color: white;
     font-size: larger;
 }
- 
+
 .hourLink {
     background-color: #3498db;
     color: white;
@@ -189,4 +178,3 @@
     color: white;
     font-size: larger;
 }
-  
