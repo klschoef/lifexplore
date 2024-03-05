@@ -1,9 +1,9 @@
 import { ViewChild,ElementRef,Component, AfterViewInit } from '@angular/core';
 import { HostListener } from '@angular/core';
 import { GlobalConstants, WSServerStatus, WebSocketEvent } from './global-constants';
-import { VBSServerConnectionService } from './vbsserver-connection.service';
-import { NodeServerConnectionService } from './nodeserver-connection.service';
-import { ClipServerConnectionService } from './clipserver-connection.service';
+import { VBSServerConnectionService } from './main/services/vbsserver-connection.service';
+import { NodeServerConnectionService } from './main/services/nodeserver-connection.service';
+import { ClipServerConnectionService } from './main/services/clipserver-connection.service';
 import { Router } from '@angular/router';
 
 
@@ -16,14 +16,14 @@ import { Router } from '@angular/router';
 
 
 export class AppComponent implements AfterViewInit {
-    
+
   constructor(
     public vbsService: VBSServerConnectionService,
     public nodeService: NodeServerConnectionService,
     public clipService: ClipServerConnectionService,
     private router: Router) {
       this.nodeService.messages.subscribe(msg => {
-        if ('wsstatus' in msg) { 
+        if ('wsstatus' in msg) {
           console.log('node-notification: connected');
         } else {
           let result = msg.content;
@@ -33,7 +33,7 @@ export class AppComponent implements AfterViewInit {
       });
   }
 
-  
+
   ngOnInit() {
   }
 
@@ -86,7 +86,7 @@ export class AppComponent implements AfterViewInit {
       this.connectToVBSServer();
     } else if (this.vbsService.vbsServerState == WSServerStatus.CONNECTED) {
       this.disconnectFromVBSServer();
-    } 
+    }
   }
 
   /****************************************************************************

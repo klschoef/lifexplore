@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CalendarComponent } from './calendar/calendar.component';
+import { CalendarComponent } from './main/components/calendar/calendar.component';
 import { AppComponent } from './app.component';
-import { QueryComponent } from './query/query.component';
-import { InfoComponent } from './info/info.component';
+import { QueryComponent } from './main/components/query/query.component';
+import { InfoComponent } from './main/components/info/info.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'query', pathMatch: 'full'}, // component: AppComponent

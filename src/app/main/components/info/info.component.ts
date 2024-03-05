@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { NodeServerConnectionService } from '../nodeserver-connection.service';
+import { NodeServerConnectionService } from '../../services/nodeserver-connection.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GlobalConstants, WSServerStatus } from '../global-constants';
+import { GlobalConstants, WSServerStatus } from '../../../global-constants';
 
-export interface EntityInfo { 
-  name: string; 
-  count: number; 
+export interface EntityInfo {
+  name: string;
+  count: number;
   examples: Array<string>;
 }
 
@@ -55,12 +55,12 @@ export class InfoComponent {
 
     this.nodeService.messages.subscribe(msg => {
 
-      if ('wsstatus' in msg) { 
+      if ('wsstatus' in msg) {
         console.log('qc: node-notification: connected');
       } else {
         //let result = msg.content;
         console.log("qc: response from node-server: " + msg);
-      
+
         if ("type" in msg) {
           let m = JSON.parse(JSON.stringify(msg));
           if (m.type === 'objects' || m.type === 'places' || m.type === 'concepts' || m.type === 'texts') {
@@ -69,7 +69,7 @@ export class InfoComponent {
         } else {
           //this.handleNodeMessage(msg);
           this.handleQueryResponseMessage(msg);
-        } 
+        }
       }
     });
 
@@ -87,9 +87,9 @@ export class InfoComponent {
 
   handleQueryResponseMessage(qresults:any) {
     console.log(qresults);
-    
+
     //let keyframeBase = this.getBaseURL();
-    
+
     for (var e of qresults.results) {
       this.entities.push(e)
     }
@@ -105,14 +105,14 @@ export class InfoComponent {
 
   performObjectsQuery() {
     if (this.nodeService.connectionState === WSServerStatus.CONNECTED) {
-      
+
       console.log('qc: query objects');
-      let msg = { 
+      let msg = {
         type: "objects"
       };
 
       this.sendToNodeServer(msg);
-      
+
     } else {
       console.log("nodeService not running");
     }
@@ -120,14 +120,14 @@ export class InfoComponent {
 
   performConceptsQuery() {
     if (this.nodeService.connectionState === WSServerStatus.CONNECTED) {
-      
+
       console.log('qc: query concepts');
-      let msg = { 
+      let msg = {
         type: "concepts"
       };
 
       this.sendToNodeServer(msg);
-      
+
     } else {
       console.log("nodeService not running");
     }
@@ -135,14 +135,14 @@ export class InfoComponent {
 
   performPlacesQuery() {
     if (this.nodeService.connectionState === WSServerStatus.CONNECTED) {
-      
+
       console.log('qc: query places');
-      let msg = { 
+      let msg = {
         type: "places"
       };
 
       this.sendToNodeServer(msg);
-      
+
     } else {
       console.log("nodeService not running");
     }
@@ -150,14 +150,14 @@ export class InfoComponent {
 
   performTextsQuery() {
     if (this.nodeService.connectionState === WSServerStatus.CONNECTED) {
-      
+
       console.log('qc: query texts');
-      let msg = { 
+      let msg = {
         type: "texts"
       };
 
       this.sendToNodeServer(msg);
-      
+
     } else {
       console.log("nodeService not running");
     }

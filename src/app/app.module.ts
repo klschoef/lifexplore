@@ -14,15 +14,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { ApiModule,Configuration } from 'openapi/dres';
 import { GlobalConstants } from './global-constants';
 import { HttpClientModule } from '@angular/common/http';
-import { VBSServerConnectionService } from './vbsserver-connection.service';
+import { VBSServerConnectionService } from './main/services/vbsserver-connection.service';
 
-import { QueryComponent } from './query/query.component';
-import { CalendarComponent } from './calendar/calendar.component';
-import { InfoComponent } from './info/info.component';
-import { QueryHelpDialogComponent } from './features/query-help-dialog/query-help-dialog.component';
+import { QueryComponent } from './main/components/query/query.component';
+import { InfoComponent } from './main/components/info/info.component';
+import { QueryHelpDialogComponent } from './main/dialogs/query-help-dialog/query-help-dialog.component';
 import {
   ExplDialogsComponentsModule
 } from './features/expl-dialogs/expl-dialogs-components/expl-dialogs-components.module';
+import {CalendarComponent} from './main/components/calendar/calendar.component';
 
 
 @NgModule({

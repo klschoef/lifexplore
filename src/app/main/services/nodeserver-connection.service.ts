@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { WSServerStatus,GlobalConstants } from "./global-constants";
+import { WSServerStatus,GlobalConstants } from "../../global-constants";
 import { Observable, Observer } from 'rxjs';
 import { AnonymousSubject } from 'rxjs/internal/Subject';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-const URL = GlobalConstants.clipServerURL;
+
+const URL = GlobalConstants.nodeServerURL;
 let statusConnected = {'wsstatus':'connected'};
 
 export interface Message {
@@ -16,23 +17,24 @@ export interface Message {
 @Injectable({
   providedIn: 'root'
 })
-export class ClipServerConnectionService {
+export class NodeServerConnectionService {
 
   private subject: AnonymousSubject<MessageEvent> | undefined;
   public messages: Subject<Message>;
 
-  public connectionState: WSServerStatus = WSServerStatus.UNSET;
+  public connectionState: WSServerStatus = WSServerStatus.UNSET;;
 
   constructor() {
-    console.log('CLIPServerConnectionService created');
+    console.log('NodeServerConnectionService created');
     this.messages = this.connectToServer();
   }
 
   public connectToServer() {
+    console.log(`will connect to node server: ${URL}`)
     this.messages = <Subject<Message>>this.connectToWebsocket(URL).pipe(
     map(
           (response: MessageEvent): Message => {
-              //console.log(`CLIP-server: ${response.data}`);
+              //console.log(`node-server: ${response.data}`);
               let data = JSON.parse(response.data)
               return data;
           }
@@ -53,20 +55,20 @@ export class ClipServerConnectionService {
       let observable = new Observable((obs: Observer<MessageEvent>) => {
           ws.onopen = (e) => {
             this.connectionState = WSServerStatus.CONNECTED;
-            console.log("Connected to CLIP-server: " + url);
+            console.log("Connected to node-server: " + url);
             let msg = {'data': JSON.stringify(statusConnected)};
             obs.next(new MessageEvent('message', msg));
           }
           ws.onmessage = (msg) => {
-            console.log('message from CLIP-server');
+            console.log('message from node-server: ' + msg);
             obs.next(msg);
           };
           ws.onerror = (e) => {
-            console.log('Error with CLIP-server');
+            console.log('Error with node-server');
             obs.error(obs);
           };
           ws.onclose = (e) => {
-            console.log('Disconnected from CLIP-server');
+            console.log('Disconnected from node-server');
             this.connectionState = WSServerStatus.DISCONNECTED;
             this.subject = undefined
             return obs.complete.bind(obs);
@@ -79,7 +81,7 @@ export class ClipServerConnectionService {
           next: (data: Object) => {
               if (ws.readyState === WebSocket.OPEN) {
                   ws.send(JSON.stringify(data));
-                  console.log('Sent to CLIP-server: ', data);
+                  console.log('Sent to node-server: ', data);
               }
           }
       };

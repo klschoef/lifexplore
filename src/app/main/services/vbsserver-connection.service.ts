@@ -1,9 +1,9 @@
 import { Injectable, OnInit } from '@angular/core';
 
-import {UserService} from '../../openapi/dres/api/user.service';
-import {ClientRunInfoService} from '../../openapi/dres/api/clientRunInfo.service';
-import {SubmissionService} from '../../openapi/dres/api/submission.service';
-import {LogService} from '../../openapi/dres/api/log.service';
+import {UserService} from '../../../../openapi/dres/api/user.service';
+import {ClientRunInfoService} from '../../../../openapi/dres/api/clientRunInfo.service';
+import {SubmissionService} from '../../../../openapi/dres/api/submission.service';
+import {LogService} from '../../../../openapi/dres/api/log.service';
 
 import {
   ClientRunInfo,
@@ -16,19 +16,19 @@ import {
   SuccessfulSubmissionsStatus,
   SuccessStatus,
   UserDetails
-} from '../../openapi/dres/';
-import { GlobalConstants, WSServerStatus } from './global-constants';
+} from '../../../../openapi/dres';
+import { GlobalConstants, WSServerStatus } from '../../global-constants';
 import { NONE_TYPE } from '@angular/compiler';
 import { UrlSegment } from '@angular/router';
 import { catchError, Observable, of, tap } from 'rxjs';
-import { AppComponent } from './app.component';
-import { QueryComponent } from './query/query.component';
+import { AppComponent } from '../../app.component';
+import { QueryComponent } from '../components/query/query.component';
 
 export enum GUIActionType {
   TEXTQUERY = 'TEXTQUERY',
   SIMILARITY = 'SIMILARITY',
   FILESIMILARITY = 'FILESIMILARITY',
-  HISTORYQUERY = 'HISTORYQUERY', 
+  HISTORYQUERY = 'HISTORYQUERY',
   INSPECTFULLIMAGE = 'INSPECTFULLIMAGE',
   HIDEFULLIMAGE = 'HIDEFULLIMAGE',
   NEXTPAGE = 'NEXTPAGE',
@@ -36,16 +36,16 @@ export enum GUIActionType {
   SHOWHELP = 'SHOWHELP',
   RESETQUERY = 'RESETQUERY',
   SUBMIT = 'SUBMIT',
-  SUBMITANSWER = 'SUBMITANSWER', 
+  SUBMITANSWER = 'SUBMITANSWER',
   CLEARQUERY = 'CLEARQUERY'
 }
 
-export interface GUIAction { 
+export interface GUIAction {
   timestamp: number;
   actionType: GUIActionType;
   page?: string;
-  info?: string; 
-  item?: number; 
+  info?: string;
+  item?: number;
   results?: Array<string>;
 }
 
@@ -56,7 +56,7 @@ export interface GUIAction {
 })
 export class VBSServerConnectionService {
 
-  sessionId: string | undefined; 
+  sessionId: string | undefined;
   vbsServerState: WSServerStatus = WSServerStatus.UNSET;
 
   serverRuns: Array<string> = [];
@@ -150,7 +150,7 @@ export class VBSServerConnectionService {
           */
           this.sessionId = login.sessionId!;
           this.println(this.sessionId);
-      
+
           // Wait for a second (do other things)
           setTimeout(() => {
               // === Evaluation Run Info ===
@@ -158,12 +158,12 @@ export class VBSServerConnectionService {
               this.println(`Found ${currentRuns.runs.length} ongoing evaluation runs`);
               this.serverRuns = [];
               this.serverRunIDs = [];
-              currentRuns.runs.forEach((run: ClientRunInfo) => { 
+              currentRuns.runs.forEach((run: ClientRunInfo) => {
                       this.println(`${run.name} (${run.id}): ${run.status}`);
                       if (run.description) {
                         this.println(run.description);
                         this.println('');
-                        this.serverRuns.push(run.description);  
+                        this.serverRuns.push(run.description);
                       } else {
                         this.serverRuns.push(run.name);
                       }
@@ -173,7 +173,7 @@ export class VBSServerConnectionService {
                   });
               });
 
-              
+
 
           });
 
@@ -190,7 +190,7 @@ export class VBSServerConnectionService {
         } else {
           qcomp.statusTaskRemainingTime = '';
         }
-        
+
       })
     } catch (error) {
       console.log('issue with task info request');
@@ -201,11 +201,11 @@ export class VBSServerConnectionService {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
-  
+
     const timestamp = `${this.padZero(hours)}:${this.padZero(minutes)}:${this.padZero(remainingSeconds)}`;
     return timestamp;
   }
-  
+
   padZero(value: number): string {
     return value.toString().padStart(2, '0');
   }
@@ -263,12 +263,12 @@ export class VBSServerConnectionService {
     ).pipe(
       tap((status: SuccessfulSubmissionsStatus) => {
         this.handleSubmissionResponse(status, ''+imageID);
-      }), 
+      }),
       catchError(err => {
         return this.handleSubmissionError(err);
       })
     ).subscribe()
-    
+
   }
 
 
@@ -287,12 +287,12 @@ export class VBSServerConnectionService {
     ).pipe(
       tap((status: SuccessfulSubmissionsStatus) => {
         this.handleSubmissionResponse(status, ''+videoid + '-' + frame);
-      }), 
+      }),
       catchError(err => {
         return this.handleSubmissionError(err);
       })
     ).subscribe()
-    
+
   }
 
   submitText(text: string) {
@@ -309,12 +309,12 @@ export class VBSServerConnectionService {
     ).pipe(
       tap((status: SuccessfulSubmissionsStatus) => {
         this.handleSubmissionResponse(status, 'text:'+text);
-      }), 
+      }),
       catchError(err => {
         return this.handleSubmissionError(err);
       })
     ).subscribe()
-    
+
   }
 
 

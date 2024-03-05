@@ -1,9 +1,9 @@
 /// <reference lib="webworker" />
 
-import { WebSocketEvent,GlobalConstants } from "./global-constants";
+import { WebSocketEvent,GlobalConstants } from "../../global-constants";
 
 var clipSocket: WebSocket = new WebSocket(GlobalConstants.clipServerURL);
- 
+
 addEventListener('message', ({ data }) => {
   console.log('clip worker received message');
   if (data.event === WebSocketEvent.OPEN) {
@@ -11,7 +11,7 @@ addEventListener('message', ({ data }) => {
   }
   else if (data.event === WebSocketEvent.CLOSE) {
     clipSocket.close();
-  } 
+  }
   else if (data.event === WebSocketEvent.MESSAGE) {
     clipSocket.send(JSON.stringify(data.content));
   }
@@ -19,7 +19,7 @@ addEventListener('message', ({ data }) => {
   //postMessage(response);
 });
 
-function connectWebSocket() {  
+function connectWebSocket() {
   console.log('clip connectWebSocket() called');
 
   clipSocket.onmessage = (message: MessageEvent) => {
