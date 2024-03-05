@@ -1,6 +1,6 @@
 import {ViewChild, ElementRef, Component, AfterViewInit, OnInit, OnDestroy} from '@angular/core';
 import { HostListener } from '@angular/core';
-import { GlobalConstants, WSServerStatus, WebSocketEvent, formatAsTime, QueryType, getTimestampInSeconds } from '../../../global-constants';
+import { GlobalConstants, WSServerStatus, QueryType, getTimestampInSeconds } from '../../../global-constants';
 import { GUIAction, GUIActionType, VBSServerConnectionService } from '../../services/vbsserver-connection.service';
 import { NodeServerConnectionService } from '../../services/nodeserver-connection.service';
 import { ClipServerConnectionService } from '../../services/clipserver-connection.service';
@@ -979,8 +979,6 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
       this.disconnectFromVBSServer();
     }
   }
-
-
 
   sendTopicAnswer() {
     this.vbsService.submitText(this.topicanswer)

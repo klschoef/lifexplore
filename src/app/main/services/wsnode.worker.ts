@@ -1,9 +1,9 @@
 /// <reference lib="webworker" />
 
-import { WebSocketEvent,GlobalConstants } from "./global-constants";
+import { WebSocketEvent,GlobalConstants } from "../../global-constants";
 
 var nodeSocket: WebSocket = new WebSocket(GlobalConstants.nodeServerURL);
- 
+
 addEventListener('message', ({ data }) => {
   console.log('node worker received message');
   if (data.event === WebSocketEvent.OPEN) {
@@ -11,13 +11,13 @@ addEventListener('message', ({ data }) => {
   }
   else if (data.event === WebSocketEvent.CLOSE) {
     nodeSocket.close();
-  } 
+  }
   else if (data.event === WebSocketEvent.MESSAGE) {
     nodeSocket.send(JSON.stringify(data.content));
   }
 });
 
-function connectWebSocket() {  
+function connectWebSocket() {
   console.log('node connectWebSocket() called');
 
   nodeSocket.onmessage = (message: MessageEvent) => {

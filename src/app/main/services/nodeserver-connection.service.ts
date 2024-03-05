@@ -20,9 +20,10 @@ export interface Message {
 export class NodeServerConnectionService {
 
   private subject: AnonymousSubject<MessageEvent> | undefined;
+  // use this to send messages to the server
   public messages: Subject<Message>;
 
-  public connectionState: WSServerStatus = WSServerStatus.UNSET;;
+  public connectionState: WSServerStatus = WSServerStatus.UNSET;
 
   constructor() {
     console.log('NodeServerConnectionService created');
