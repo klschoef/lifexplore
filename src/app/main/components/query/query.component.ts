@@ -14,6 +14,7 @@ import {ExpLogService} from '../../services/exp-log.service';
 import {InteractionLogService} from '../../services/interaction-log.service';
 import {QueryEventLogService} from '../../services/query-event-log.service';
 import {QueryResultLogService} from '../../services/query-result-log.service';
+import {HistoryService} from '../../services/history.service';
 
 @Component({
   selector: 'app-query',
@@ -96,6 +97,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
     private interactionLogService: InteractionLogService,
     private queryEventLogService: QueryEventLogService,
     private queryResultLogService: QueryResultLogService,
+    private historyService: HistoryService,
     private expLogService: ExpLogService) {
   }
 
@@ -257,53 +259,6 @@ export class QueryComponent implements AfterViewInit, OnInit {
     if (this.showHelpActive) {
       //interaction logging
       this.interactionLogService.logShowHelp(this.selectedPage, this.queryresults);
-    }
-  }
-
-  // TODO: move to service (maybe log service?)
-  history() {
-    let historyList = [];
-    let hist = localStorage.getItem('history')
-    if (hist) {
-      let histj:[QueryType] = JSON.parse(hist);
-      for (let i=0; i < histj.length; i++) {
-        let ho = histj[i];
-        historyList.push(`${ho.type}: ${ho.query} (${ho.queryMode})`)
-      }
-    }
-    return historyList; //JSON.parse(hist!);
-  }
-
-  // TODO: move to same service then history
-  saveToHistory(msg: QueryType) {
-    if (msg.query === '') {
-      return;
-    }
-
-    let hist = localStorage.getItem('history')
-    if (hist) {
-      let queryHistory:Array<QueryType> = JSON.parse(hist);
-      let containedPos = -1;
-      let i = 0;
-      for (let qh of queryHistory) {
-        if (qh.query === msg.query && qh.queryMode === msg.queryMode) {
-          containedPos = i;
-          break;
-        }
-        i++;
-      }
-      if (containedPos >= 0) {
-        queryHistory.splice(containedPos,1);
-        queryHistory.unshift(msg);
-        localStorage.setItem('history', JSON.stringify(queryHistory));
-      }
-      else {
-        queryHistory.unshift(msg);
-        localStorage.setItem('history', JSON.stringify(queryHistory));
-      }
-    } else {
-      let queryHistory:Array<QueryType> = [msg];
-      localStorage.setItem('history', JSON.stringify(queryHistory));
     }
   }
 
@@ -629,7 +584,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
         this.queryType = 'CLIP';
         this.sendToCLIPServer(msg);
       }
-      this.saveToHistory(msg);
+      this.historyService.saveToHistory(msg);
 
       //query logging
       this.queryEventLogService.logJointEmbedding(this.queryinput);
@@ -662,7 +617,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
       this.queryType = 'CLIP similarity';
 
       this.sendToCLIPServer(msg);
-      this.saveToHistory(msg);
+      this.historyService.saveToHistory(msg);
 
       //query logging
       this.queryEventLogService.logFeedbackModel(`result# ${this.queryresult_resultnumber[serveridx]}`)
@@ -693,7 +648,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
 
       this.nodeServerInfo = 'processing similarity query, please wait...please also note that the query input field does not work for this search/tab, unfortunately.';
       this.sendToCLIPServer(msg);
-      this.saveToHistory(msg);
+      this.historyService.saveToHistory(msg);
 
       //query logging
       this.queryEventLogService.logFeedbackModel(keyframe);
@@ -707,6 +662,11 @@ export class QueryComponent implements AfterViewInit, OnInit {
 
   }
 
+  getHistory() {
+    return this.historyService.fetch_history();
+  }
+
+  // TODO: outsource to history service (at least parts of it)
   performHistoryQuery() {
     console.log(`run hist: ${this.selectedHistoryEntry}`)
     let hist = localStorage.getItem('history')

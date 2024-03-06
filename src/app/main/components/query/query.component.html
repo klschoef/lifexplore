@@ -16,7 +16,7 @@
     <div class="historySelect" #historyDiv>
       <select [(ngModel)]="selectedHistoryEntry" value="" (change)="performHistoryQuery()">
         <option value="-1" selected disabled>-- Search History --</option>
-        <option *ngFor="let h of history(); let i = index" [ngValue]="i">{{h}}</option>
+        <option *ngFor="let h of getHistory(); let i = index" [ngValue]="i">{{h}}</option>
       </select>
     </div>
 </div>
