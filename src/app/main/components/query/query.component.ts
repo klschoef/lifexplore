@@ -1,4 +1,4 @@
-import {ViewChild, ElementRef, Component, AfterViewInit, OnInit, OnDestroy} from '@angular/core';
+import {ViewChild, ElementRef, Component, AfterViewInit, OnInit} from '@angular/core';
 import { HostListener } from '@angular/core';
 import { GlobalConstants, WSServerStatus, QueryType, getTimestampInSeconds } from '../../../global-constants';
 import { VBSServerConnectionService } from '../../services/vbsserver-connection.service';
@@ -7,9 +7,6 @@ import { ClipServerConnectionService } from '../../services/clipserver-connectio
 import { Router,ActivatedRoute } from '@angular/router';
 import { QueryResult} from 'openapi/dres';
 import { LocalConfig } from '../../../local-config';
-import {JsonObjects} from '../../models/json/json-objects';
-import {JsonConcepts} from '../../models/json/json-concepts';
-import {JsonTexts} from '../../models/json/json-texts';
 import {ExpLogService} from '../../services/exp-log.service';
 import {InteractionLogService} from '../../services/interaction-log.service';
 import {QueryEventLogService} from '../../services/query-event-log.service';
@@ -17,6 +14,7 @@ import {QueryResultLogService} from '../../services/query-result-log.service';
 import {HistoryService} from '../../services/history.service';
 import QueryUtil from '../../utils/query-util';
 import URLUtil from '../../utils/url-util';
+import DateUtil from '../../utils/date-util';
 
 @Component({
   selector: 'app-query',
@@ -102,7 +100,6 @@ export class QueryComponent implements AfterViewInit, OnInit {
     private historyService: HistoryService,
     private expLogService: ExpLogService) {
   }
-
 
   ngOnInit() {
     console.log('query component (qc) initated');
@@ -222,9 +219,6 @@ export class QueryComponent implements AfterViewInit, OnInit {
 
   toggleHistorySelect() {
     this.historyDiv.nativeElement.hidden = !this.historyDiv.nativeElement.hidden;
-    /*if (!this.historyDiv.nativeElement.hidden) {
-      this.historyDiv.nativeElement.focus();
-    }*/
   }
 
   showHelp() {
@@ -235,49 +229,18 @@ export class QueryComponent implements AfterViewInit, OnInit {
     }
   }
 
+  // helper function to add a subquery to the current query via html button
   addToQuery(prefix:string, name:string) {
     this.queryinput = QueryUtil.addToQuery(this.queryinput, prefix, name);
   }
 
+  // helper function to remove a subquery to the current query via html button
   delFromQuery(prefix:string, name:string) {
     this.queryinput = QueryUtil.delFromQuery(this.queryinput, prefix, name);
   }
 
-  // TODO: move to utils
   filenameToDate(fn:string):string {
-    let yyyy = fn.substring(0,4);
-    let MM = fn.substring(4,6);
-    let dd = fn.substring(6,8);
-    let hh = fn.substring(9,11);
-    let mm = fn.substring(11,13);
-    let ss = fn.substring(13,15);
-
-    return dd + '.' + MM + '.' + yyyy + ' ' + hh + ':' + mm + ':' + ss;
-  }
-
-  // TODO: move to utils
-  asTimeLabel(frame:string, withFrames:boolean=true) {
-    console.log('TODO: need FPS in query component!')
-    return frame;
-    //return formatAsTime(frame, this.fps, withFrames);
-  }
-
-  // TODO: move to utils
-  getDetectedObjects(jsonObjects: JsonObjects[]): string {
-    const objectNames: string[] = jsonObjects.map((obj) => obj.object);
-    return objectNames.join(', ');
-  }
-
-  // TODO: move to object utils
-  getDetectedConcepts(jsonConcepts: JsonConcepts[]): string {
-    const conceptNames: string[] = jsonConcepts.map((obj) => obj.concept);
-    return conceptNames.join(', ');
-  }
-
-  // TODO: move to object utils
-  getDetectedTexts(jsonTexts: JsonTexts[]): string {
-    const textNames: string[] = jsonTexts.map((obj) => obj.text);
-    return textNames.join(', ');
+    return DateUtil.filenameToDate(fn);
   }
 
   // TODO: move key handling to util class strongly related to this query component. Maybe directly in the same folder. Don't call it util, call it handler to make it more clear.
@@ -376,38 +339,15 @@ export class QueryComponent implements AfterViewInit, OnInit {
         }
       }
       else {
-        switch (event.key) {
-          case '1':
-            this.gotoPage('1');
-            break;
-          case '2':
-            this.gotoPage('2');
-            break;
-          case '3':
-            this.gotoPage('3');
-            break;
-          case '4':
-            this.gotoPage('4');
-            break;
-          case '5':
-            this.gotoPage('5');
-            break;
-          case '6':
-            this.gotoPage('6');
-            break;
-          case '7':
-            this.gotoPage('7');
-            break;
-          case '8':
-            this.gotoPage('8');
-            break;
-          case '9':
-            this.gotoPage('9');
-            break;
+        switch (event.key) { // go to page from 1 to 10 (0 is 10)
           case '0':
             this.gotoPage('10');
             break;
           default:
+            const keyNumber = parseInt(event.key);
+            if (!isNaN(keyNumber) && keyNumber >= 1 && keyNumber <= 9) {
+              this.gotoPage(event.key);
+            }
             break;
         }
       }
@@ -529,10 +469,10 @@ export class QueryComponent implements AfterViewInit, OnInit {
 
       if (this.nodeService.connectionState === WSServerStatus.CONNECTED) {
         this.queryType = 'database/joint';
-        this.sendToNodeServer(msg);
+        this.nodeService.sendToNodeServer(msg);
       } else {
         this.queryType = 'CLIP';
-        this.sendToCLIPServer(msg);
+        this.clipService.sendToCLIPServer(msg);
       }
       this.historyService.saveToHistory(msg);
 
@@ -566,7 +506,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
       this.queryTimestamp = getTimestampInSeconds();
       this.queryType = 'CLIP similarity';
 
-      this.sendToCLIPServer(msg);
+      this.clipService.sendToCLIPServer(msg);
       this.historyService.saveToHistory(msg);
 
       //query logging
@@ -597,7 +537,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
       this.queryType = 'CLIP file-similarity';
 
       this.nodeServerInfo = 'processing similarity query, please wait...please also note that the query input field does not work for this search/tab, unfortunately.';
-      this.sendToCLIPServer(msg);
+      this.clipService.sendToCLIPServer(msg);
       this.historyService.saveToHistory(msg);
 
       //query logging
@@ -649,9 +589,6 @@ export class QueryComponent implements AfterViewInit, OnInit {
       this.queryTimestamp = getTimestampInSeconds();
       this.queryType = 'history';
 
-      //this.sendToCLIPServer(msg);
-      //this.saveToHistory(msg);
-
       this.selectedHistoryEntry = "-1";
       this.historyDiv.nativeElement.hidden = true;
 
@@ -672,7 +609,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
       this.queryTimestamp = getTimestampInSeconds();
       this.queryType = 'history last';
 
-      this.sendToCLIPServer(msg);
+      this.clipService.sendToCLIPServer(msg);
     }
   }
 
@@ -685,7 +622,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
         imagepath: this.queryresults[this.fullImageIndex],
       };
 
-      this.sendToNodeServer(msg);
+      this.nodeService.sendToNodeServer(msg);
 
     } else {
       console.log("nodeService not running");
@@ -699,27 +636,10 @@ export class QueryComponent implements AfterViewInit, OnInit {
         type: "videosummaries",
         videoid: videoid
       };
-      this.sendToNodeServer(msg);
+      this.nodeService.sendToNodeServer(msg);
     } else {
       alert(`Node.js connection down: ${this.nodeService.connectionState}. Try reconnecting by pressing the red button!`);
     }
-  }
-
-  // TODO: outsource to service
-  sendToCLIPServer(msg:any) {
-    let message = {
-      source: 'appcomponent',
-      content: msg
-    };
-    this.clipService.messages.next(message);
-  }
-
-  sendToNodeServer(msg:any) {
-    let message = {
-      source: 'appcomponent',
-      content: msg
-    };
-    this.nodeService.messages.next(message);
   }
 
   showVideoShots(videoid:string, frame:string) {
@@ -826,7 +746,6 @@ export class QueryComponent implements AfterViewInit, OnInit {
     let keyframeBase = URLUtil.getBaseURL(); //TODO + 'thumbs/';
 
     let logResults:Array<QueryResult> = [];
-    //for (var e of qresults.results) {
     for (let i = 0; i < qresults.results.length; i++) {
       let e = qresults.results[i];
       this.queryresults.push(e);
@@ -837,7 +756,6 @@ export class QueryComponent implements AfterViewInit, OnInit {
       this.queryresult_resultnumber.push(resultnum.toString());
       let logResult:QueryResult = {
         item: e,
-        //score: qresults.scores[i],
         rank: resultnum
       }
       logResults.push(logResult)

@@ -28,6 +28,14 @@ export class ClipServerConnectionService {
     this.messages = this.connectToServer();
   }
 
+  sendToCLIPServer(msg:any, source: string = 'appcomponent') {
+    let message = {
+      source: source,
+      content: msg
+    };
+    this.messages.next(message);
+  }
+
   connectToServerIfUnconnected() {
     if (this.connectionState !== WSServerStatus.CONNECTED) {
       this.connectToServer();

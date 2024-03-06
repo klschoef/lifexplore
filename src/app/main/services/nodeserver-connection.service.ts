@@ -30,6 +30,14 @@ export class NodeServerConnectionService {
     this.messages = this.connectToServer();
   }
 
+  public sendToNodeServer(msg:any, source: string = 'appcomponent') {
+      let message = {
+          source: source,
+          content: msg
+      };
+      this.messages.next(message);
+  }
+
   public connectToServerIfUnconnected() {
     if (this.connectionState !== WSServerStatus.CONNECTED) {
       this.connectToServer();
