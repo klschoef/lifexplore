@@ -1,22 +1,26 @@
 import {ViewChild, ElementRef, Component, AfterViewInit, OnInit, OnDestroy} from '@angular/core';
 import { HostListener } from '@angular/core';
 import { GlobalConstants, WSServerStatus, QueryType, getTimestampInSeconds } from '../../../global-constants';
-import { GUIAction, GUIActionType, VBSServerConnectionService } from '../../services/vbsserver-connection.service';
+import { VBSServerConnectionService } from '../../services/vbsserver-connection.service';
 import { NodeServerConnectionService } from '../../services/nodeserver-connection.service';
 import { ClipServerConnectionService } from '../../services/clipserver-connection.service';
 import { Router,ActivatedRoute } from '@angular/router';
-import { QueryEvent, QueryResult, QueryResultLog } from 'openapi/dres';
+import { QueryResult} from 'openapi/dres';
 import { LocalConfig } from '../../../local-config';
 import {JsonObjects} from '../../models/json/json-objects';
 import {JsonConcepts} from '../../models/json/json-concepts';
 import {JsonTexts} from '../../models/json/json-texts';
+import {ExpLogService} from '../../services/exp-log.service';
+import {InteractionLogService} from '../../services/interaction-log.service';
+import {QueryEventLogService} from '../../services/query-event-log.service';
+import {QueryResultLogService} from '../../services/query-result-log.service';
 
 @Component({
   selector: 'app-query',
   templateUrl: './query.component.html',
   styleUrls: ['./query.component.scss']
 })
-export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
+export class QueryComponent implements AfterViewInit, OnInit {
 
   @ViewChild('inputfield') inputfield!: ElementRef<HTMLInputElement>;
   @ViewChild('historyDiv') historyDiv!: ElementRef<HTMLDivElement>;
@@ -88,7 +92,11 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
     public nodeService: NodeServerConnectionService,
     public clipService: ClipServerConnectionService,
     private route: ActivatedRoute,
-    private router: Router) {
+    private router: Router,
+    private interactionLogService: InteractionLogService,
+    private queryEventLogService: QueryEventLogService,
+    private queryResultLogService: QueryResultLogService,
+    private expLogService: ExpLogService) {
   }
 
 
@@ -203,8 +211,6 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
       }
     });
 
-    document.addEventListener('keydown', this.handleKeyDown);
-
     //repeatedly retrieve task info
     setInterval(() => {
       this.requestTaskInfo();
@@ -215,16 +221,6 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
   ngAfterViewInit(): void {
     this.historyDiv.nativeElement.hidden = true;
   }
-
-  ngOnDestroy() {
-    document.removeEventListener('keydown', this.handleKeyDown);
-  }
-
-  handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === 'Escape') {
-      this.hideFullImage();
-    }
-  };
 
   requestTaskInfo() {
     this.vbsService.getClientTaskInfo(this.vbsService.serverRunIDs[0], this);
@@ -237,43 +233,16 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
     this.showFullImage = true;
 
     //interaction logging
-    this.logFullImageDisplay(index, url);
-  }
-
-  private logFullImageDisplay(index: number, url: string) {
-    let GUIaction: GUIAction = {
-      timestamp: getTimestampInSeconds(),
-      actionType: GUIActionType.INSPECTFULLIMAGE,
-      item: index,
-      info: this.removeBaseURL(url)
-    };
-    this.vbsService.interactionLog.push(GUIaction);
-  }
-
-  removeBaseURL(val:string):string {
-    if (val.startsWith(GlobalConstants.keyframeBaseURL)) {
-      val = val.substring(GlobalConstants.keyframeBaseURL.length);
-    }
-    return val;
+    this.interactionLogService.logFullImageDisplay(index, url);
   }
 
   hideFullImage() {
     //interaction logging
-    this.logFullImageHide();
+    this.interactionLogService.logFullImageHide(this.fullImageIndex, this.fullImage);
 
     this.showFullImage = false;
     this.fullImage = '';
     this.fullImageIndex = -1;
-  }
-
-  private logFullImageHide() {
-    let GUIaction: GUIAction = {
-      timestamp: getTimestampInSeconds(),
-      actionType: GUIActionType.HIDEFULLIMAGE,
-      item: this.fullImageIndex,
-      info: this.removeBaseURL(this.fullImage)
-    };
-    this.vbsService.interactionLog.push(GUIaction);
   }
 
   toggleHistorySelect() {
@@ -287,16 +256,11 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
     this.showHelpActive = !this.showHelpActive;
     if (this.showHelpActive) {
       //interaction logging
-      let GUIaction: GUIAction = {
-        timestamp: getTimestampInSeconds(),
-        actionType: GUIActionType.SHOWHELP,
-        page: this.selectedPage,
-        results: this.queryresults
-      }
-      this.vbsService.interactionLog.push(GUIaction);
+      this.interactionLogService.logShowHelp(this.selectedPage, this.queryresults);
     }
   }
 
+  // TODO: move to service (maybe log service?)
   history() {
     let historyList = [];
     let hist = localStorage.getItem('history')
@@ -310,6 +274,7 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
     return historyList; //JSON.parse(hist!);
   }
 
+  // TODO: move to same service then history
   saveToHistory(msg: QueryType) {
     if (msg.query === '') {
       return;
@@ -342,6 +307,7 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
+  // TODO: move to utils
   filenameToDate(fn:string):string {
     let yyyy = fn.substring(0,4);
     let MM = fn.substring(4,6);
@@ -353,18 +319,20 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
     return dd + '.' + MM + '.' + yyyy + ' ' + hh + ':' + mm + ':' + ss;
   }
 
+  // TODO: move to utils
   asTimeLabel(frame:string, withFrames:boolean=true) {
     console.log('TODO: need FPS in query component!')
     return frame;
     //return formatAsTime(frame, this.fps, withFrames);
   }
 
-
+  // TODO: move to utils
   getDetectedObjects(jsonObjects: JsonObjects[]): string {
     const objectNames: string[] = jsonObjects.map((obj) => obj.object);
     return objectNames.join(', ');
   }
 
+  // TODO: move to query utils?
   addToQuery(prefix:string, name:string) {
     if (this.queryinput.includes('-' + prefix + ' ')) {
       this.queryinput = this.queryinput.replace('-' + prefix + ' ', '-' + prefix + ' ' + name + ',');
@@ -373,6 +341,7 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
+  // TODO: move to query utils?
   delFromQuery(prefix:string, name:string) {
     if (this.queryinput.includes('-' + prefix + ' ')) {
       if (this.queryinput.indexOf('-' + prefix + ' ' + name + ' ') >= 0) {
@@ -389,20 +358,23 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
+  // TODO: move to object utils
   getDetectedConcepts(jsonConcepts: JsonConcepts[]): string {
     const conceptNames: string[] = jsonConcepts.map((obj) => obj.concept);
     return conceptNames.join(', ');
   }
 
+  // TODO: move to object utils
   getDetectedTexts(jsonTexts: JsonTexts[]): string {
     const textNames: string[] = jsonTexts.map((obj) => obj.text);
     return textNames.join(', ');
   }
 
+  // TODO: move key handling to util class strongly related to this query component. Maybe directly in the same folder. Don't call it util, call it handler to make it more clear.
+  // TODO: be aware that we also need to use services here, so maybe we need to move the key handling to a util service?.
   @HostListener('document:keyup', ['$event'])
   handleKeyboardEventUp(event: KeyboardEvent) {
-
-    if (this.queryFieldHasFocus == false && this.answerFieldHasFocus == false) {
+    if (!this.queryFieldHasFocus && !this.answerFieldHasFocus) {
       if (event.key === 'q') {
         this.inputfield.nativeElement.select();
       }
@@ -420,9 +392,9 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
           this.fullImage = this.resultURLs[this.fullImageIndex];
           this.showFullImage = !this.showFullImage;
           if (this.showFullImage) {
-            this.logFullImageDisplay(this.fullImageIndex, this.fullImage);
+            this.interactionLogService.logFullImageDisplay(this.fullImageIndex, this.fullImage);
           } else {
-            this.logFullImageHide();
+            this.interactionLogService.logFullImageHide(this.fullImageIndex, this.fullImage);
           }
       }
       else if (event.key === 'Escape') {
@@ -433,17 +405,16 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
-    if (this.queryFieldHasFocus == false && this.answerFieldHasFocus == false) {
+    if (!this.queryFieldHasFocus && !this.answerFieldHasFocus) {
       if (event.key == 'ArrowDown') {
         if (this.showFullImage) {
           if (this.fullImageIndex < this.resultURLs.length - LocalConfig.config_IMAGES_PER_ROW) {
             this.fullImageIndex += LocalConfig.config_IMAGES_PER_ROW;
             this.fullImage = this.resultURLs[this.fullImageIndex];
             this.performMetaDataQuery();
-            this.logFullImageDisplay(this.fullImageIndex, this.fullImage);
+            this.interactionLogService.logFullImageDisplay(this.fullImageIndex, this.fullImage);
           }
           event.preventDefault();
         }
@@ -454,7 +425,7 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
             this.fullImageIndex -= LocalConfig.config_IMAGES_PER_ROW;
             this.fullImage = this.resultURLs[this.fullImageIndex];
             this.performMetaDataQuery();
-            this.logFullImageDisplay(this.fullImageIndex, this.fullImage);
+            this.interactionLogService.logFullImageDisplay(this.fullImageIndex, this.fullImage);
           }
           event.preventDefault();
         }
@@ -464,7 +435,7 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
           if (this.fullImageIndex < this.resultURLs.length-1) {
             this.fullImage = this.resultURLs[++this.fullImageIndex];
             this.performMetaDataQuery();
-            this.logFullImageDisplay(this.fullImageIndex, this.fullImage);
+            this.interactionLogService.logFullImageDisplay(this.fullImageIndex, this.fullImage);
           }
         } else {
           this.hideFullImage();
@@ -475,12 +446,14 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
       else if (event.key == 'Tab') {
         this.hideFullImage();
         this.nextPage();
-      } else if (event.key == "ArrowLeft") {
+      }
+      else if (event.key == "ArrowLeft") {
+        // if full image, show next image, otherwise go to previous page
         if (this.showFullImage) {
           if (this.fullImageIndex > 0) {
             this.fullImage = this.resultURLs[--this.fullImageIndex];
             this.performMetaDataQuery();
-            this.logFullImageDisplay(this.fullImageIndex, this.fullImage);
+            this.interactionLogService.logFullImageDisplay(this.fullImageIndex, this.fullImage);
           }
         } else {
           this.hideFullImage();
@@ -556,6 +529,7 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
+  // TODO: remove it and replace it with the method in the url-utils
   getBaseURL() {
     return GlobalConstants.keyframeBaseURL;
   }
@@ -658,22 +632,10 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
       this.saveToHistory(msg);
 
       //query logging
-      let queryEvent:QueryEvent = {
-        timestamp: getTimestampInSeconds(),
-        category: QueryEvent.CategoryEnum.TEXT,
-        type: 'jointEmbedding',
-        value: this.queryinput
-      }
-      this.vbsService.queryEvents.push(queryEvent);
+      this.queryEventLogService.logJointEmbedding(this.queryinput);
 
       //interaction logging
-      let GUIaction: GUIAction = {
-        timestamp: getTimestampInSeconds(),
-        actionType: GUIActionType.TEXTQUERY,
-        info: this.queryinput,
-        page: this.selectedPage
-      }
-      this.vbsService.interactionLog.push(GUIaction);
+      this.interactionLogService.logTextQuery(this.queryinput, this.selectedPage);
 
     } else {
       console.log(`CLIP or NODE connection down: ${this.clipService.connectionState} ${this.nodeService.connectionState}.`);
@@ -703,22 +665,10 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
       this.saveToHistory(msg);
 
       //query logging
-      let queryEvent:QueryEvent = {
-        timestamp: getTimestampInSeconds(),
-        category: QueryEvent.CategoryEnum.IMAGE,
-        type: 'feedbackModel',
-        value: `result# ${this.queryresult_resultnumber[serveridx]}`
-      }
-      this.vbsService.queryEvents.push(queryEvent);
+      this.queryEventLogService.logFeedbackModel(`result# ${this.queryresult_resultnumber[serveridx]}`)
 
       //interaction logging
-      let GUIaction: GUIAction = {
-        timestamp: getTimestampInSeconds(),
-        actionType: GUIActionType.SIMILARITY,
-        item: serveridx,
-        page: this.selectedPage
-      }
-      this.vbsService.interactionLog.push(GUIaction);
+      this.interactionLogService.logSimilarityQuery(serveridx, this.selectedPage);
     }
   }
 
@@ -746,22 +696,10 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
       this.saveToHistory(msg);
 
       //query logging
-      let queryEvent:QueryEvent = {
-        timestamp: getTimestampInSeconds(),
-        category: QueryEvent.CategoryEnum.IMAGE,
-        type: 'feedbackModel',
-        value: `${keyframe}`
-      }
-      this.vbsService.queryEvents.push(queryEvent);
+      this.queryEventLogService.logFeedbackModel(keyframe);
 
       //interaction logging
-      let GUIaction: GUIAction = {
-        timestamp: getTimestampInSeconds(),
-        actionType: GUIActionType.FILESIMILARITY,
-        info: keyframe,
-        page: this.selectedPage
-      }
-      this.vbsService.interactionLog.push(GUIaction);
+      this.interactionLogService.logFileSimilarityQuery(keyframe, this.selectedPage);
     }
   }
 
@@ -775,21 +713,10 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
     if (hist && this.selectedHistoryEntry !== "-1") {
 
       //logging
-      let queryEvent:QueryEvent = {
-        timestamp: getTimestampInSeconds(),
-        category: QueryEvent.CategoryEnum.OTHER,
-        type: 'queryRepetition',
-        value: `${this.selectedHistoryEntry}`
-      }
-      this.vbsService.queryEvents.push(queryEvent);
+      this.queryEventLogService.logQueryRepetitionQuery(this.selectedHistoryEntry ?? '')
 
       //interaction logging
-      let GUIaction: GUIAction = {
-        timestamp: getTimestampInSeconds(),
-        actionType: GUIActionType.HISTORYQUERY,
-        info: hist
-      }
-      this.vbsService.interactionLog.push(GUIaction);
+      this.interactionLogService.logHistoryQuery(hist)
 
       //perform history query
       let queryHistory:Array<QueryType> = JSON.parse(hist);
@@ -868,6 +795,7 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
+  // TODO: outsource to service
   sendToCLIPServer(msg:any) {
     let message = {
       source: 'appcomponent',
@@ -899,11 +827,7 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
     this.queryinput = '';
 
     //interaction logging
-    let GUIaction: GUIAction = {
-      timestamp: getTimestampInSeconds(),
-      actionType: GUIActionType.CLEARQUERY
-    }
-    this.vbsService.interactionLog.push(GUIaction);
+    this.interactionLogService.logClearQuery();
   }
 
   resetQuery() {
@@ -922,18 +846,11 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
     localStorage.setItem('history', JSON.stringify(queryHistory));
 
     //interaction logging
-    let GUIaction: GUIAction = {
-      timestamp: getTimestampInSeconds(),
-      actionType: GUIActionType.RESETQUERY,
-      page: this.selectedPage,
-      results: this.queryresults
-    }
-    this.vbsService.interactionLog.push(GUIaction);
+    this.interactionLogService.logResetQuery(this.selectedPage, this.queryresults);
 
-    this.vbsService.submitLog();
-    this.vbsService.saveLogLocallyAndClear();
+    this.expLogService.submitLog();
+    this.expLogService.saveLogLocallyAndClear();
   }
-
 
   private clearResultArrays() {
     this.queryresults = [];
@@ -959,7 +876,6 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
     //this.vbsService.logout(this);
   }
 
-
   checkNodeConnection() {
     if (this.nodeService.connectionState !== WSServerStatus.CONNECTED) {
       this.nodeService.connectToServer();
@@ -983,27 +899,15 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
   sendTopicAnswer() {
     this.vbsService.submitText(this.topicanswer)
 
-    let queryEvent:QueryEvent = {
-      timestamp: getTimestampInSeconds(),
-      category: QueryEvent.CategoryEnum.OTHER,
-      type: 'submitanswer',
-      value: `result:${this.topicanswer}`
-    }
-    this.vbsService.queryEvents.push(queryEvent);
-    this.vbsService.submitLog();
+    this.queryEventLogService.logSubmitAnswer(`result:${this.topicanswer}`);
+    this.expLogService.submitLog();
 
     //interaction logging
-    let GUIaction: GUIAction = {
-      timestamp: getTimestampInSeconds(),
-      actionType: GUIActionType.SUBMITANSWER,
-      info: this.topicanswer
-    }
-    this.vbsService.interactionLog.push(GUIaction);
+    this.interactionLogService.logSubmitAnswer(this.topicanswer);
 
     //save and reset logs
-    this.vbsService.saveLogLocallyAndClear();
+    this.expLogService.saveLogLocallyAndClear();
   }
-
 
   handleNodeMessage(msg:any) {
     if (msg['summaries']) {
@@ -1061,18 +965,11 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
     this.inputfield.nativeElement.blur();
 
     //add to interaction log (created when query was sent)
-    this.vbsService.interactionLog[this.vbsService.interactionLog.length-1].results = this.queryresults;
+    this.interactionLogService.updateLatestResults(this.queryresults);
 
 
     //create and send log
-    let log : QueryResultLog = {
-      timestamp: this.queryTimestamp,
-      sortType: 'rankingModel @ ' + this.queryType,
-      resultSetAvailability: '' + Math.min(this.resultsPerPage, qresults.totalresults), //top-k, for me: all return items
-      results: logResults,
-      events: this.vbsService.queryEvents
-    }
-    this.vbsService.resultLog.push(log);
+    this.queryResultLogService.logQueryResult(this.queryTimestamp, 'rankingModel @ ' + this.queryType, '' + Math.min(this.resultsPerPage, qresults.totalresults), logResults);
 
     this.nodeServerInfo = undefined;
   }
@@ -1092,29 +989,14 @@ export class QueryComponent implements AfterViewInit, OnInit, OnDestroy {
     console.log(`${imageID}`);
     this.vbsService.submitImageID(imageID);
 
-    let queryEvent:QueryEvent = {
-      timestamp: getTimestampInSeconds(),
-      category: QueryEvent.CategoryEnum.OTHER,
-      type: 'submit',
-      value: `result:${index}`
-    }
-    this.vbsService.queryEvents.push(queryEvent);
-    this.vbsService.submitLog();
+    this.queryEventLogService.logSubmit(`result:${index}`);
+    this.expLogService.submitLog();
 
 
     //interaction logging
-    let GUIaction: GUIAction = {
-      timestamp: getTimestampInSeconds(),
-      actionType: GUIActionType.SUBMIT,
-      info: imageID,
-      item: index
-    }
-    this.vbsService.interactionLog.push(GUIaction);
+    this.interactionLogService.logSubmit(imageID, index)
 
     //save and reset logs
-    this.vbsService.saveLogLocallyAndClear();
-
+    this.expLogService.saveLogLocallyAndClear();
   }
-
-
 }

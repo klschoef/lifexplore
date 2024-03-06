@@ -10,46 +10,14 @@ import {
   ClientRunInfoList,
   ClientTaskInfo,
   LoginRequest,
-  QueryEvent,
-  QueryResult,
-  QueryResultLog,
   SuccessfulSubmissionsStatus,
   SuccessStatus,
   UserDetails
 } from '../../../../openapi/dres';
 import { GlobalConstants, WSServerStatus } from '../../global-constants';
-import { NONE_TYPE } from '@angular/compiler';
-import { UrlSegment } from '@angular/router';
 import { catchError, Observable, of, tap } from 'rxjs';
 import { AppComponent } from '../../app.component';
 import { QueryComponent } from '../components/query/query.component';
-
-export enum GUIActionType {
-  TEXTQUERY = 'TEXTQUERY',
-  SIMILARITY = 'SIMILARITY',
-  FILESIMILARITY = 'FILESIMILARITY',
-  HISTORYQUERY = 'HISTORYQUERY',
-  INSPECTFULLIMAGE = 'INSPECTFULLIMAGE',
-  HIDEFULLIMAGE = 'HIDEFULLIMAGE',
-  NEXTPAGE = 'NEXTPAGE',
-  PREVPAGE = 'PREVPAGE',
-  SHOWHELP = 'SHOWHELP',
-  RESETQUERY = 'RESETQUERY',
-  SUBMIT = 'SUBMIT',
-  SUBMITANSWER = 'SUBMITANSWER',
-  CLEARQUERY = 'CLEARQUERY'
-}
-
-export interface GUIAction {
-  timestamp: number;
-  actionType: GUIActionType;
-  page?: string;
-  info?: string;
-  item?: number;
-  results?: Array<string>;
-}
-
-
 
 @Injectable({
   providedIn: 'root'
@@ -62,17 +30,12 @@ export class VBSServerConnectionService {
   serverRuns: Array<string> = [];
   serverRunIDs: Array<string> = [];
 
-  queryEvents: Array<QueryEvent> = [];
-  resultLog: Array<QueryResultLog>  = [];
-  interactionLog: Array<GUIAction> = [];
-
   activeUsername: string = '';
 
   constructor(
     private userService: UserService,
     private runInfoService: ClientRunInfoService,
-    private submissionService: SubmissionService,
-    private logService: LogService
+    private submissionService: SubmissionService
   ) {
     this.println(`VBSServerConnectionService created`);
     if (localStorage.getItem("LSCusername")) {
@@ -81,48 +44,6 @@ export class VBSServerConnectionService {
       this.activeUsername = GlobalConstants.configUSER;
     }
     this.connect();
-  }
-
-  submitLog() {
-    if (this.resultLog.length > 0 && this.queryEvents.length > 0) {
-      this.resultLog[this.resultLog.length-1].events = this.queryEvents;
-      this.logService.postApiV1LogResult(this.sessionId!, this.resultLog[this.resultLog.length-1]).pipe(
-            tap(o => {
-              console.log(`Successfully submitted result log to DRES!`);
-            }),
-            catchError((err) => {
-              return of(`Failed to submit segment to DRES due to a HTTP error (${err.status}).`)
-            })
-        ).subscribe();
-      }
-  }
-
-  addToLogInLocalStorage(name:string, myLog:any) {
-    let log = localStorage.getItem(name);
-    if (log) {
-      let loga = JSON.parse(log);
-      loga.push(myLog);
-      localStorage.setItem(name,JSON.stringify(loga));
-    } else {
-      let loga  = [myLog];
-      localStorage.setItem(name,JSON.stringify(loga));
-    }
-  }
-
-  saveLogLocallyAndClear() {
-    if (this.resultLog.length > 0) {
-      this.addToLogInLocalStorage('LSCResultLog', this.resultLog);
-      this.resultLog = [];
-    }
-    if (this.queryEvents.length > 0) {
-      this.addToLogInLocalStorage('LSCQueryEvents', this.queryEvents);
-      this.queryEvents = [];
-    }
-    if (this.interactionLog.length > 0) {
-      console.log(`interactionlog has ${this.interactionLog.length} entries`);
-      this.addToLogInLocalStorage('LSCInteractionLog', this.interactionLog);
-      this.interactionLog = [];
-    }
   }
 
   connect() {
@@ -249,7 +170,6 @@ export class VBSServerConnectionService {
   }
 
   submitImageID(imageID: string) {
-
     // === Submission ===
     //'00:00:10:00', // timecode - in this case, we use the timestamp in the form HH:MM:SS:FF
     this.submissionService.getApiV1Submit(
@@ -268,10 +188,7 @@ export class VBSServerConnectionService {
         return this.handleSubmissionError(err);
       })
     ).subscribe()
-
   }
-
-
 
   submitFrame(videoid: string, frame: number) {
     // === Submission ===
@@ -292,7 +209,6 @@ export class VBSServerConnectionService {
         return this.handleSubmissionError(err);
       })
     ).subscribe()
-
   }
 
   submitText(text: string) {
