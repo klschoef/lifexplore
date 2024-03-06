@@ -15,6 +15,8 @@ import {InteractionLogService} from '../../services/interaction-log.service';
 import {QueryEventLogService} from '../../services/query-event-log.service';
 import {QueryResultLogService} from '../../services/query-result-log.service';
 import {HistoryService} from '../../services/history.service';
+import QueryUtil from '../../utils/query-util';
+import URLUtil from '../../utils/url-util';
 
 @Component({
   selector: 'app-query',
@@ -65,7 +67,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
   previousQuery : any | undefined;
 
   querydataset: string = '';
-  queryBaseURL = this.getBaseURL();
+  queryBaseURL = URLUtil.getBaseURL();
 
   maxresults = LocalConfig.config_MAX_RESULTS_TO_RETURN;
   totalReturnedResults = 0; //how many results did our query return in total?
@@ -105,52 +107,23 @@ export class QueryComponent implements AfterViewInit, OnInit {
   ngOnInit() {
     console.log('query component (qc) initated');
 
-    //read parameters
+    //read the route parameters
     this.route.params.subscribe(params => {
-      if ('filename' in params) {
-        let paramFilename = params['filename'];
-        this.queryinput = '-fn ' + paramFilename;
-        setTimeout(() => { // TODO: why the timeout is needed?
-          this.performQuery();
-        }, 250);
-      }
-      else if ('objects' in params) {
-        let paramObject = params['objects'];
-        this.queryinput = '-o ' + paramObject;
-        setTimeout(() => {
-          this.performQuery();
-        }, 250);
-      }
-      else if ('places' in params) {
-        let paramPlace = params['places'];
-        this.queryinput = '-p ' + paramPlace;
-        setTimeout(() => {
-          this.performQuery();
-        }, 250);
-      }
-      else if ('concepts' in params) {
-        let paramConcept = params['concepts'];
-        this.queryinput = '-c ' + paramConcept;
-        setTimeout(() => {
-          this.performQuery();
-        }, 250);
-      }
-      else if ('texts' in params) {
-        let paramText = params['texts'];
-        this.queryinput = '-t ' + paramText;
-        setTimeout(() => {
-          this.performQuery();
-        }, 250);
-      }
-      else if ('similarto' in params) {
-        let filepath = params['similarto'];
-        //this.queryinput = '-sim ' + filepath;
-        setTimeout(() => {
-          //this.performQuery();
-          this.performFileSimilarityQuery(filepath, '');
-        }, 250);
+      const [key, queryinput] = QueryUtil.getQueryValueFromParams(params);
+      if (key && queryinput) {
+        if (key === 'similarto') {
+          setTimeout(() => {
+            this.performFileSimilarityQuery(queryinput, '');
+          }, 250); // TODO: why do we need to wait here?
+        } else {
+          setTimeout(() => {
+            this.queryinput = queryinput;
+            this.performQuery();
+          }, 250);
+        }
       }
     });
+
 
     //already connected?
     if (this.nodeService.connectionState == WSServerStatus.CONNECTED) {
@@ -262,6 +235,14 @@ export class QueryComponent implements AfterViewInit, OnInit {
     }
   }
 
+  addToQuery(prefix:string, name:string) {
+    this.queryinput = QueryUtil.addToQuery(this.queryinput, prefix, name);
+  }
+
+  delFromQuery(prefix:string, name:string) {
+    this.queryinput = QueryUtil.delFromQuery(this.queryinput, prefix, name);
+  }
+
   // TODO: move to utils
   filenameToDate(fn:string):string {
     let yyyy = fn.substring(0,4);
@@ -285,32 +266,6 @@ export class QueryComponent implements AfterViewInit, OnInit {
   getDetectedObjects(jsonObjects: JsonObjects[]): string {
     const objectNames: string[] = jsonObjects.map((obj) => obj.object);
     return objectNames.join(', ');
-  }
-
-  // TODO: move to query utils?
-  addToQuery(prefix:string, name:string) {
-    if (this.queryinput.includes('-' + prefix + ' ')) {
-      this.queryinput = this.queryinput.replace('-' + prefix + ' ', '-' + prefix + ' ' + name + ',');
-    } else {
-      this.queryinput = '-' + prefix + ' ' + name + ' ' + this.queryinput;
-    }
-  }
-
-  // TODO: move to query utils?
-  delFromQuery(prefix:string, name:string) {
-    if (this.queryinput.includes('-' + prefix + ' ')) {
-      if (this.queryinput.indexOf('-' + prefix + ' ' + name + ' ') >= 0) {
-        this.queryinput = this.queryinput.replace('-' + prefix + ' ' + name + ' ', '');
-      } else if (this.queryinput.indexOf(name + ',') >= 0) {
-        this.queryinput = this.queryinput.replace(name + ',', '');
-      } else if (this.queryinput.indexOf(',' + name) >= 0) {
-        this.queryinput = this.queryinput.replace(',' + name, '');
-      } else if (this.queryinput.indexOf('-' + prefix + ' ' + name) >= 0) {
-        this.queryinput = this.queryinput.replace('-' + prefix + ' ' + name, '');
-      } else if (this.queryinput.indexOf(name + ' ') >= 0) {
-        this.queryinput = this.queryinput.replace(name + ' ', ' ');
-      }
-    }
   }
 
   // TODO: move to object utils
@@ -484,11 +439,6 @@ export class QueryComponent implements AfterViewInit, OnInit {
     }
   }
 
-  // TODO: remove it and replace it with the method in the url-utils
-  getBaseURL() {
-    return GlobalConstants.keyframeBaseURL;
-  }
-
   isVideoResult(dataset: string): boolean {
     return dataset.endsWith('v');
   }
@@ -563,7 +513,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
       }
 
       console.log('qc: query for', this.queryinput);
-      this.queryBaseURL = this.getBaseURL();
+      this.queryBaseURL = URLUtil.getBaseURL();
       let msg = {
         type: "textquery",
         clientId: "direct",
@@ -601,7 +551,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
     if (this.clipService.connectionState === WSServerStatus.CONNECTED) {
       //alert(`search for ${i} ==> ${idx}`);
       console.log('similarity-query for ', serveridx);
-      this.queryBaseURL = this.getBaseURL();
+      this.queryBaseURL = URLUtil.getBaseURL();
       let msg = {
         type: "similarityquery",
         clientId: "direct",
@@ -828,34 +778,6 @@ export class QueryComponent implements AfterViewInit, OnInit {
    * WebSockets (CLIP and Node.js)
    ****************************************************************************/
 
-  connectToVBSServer() {
-    this.vbsService.connect();
-  }
-
-  disconnectFromVBSServer() {
-    //this.vbsService.logout(this);
-  }
-
-  checkNodeConnection() {
-    if (this.nodeService.connectionState !== WSServerStatus.CONNECTED) {
-      this.nodeService.connectToServer();
-    }
-  }
-
-  checkCLIPConnection() {
-    if (this.clipService.connectionState !== WSServerStatus.CONNECTED) {
-      this.clipService.connectToServer();
-    }
-  }
-
-  checkVBSServerConnection() {
-    if (this.vbsService.vbsServerState == WSServerStatus.UNSET || this.vbsService.vbsServerState == WSServerStatus.DISCONNECTED) {
-      this.connectToVBSServer();
-    } else if (this.vbsService.vbsServerState == WSServerStatus.CONNECTED) {
-      this.disconnectFromVBSServer();
-    }
-  }
-
   sendTopicAnswer() {
     this.vbsService.submitText(this.topicanswer)
 
@@ -901,7 +823,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
 
     let resultnum = (parseInt(this.selectedPage) - 1) * this.resultsPerPage + 1;
     this.querydataset = qresults.dataset;
-    let keyframeBase = this.getBaseURL(); //TODO + 'thumbs/';
+    let keyframeBase = URLUtil.getBaseURL(); //TODO + 'thumbs/';
 
     let logResults:Array<QueryResult> = [];
     //for (var e of qresults.results) {
@@ -934,12 +856,6 @@ export class QueryComponent implements AfterViewInit, OnInit {
     this.nodeServerInfo = undefined;
   }
 
-  closeWebSocketCLIP() {
-    if (this.clipService.connectionState !== WSServerStatus.CONNECTED) {
-      this.clipService.connectToServer();
-    }
-  }
-
   /****************************************************************************
    * Submission to VBS Server
    ****************************************************************************/
@@ -951,7 +867,6 @@ export class QueryComponent implements AfterViewInit, OnInit {
 
     this.queryEventLogService.logSubmit(`result:${index}`);
     this.expLogService.submitLog();
-
 
     //interaction logging
     this.interactionLogService.logSubmit(imageID, index)

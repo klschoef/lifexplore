@@ -8,7 +8,7 @@ export default class URLUtil {
     return val;
   }
 
-  getBaseURL() {
+  static getBaseURL() {
     return GlobalConstants.keyframeBaseURL;
   }
 }

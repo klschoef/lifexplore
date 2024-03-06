@@ -28,6 +28,12 @@ export class ClipServerConnectionService {
     this.messages = this.connectToServer();
   }
 
+  connectToServerIfUnconnected() {
+    if (this.connectionState !== WSServerStatus.CONNECTED) {
+      this.connectToServer();
+    }
+  }
+
   public connectToServer() {
     this.messages = <Subject<Message>>this.connectToWebsocket(URL).pipe(
     map(

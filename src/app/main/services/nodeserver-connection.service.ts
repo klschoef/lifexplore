@@ -30,6 +30,12 @@ export class NodeServerConnectionService {
     this.messages = this.connectToServer();
   }
 
+  public connectToServerIfUnconnected() {
+    if (this.connectionState !== WSServerStatus.CONNECTED) {
+      this.connectToServer();
+    }
+  }
+
   public connectToServer() {
     console.log(`will connect to node server: ${URL}`)
     this.messages = <Subject<Message>>this.connectToWebsocket(URL).pipe(
