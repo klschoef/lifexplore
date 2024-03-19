@@ -1,0 +1,83 @@
+.exp-clickable {
+  cursor: pointer;
+}
+
+.exp-hover-scale {
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.exp-hover-scale-small {
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(0.9);
+  }
+}
+
+.exp-hover-scale-rotate {
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1) rotate(5deg);
+  }
+}
+
+.exp-hover-scale-rotate-small {
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(0.9) rotate(-5deg);
+  }
+}
+
+.exp-hover-move-up {
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px); /* Adjust the value as needed for the desired movement */
+  }
+}
+
+.exp-hover-move-left {
+  transition: transform 0.3s ease-in-out;
+
+  &:hover {
+    transform: translateX(-10px);
+  }
+}
+
+.exp-hover-move-right {
+  transition: transform 0.3s ease-in-out;
+
+  &:hover {
+    transform: translateX(10px);
+  }
+}
+
+@keyframes textPulsate {
+  0% {
+    text-shadow: 0 0 10px rgba(255,255,255,.7);
+  }
+  50% {
+    text-shadow: 0 0 20px #fff;
+  }
+  100% {
+    text-shadow: 0 0 10px rgba(255,255,255,.7);
+  }
+}
+
+@keyframes pulseAnimation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

@@ -1,0 +1,24 @@
+button {
+  &.primary, &.secondary, &.delete {
+    border-radius: 8px;
+    padding: 8px;
+    height: auto;
+    box-shadow: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  &.primary {
+    background-color: rgba(29,30,33,1);
+    color: white;
+  }
+
+  &.secondary {
+    background-color: rgb(227, 227, 158);
+  }
+
+  &.delete {
+    background-color: red;
+    color: white;
+  }
+}

@@ -50,7 +50,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
   queryType: string = '';
   metadata: any;
 
-  public statusTaskInfoText: string = ""; //property binding
+  statusTaskInfoText: string = ""; //property binding
   statusTaskRemainingTime: string = ""; //property binding
 
   nodeServerInfo?: string; // info message for server communication
@@ -217,32 +217,6 @@ export class QueryComponent implements AfterViewInit, OnInit {
     this.fullImageIndex = -1;
   }
 
-  toggleHistorySelect() {
-    this.historyDiv.nativeElement.hidden = !this.historyDiv.nativeElement.hidden;
-  }
-
-  showHelp() {
-    this.showHelpActive = !this.showHelpActive;
-    if (this.showHelpActive) {
-      //interaction logging
-      this.interactionLogService.logShowHelp(this.selectedPage, this.queryresults);
-    }
-  }
-
-  // helper function to add a subquery to the current query via html button
-  addToQuery(prefix:string, name:string) {
-    this.queryinput = QueryUtil.addToQuery(this.queryinput, prefix, name);
-  }
-
-  // helper function to remove a subquery to the current query via html button
-  delFromQuery(prefix:string, name:string) {
-    this.queryinput = QueryUtil.delFromQuery(this.queryinput, prefix, name);
-  }
-
-  filenameToDate(fn:string):string {
-    return DateUtil.filenameToDate(fn);
-  }
-
   // TODO: move key handling to util class strongly related to this query component. Maybe directly in the same folder. Don't call it util, call it handler to make it more clear.
   // TODO: be aware that we also need to use services here, so maybe we need to move the key handling to a util service?.
   @HostListener('document:keyup', ['$event'])
@@ -352,62 +326,6 @@ export class QueryComponent implements AfterViewInit, OnInit {
         }
       }
     }
-  }
-
-  prevPage() {
-    let currPage = parseInt(this.selectedPage);
-    if (currPage > 1) {
-      this.selectedPage = (currPage - 1).toString();
-      this.performQuery();
-    }
-  }
-
-  nextPage() {
-    let currPage = parseInt(this.selectedPage);
-    if (currPage < this.pages.length) {
-      this.selectedPage = (currPage + 1).toString();
-      this.performQuery();
-    }
-  }
-
-  gotoPage(pnum:string) {
-    let testPage = parseInt(pnum);
-    if (testPage < this.pages.length && testPage > 0) {
-      this.hideFullImage();
-      this.selectedPage = pnum;
-      this.performQuery();
-    }
-  }
-
-  isVideoResult(dataset: string): boolean {
-    return dataset.endsWith('v');
-  }
-
-  onQueryInputFocus() {
-    this.queryFieldHasFocus = true;
-  }
-
-  onQueryInputBlur() {
-    this.queryFieldHasFocus = false;
-  }
-
-  onAnswerInputFocus() {
-    this.answerFieldHasFocus = true;
-  }
-
-  onAnswerInputBlur() {
-    this.answerFieldHasFocus = false
-  }
-
-
-  showDaySummary(idx:number) {
-    this.requestVideoSummaries(this.queryresult_videoid[idx]);
-  }
-
-  getFilenameFromItem(filepath: string) {
-    const filenameWithExtension: string = filepath.split('/').pop() || '';
-    const filename: string = filenameWithExtension.slice(0, -4);
-    return filename
   }
 
    /****************************************************************************
@@ -591,8 +509,6 @@ export class QueryComponent implements AfterViewInit, OnInit {
 
       this.selectedHistoryEntry = "-1";
       this.historyDiv.nativeElement.hidden = true;
-
-
     }
   }
 
@@ -642,7 +558,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
     }
   }
 
-  showVideoShots(videoid:string, frame:string) {
+  showVideoShots(videoid:string, frame:string) { // TODO: outsource to an own video part?
     this.router.navigate(['video',videoid,frame]); //or navigateByUrl(`/video/${videoid}`)
   }
 
@@ -791,5 +707,90 @@ export class QueryComponent implements AfterViewInit, OnInit {
 
     //save and reset logs
     this.expLogService.saveLogLocallyAndClear();
+  }
+
+  /****************************************************************************
+   * UI Helper Methods
+   ****************************************************************************/
+  toggleHistorySelect() {
+    this.historyDiv.nativeElement.hidden = !this.historyDiv.nativeElement.hidden;
+  }
+
+  showHelp() {
+    this.showHelpActive = !this.showHelpActive;
+    if (this.showHelpActive) {
+      //interaction logging
+      this.interactionLogService.logShowHelp(this.selectedPage, this.queryresults);
+    }
+  }
+
+  // helper function to add a subquery to the current query via html button
+  addToQuery(prefix:string, name:string) {
+    this.queryinput = QueryUtil.addToQuery(this.queryinput, prefix, name);
+  }
+
+  // helper function to remove a subquery to the current query via html button
+  delFromQuery(prefix:string, name:string) {
+    this.queryinput = QueryUtil.delFromQuery(this.queryinput, prefix, name);
+  }
+
+  filenameToDate(fn:string):string {
+    return DateUtil.filenameToDate(fn);
+  }
+
+  prevPage() {
+    let currPage = parseInt(this.selectedPage);
+    if (currPage > 1) {
+      this.selectedPage = (currPage - 1).toString();
+      this.performQuery();
+    }
+  }
+
+  nextPage() {
+    let currPage = parseInt(this.selectedPage);
+    if (currPage < this.pages.length) {
+      this.selectedPage = (currPage + 1).toString();
+      this.performQuery();
+    }
+  }
+
+  gotoPage(pnum:string) {
+    let testPage = parseInt(pnum);
+    if (testPage < this.pages.length && testPage > 0) {
+      this.hideFullImage();
+      this.selectedPage = pnum;
+      this.performQuery();
+    }
+  }
+
+  isVideoResult(dataset: string): boolean {
+    return dataset.endsWith('v');
+  }
+
+  onQueryInputFocus() {
+    this.queryFieldHasFocus = true;
+  }
+
+  onQueryInputBlur() {
+    this.queryFieldHasFocus = false;
+  }
+
+  onAnswerInputFocus() {
+    this.answerFieldHasFocus = true;
+  }
+
+  onAnswerInputBlur() {
+    this.answerFieldHasFocus = false
+  }
+
+
+  showDaySummary(idx:number) {
+    this.requestVideoSummaries(this.queryresult_videoid[idx]);
+  }
+
+  getFilenameFromItem(filepath: string) {
+    const filenameWithExtension: string = filepath.split('/').pop() || '';
+    const filename: string = filenameWithExtension.slice(0, -4);
+    return filename
   }
 }

@@ -7,7 +7,7 @@ import { LocalConfig } from "./local-config";
 //export var queryHistory:Array<string> = [];
 
 export enum WebSocketEvent {
-    UNSET = 'unset', 
+    UNSET = 'unset',
     CLOSE = 'disconnected',
     OPEN = 'connected',
     SEND = 'sending',
@@ -21,20 +21,20 @@ export enum WSServerStatus {
     DISCONNECTED = 'disconnected'
 }
 
-export interface QueryType { 
-  type: string; 
-  query: string; 
-  maxresults: number; 
-  resultsperpage: number; 
-  selectedpage: string; 
-  queryMode: string; 
+export interface QueryType {
+  type: string;
+  query: string;
+  maxresults: number;
+  resultsperpage: number;
+  selectedpage: string;
+  queryMode: string;
 }
 
 /*
-export interface LogResultItem { 
-  item: string; 
-  frame: string; 
-  score: number; 
+export interface LogResultItem {
+  item: string;
+  frame: string;
+  score: number;
   rank: number;
 }
 
@@ -49,7 +49,7 @@ export interface ResultLog {
     timestamp: number;
     source: string;
     sortType: string;
-    resultSetAvailability: string,  
+    resultSetAvailability: string,
     results: Array<LogResultItem>,
     evets: Array<LogQueryEvent>
 }
@@ -57,9 +57,9 @@ export interface ResultLog {
 
 export class GlobalConstants {
     public static configVBSSERVER = 'https://vbs.videobrowsing.org';
-    public static configUSER = 'divexplore'; //might be overriden by LocalStorage
-    public static configPASS = 'dHKooTWGP3LY'; //might be overriden by LocalStorage //'MRT7jDaRUq';
-    
+    public static configUSER = 'diveXplore1'; //might be overriden by LocalStorage
+    public static configPASS = 'Wy?j}7&3'; //might be overriden by LocalStorage //'MRT7jDaRUq';
+
     public static clipServerURL: string = 'ws://' + LocalConfig.config_CLIP_SERVER_HOST + ':' + LocalConfig.config_CLIP_SERVER_PORT;
     public static nodeServerURL: string = 'ws://' + LocalConfig.config_NODE_SERVER_HOST + ':' + LocalConfig.config_NODE_SERVER_PORT;
     public static dataHost = LocalConfig.config_DATA_BASE_URL;
@@ -82,7 +82,7 @@ export function formatAsTime(frame:string, fps:number, withFrames:boolean=true) 
     let secs = parseInt(frame) / fps;
     let ss = Math.floor(secs % 60);
     let mm = Math.floor(secs / 60);
-    let hh = Math.floor(secs / 3600); 
+    let hh = Math.floor(secs / 3600);
     let timeString = `${twoDigits(hh.toString())}:${twoDigits(mm.toString())}:${twoDigits(ss.toString())}`;
     if (withFrames) {
       return `${timeString}.${ff}`
@@ -96,7 +96,7 @@ export function getTimestampInSeconds () {
 }
 /**
  * EXAMPLE OF LOCAL CONFIG (local-config.ts)
- * 
+ *
  export class LocalConfig {
     public static config_CLIP_SERVER_HOST = 'extreme00.itec.aau.at'; //localhost
     public static config_CLIP_SERVER_PORT = '8001';

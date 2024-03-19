@@ -1,0 +1,14 @@
+<div class="exp-search-area animate__animated animate__slideInDown animate__faster">
+  <div class="header-line">
+    <a routerLink="/search"><img class="logo" src="../../../../assets/lifeXplore_.png"></a>
+    <div class="search-container animate__animated animate__fadeIn animate__delay-0.3s">
+      <mat-icon aria-hidden="false" fontIcon="search"></mat-icon>
+      <input [(ngModel)]="searchValue" (ngModelChange)="onSearchChange($event)" (keydown.enter)="onSearch.emit(searchValue)" type="text" class="exp-textfield" placeholder="Search ..."/>
+    </div>
+    <div class="action-buttons animate__animated animate__fadeIn animate__delay-0.3s">
+      <button class="secondary exp-hover-scale" (click)="onSearch.emit(searchValue)">Search</button>
+      <button class="delete exp-hover-scale" (click)="clickOnReset()">Reset</button>
+    </div>
+  </div>
+</div>
+

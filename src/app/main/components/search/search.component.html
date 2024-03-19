@@ -1,0 +1,16 @@
+<exp-search-area (searchValueChange)="searchValueChange($event)" (onSearch)="onSearch($event)"/>
+<div class="lifelog-search-results-container">
+  <div class="lifelog-search-result exp-clickable exp-hover-move-up animate__animated animate__fadeIn" *ngFor="let result of results$ | async; let i = index">
+    <img src="{{result.filepath}}">
+    <div class="metadata">
+      <div class="line">
+        <div *ngIf="result.heart_rate" class="heart-rate-container">
+          <mat-icon fontIcon="favorite" style="color: red; animation: pulseAnimation {{60/result.heart_rate}}s infinite;"></mat-icon>
+          {{result.heart_rate}}
+        </div>
+        <div class="datetime">{{result.datetime}}</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div>STATUS BAR</div>

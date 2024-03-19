@@ -11,4 +11,8 @@ export default class URLUtil {
   static getBaseURL() {
     return GlobalConstants.keyframeBaseURL;
   }
+
+  static getKeyframeBaseUrl() {
+    return GlobalConstants.keyframeBaseURL;
+  }
 }

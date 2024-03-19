@@ -21,7 +21,7 @@ export class NodeServerConnectionService {
 
   private subject: AnonymousSubject<MessageEvent> | undefined;
   // use this to send messages to the server
-  public messages: Subject<Message>;
+  public messages: Subject<any>;
 
   public connectionState: WSServerStatus = WSServerStatus.UNSET;
 

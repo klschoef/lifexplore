@@ -23,6 +23,9 @@ import {
   ExplDialogsComponentsModule
 } from './features/expl-dialogs/expl-dialogs-components/expl-dialogs-components.module';
 import {CalendarComponent} from './main/components/calendar/calendar.component';
+import { SearchComponent } from './main/components/search/search.component';
+import { ExpSearchAreaComponent } from './main/components/exp-search-area/exp-search-area.component';
+import {NgOptimizedImage} from '@angular/common';
 
 
 @NgModule({
@@ -31,11 +34,13 @@ import {CalendarComponent} from './main/components/calendar/calendar.component';
     QueryComponent,
     CalendarComponent,
     InfoComponent,
-    QueryHelpDialogComponent
+    QueryHelpDialogComponent,
+    SearchComponent,
+    ExpSearchAreaComponent
   ],
   imports: [
     BrowserModule,
-    ApiModule.forRoot( () => {
+    ApiModule.forRoot(() => {
       return new Configuration({
         basePath: GlobalConstants.configVBSSERVER
         , withCredentials: true
@@ -48,7 +53,8 @@ import {CalendarComponent} from './main/components/calendar/calendar.component';
     MatIconModule,
     MatSliderModule,
     MatButtonToggleModule,
-    ExplDialogsComponentsModule
+    ExplDialogsComponentsModule,
+    NgOptimizedImage
   ],
   providers: [VBSServerConnectionService],
   bootstrap: [AppComponent]

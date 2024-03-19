@@ -26,6 +26,7 @@
     "@mdi/js": "^7.1.96",
     "@openapitools/openapi-generator-cli": "2.4.26",
     "@types/googlemaps": "^3.43.3",
+    "animate.css": "^4.1.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"

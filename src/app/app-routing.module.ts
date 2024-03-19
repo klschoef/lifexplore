@@ -4,10 +4,12 @@ import { CalendarComponent } from './main/components/calendar/calendar.component
 import { AppComponent } from './app.component';
 import { QueryComponent } from './main/components/query/query.component';
 import { InfoComponent } from './main/components/info/info.component';
+import {SearchComponent} from './main/components/search/search.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'query', pathMatch: 'full'}, // component: AppComponent
   {path: 'query', component: QueryComponent},
+  {path: 'search', component: SearchComponent},
   {path: 'query/:filename', component: QueryComponent},
   {path: 'query/:objects', component: QueryComponent},
   {path: 'filesimilarity/:similarto', component: QueryComponent},
