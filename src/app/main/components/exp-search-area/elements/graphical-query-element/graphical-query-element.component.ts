@@ -9,7 +9,7 @@ import {QueryPart, QueryPartType, SubqueryType} from '../../models/query-part';
   styleUrls: ['./graphical-query-element.component.scss']
 })
 export class GraphicalQueryElementComponent {
-  @Input() graphicalContentPart?: GraphicalContentPart;
+  @Input() graphicalContentPart!: GraphicalContentPart;
   @Input() canMoveForward: boolean = true;
   @Input() canMoveBackward: boolean = true;
 
@@ -37,5 +37,9 @@ export class GraphicalQueryElementComponent {
     this.graphicalContentPart?.queryParts.push({
       query_type: QueryPartType.objects
     });
+  }
+
+  deleteQueryPart(queryPart: QueryPart) {
+    this.graphicalContentPart.queryParts = this.graphicalContentPart?.queryParts.filter(qp => qp !== queryPart);
   }
 }

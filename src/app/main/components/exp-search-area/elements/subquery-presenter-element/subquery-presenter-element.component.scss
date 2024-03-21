@@ -1,0 +1,33 @@
+.subquery-container {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid;
+  border-radius: 8px;
+
+  .subquery-type {
+    padding: 4px;
+    border-width: 0 1px 0 0;
+    border-style: solid;
+    font-weight: 300;
+    background-color: rgb(227, 227, 158);
+    color: black;
+  }
+
+  .subquery-delete, .subquery-type, .subquery-value {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .subquery-delete > mat-icon {
+    width: 12px;
+    height: 12px;
+    font-size: 12px;
+    margin-right: 4px;
+  }
+
+  .subquery-value {
+    padding: 4px;
+  }
+}

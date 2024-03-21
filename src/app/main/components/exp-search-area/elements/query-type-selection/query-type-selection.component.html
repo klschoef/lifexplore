@@ -1,6 +1,8 @@
 <div class="subquery-selection">
-  <div class="subquery-type exp-clickable exp-hover-scale-left-center"
+  <div class="subquery-type"
        (click)="clickQueryType(stype)"
+       [class.selected]="stype === selectedQueryType"
+       [class.exp-clickable]="stype !== selectedQueryType"
        *ngFor="let stype of query_types">
     {{stype}}
   </div>

@@ -11,8 +11,8 @@ export interface Subquery {
 }
 
 export enum QueryPartType {
-  objects = "objects",
-  texts = "texts",
+  objects = "Objects",
+  texts = "Texts",
 }
 
 export interface QueryPart {

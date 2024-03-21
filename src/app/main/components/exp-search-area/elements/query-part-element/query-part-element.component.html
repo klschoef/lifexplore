@@ -1,9 +1,13 @@
 <form [formGroup]="formGroup" class="query-part-element">
   <div class="header-label">Query Type</div>
-  <exp-subquery-selection />
+  <exp-subquery-selection
+    (onSelectQueryType)="selectQueryType($event)"
+    [selectedQueryType]="queryPart.query_type"
+  />
   <div class="header-label">Query</div>
   <input
     [style.border-color]="(queryControl?.errors) ? 'red' : 'inherit'"
+    [(ngModel)]="queryPart.query"
     class="exp-textfield" type="text"
     placeholder="Query ..."
     formControlName="query"/>
@@ -11,6 +15,13 @@
     <div class="error" *ngIf="queryControl.errors?.['required']">Query is required.</div>
   </div>
   <div class="header-label">Subqueries</div>
+  <div class="subqueries-container" *ngIf="queryPart?.subqueries">
+    <app-subquery-element
+      *ngFor="let subquery of queryPart!.subqueries"
+      (onDelete)="deleteSubquery($event)"
+      [subquery]="subquery" />
+  </div>
   <mat-icon class="exp-clickable exp-hover-scale"
+            (click)="addSubquery()"
             fontIcon="add" ></mat-icon>
 </form>

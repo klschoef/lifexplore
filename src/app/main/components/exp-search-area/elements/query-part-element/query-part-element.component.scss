@@ -19,4 +19,10 @@
     font-weight: bold;
     margin-bottom: -4px;
   }
+
+  .subqueries-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
 }

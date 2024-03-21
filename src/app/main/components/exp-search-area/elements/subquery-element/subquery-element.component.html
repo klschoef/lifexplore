@@ -1,0 +1,12 @@
+<div class="subquery-element-container">
+  <div class="header">
+    <input class="exp-textfield" type="text" [(ngModel)]="subquery.query_type"/>
+    <mat-icon (click)="clickDelete()" class="exp-clickable exp-hover-scale" aria-hidden="false" fontIcon="delete"></mat-icon>
+  </div>
+  <div class="desc-label">Query</div>
+  <input class="exp-textfield" type="text" [(ngModel)]="subquery.query"/>
+  <div class="desc-label">Min</div>
+  <input class="exp-textfield" type="number" [(ngModel)]="subquery.min"/>
+  <div class="desc-label">Max</div>
+  <input class="exp-textfield" type="number" [(ngModel)]="subquery.max"/>
+</div>
