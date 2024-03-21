@@ -39,6 +39,11 @@
     }
   }
 
+  exp-graphical-search-area {
+    min-width: 10px;
+    flex-grow: 1;
+  }
+
   .action-buttons {
     display: flex;
     flex-direction: row;

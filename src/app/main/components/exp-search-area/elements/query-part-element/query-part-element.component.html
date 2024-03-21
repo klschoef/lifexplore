@@ -1,0 +1,16 @@
+<form [formGroup]="formGroup" class="query-part-element">
+  <div class="header-label">Query Type</div>
+  <exp-subquery-selection />
+  <div class="header-label">Query</div>
+  <input
+    [style.border-color]="(queryControl?.errors) ? 'red' : 'inherit'"
+    class="exp-textfield" type="text"
+    placeholder="Query ..."
+    formControlName="query"/>
+  <div *ngIf="queryControl && (queryControl.dirty || queryControl.touched)">
+    <div class="error" *ngIf="queryControl.errors?.['required']">Query is required.</div>
+  </div>
+  <div class="header-label">Subqueries</div>
+  <mat-icon class="exp-clickable exp-hover-scale"
+            fontIcon="add" ></mat-icon>
+</form>

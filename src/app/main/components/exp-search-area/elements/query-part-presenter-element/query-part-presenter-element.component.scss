@@ -1,0 +1,68 @@
+.query-type-container {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid;
+  border-radius: 8px;
+  overflow: hidden;
+
+  .query-type, .subquery-type {
+    padding: 4px;
+    border-width: 0 1px 0 0;
+    border-style: solid;
+    color: white;
+    background-color: rgba(29,30,33,1);
+    font-weight: 300;
+  }
+
+  .subquery-type {
+    background-color: rgb(227, 227, 158);
+    color: black;
+  }
+
+  .subquery-delete, .subquery-type, .subquery-value, .query-delete, .query-type, .query-value {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .subquery-delete > mat-icon {
+    width: 12px;
+    height: 12px;
+    font-size: 12px;
+    margin-right: 4px;
+  }
+
+  .query-value, .subquery-value {
+    padding: 4px;
+  }
+
+  .line {
+    &.first {
+      display: flex;
+      flex-direction: row;
+      border-style: solid;
+      border-width: 0 0 1px 0;
+
+      .query-value {
+        flex-grow: 1;
+      }
+    }
+
+    &.subqueries {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 8px;
+      font-size: 12px;
+
+      .subquery-container {
+        display: flex;
+        flex-direction: row;
+        border: 1px solid;
+        border-radius: 8px;
+      }
+    }
+  }
+}

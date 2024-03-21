@@ -1,0 +1,20 @@
+<div class="graphical-query-element">
+  <div class="header-element">
+    <div class="movement">
+      <mat-icon [ngClass]="{'exp-clickable exp-hover-scale': canMoveBackward, 'disabled': !canMoveBackward}" (click)="clickMoveBackward()" aria-hidden="false" fontIcon="arrow_back"></mat-icon>
+      <mat-icon [ngClass]="{'exp-clickable exp-hover-scale': canMoveForward, 'disabled': !canMoveForward}" (click)="clickMoveForward()" aria-hidden="false" fontIcon="arrow_forward"></mat-icon>
+    </div>
+    <div class="delete">
+      <mat-icon (click)="clickDelete()" class="exp-clickable exp-hover-scale" aria-hidden="false" fontIcon="delete"></mat-icon>
+    </div>
+  </div>
+  <div class="new-subquery-container">
+    <div *ngFor="let queryPart of graphicalContentPart?.queryParts">
+      <app-query-part-presenter-element [queryPart]="queryPart"/>
+    </div>
+    <mat-icon class="exp-clickable exp-hover-scale"
+              aria-hidden="false"
+              (click)="addQueryPart()"
+              fontIcon="add" ></mat-icon>
+  </div>
+</div>

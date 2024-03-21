@@ -10,6 +10,15 @@
   }
 }
 
+.exp-hover-scale-left-center {
+  transition: transform 0.3s ease;
+  transform-origin: left center;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
 .exp-hover-scale-small {
   transition: transform 0.3s ease;
 

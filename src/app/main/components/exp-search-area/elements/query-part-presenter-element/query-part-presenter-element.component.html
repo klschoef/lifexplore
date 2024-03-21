@@ -1,0 +1,20 @@
+<div class="query-type-container">
+  <div class="line first">
+    <div class="query-type">{{queryPart.query_type}}</div>
+    <div class="query-value">{{queryPart.query}}</div>
+    <div class="query-delete">
+      <mat-icon fontIcon="edit_note" class="exp-clickable exp-hover-scale" (click)="openDetail()"/>
+      <mat-icon fontIcon="delete" class="exp-clickable exp-hover-scale" />
+    </div>
+  </div>
+  <div *ngIf="queryPart.subqueries && queryPart.subqueries.length > 0" class="line subqueries">
+    <div class="subquery-container" *ngFor="let subquery of queryPart.subqueries">
+      <div class="subquery-type">{{subquery.query_type}}</div>
+      <div class="subquery-value">{{subquery.query}}</div>
+      <div class="subquery-delete"><mat-icon fontIcon="delete" class="exp-clickable exp-hover-scale" /></div>
+    </div>
+  </div>
+</div>
+<exp-popup [open$]="openDetailContainer$">
+  <app-query-part-element [queryPart]="queryPart"/>
+</exp-popup>

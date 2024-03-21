@@ -1,0 +1,22 @@
+.query-part-element {
+  background: white;
+  padding: 8px;
+  border: 1px solid;
+  border-radius: 8px;
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 1px 5px rgba(29,30,33,1);
+
+  .error {
+    color: red;
+    font-size: 12px;
+  }
+
+  .header-label {
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: -4px;
+  }
+}

@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 
-import { FormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MatSliderModule } from '@angular/material/slider';
@@ -26,6 +26,12 @@ import {CalendarComponent} from './main/components/calendar/calendar.component';
 import { SearchComponent } from './main/components/search/search.component';
 import { ExpSearchAreaComponent } from './main/components/exp-search-area/exp-search-area.component';
 import {NgOptimizedImage} from '@angular/common';
+import { SubquerySelectionComponent } from './main/components/exp-search-area/elements/subquery-selection/subquery-selection.component';
+import { ExpPopupComponent } from './main/components/utility-components/popups/exp-popup/exp-popup.component';
+import { QueryPartElementComponent } from './main/components/exp-search-area/elements/query-part-element/query-part-element.component';
+import { GraphicalQueryElementComponent } from './main/components/exp-search-area/elements/graphical-query-element/graphical-query-element.component';
+import { GraphicalSearchAreaComponent } from './main/components/exp-search-area/search-areas/graphical-search-area/graphical-search-area.component';
+import { QueryPartPresenterElementComponent } from './main/components/exp-search-area/elements/query-part-presenter-element/query-part-presenter-element.component';
 
 
 @NgModule({
@@ -36,7 +42,13 @@ import {NgOptimizedImage} from '@angular/common';
     InfoComponent,
     QueryHelpDialogComponent,
     SearchComponent,
-    ExpSearchAreaComponent
+    ExpSearchAreaComponent,
+    SubquerySelectionComponent,
+    ExpPopupComponent,
+    QueryPartElementComponent,
+    GraphicalQueryElementComponent,
+    GraphicalSearchAreaComponent,
+    QueryPartPresenterElementComponent
   ],
   imports: [
     BrowserModule,
@@ -54,7 +66,8 @@ import {NgOptimizedImage} from '@angular/common';
     MatSliderModule,
     MatButtonToggleModule,
     ExplDialogsComponentsModule,
-    NgOptimizedImage
+    NgOptimizedImage,
+    ReactiveFormsModule
   ],
   providers: [VBSServerConnectionService],
   bootstrap: [AppComponent]

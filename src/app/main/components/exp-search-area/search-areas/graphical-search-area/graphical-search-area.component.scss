@@ -1,0 +1,36 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  background: white;
+  border-radius: 8px;
+  color: rgba(29,30,33,1);
+  padding: 0 8px;
+  flex-grow: 1;
+  gap: 8px;
+  overflow: scroll;
+
+  mat-icon {
+    width: 30px;
+  }
+
+  input {
+    border: none;
+    width: 100%;
+    padding: 8px;
+    font-size: 18px;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .add-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 8px;
+  }
+}
