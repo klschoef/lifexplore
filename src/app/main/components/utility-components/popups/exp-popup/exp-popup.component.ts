@@ -13,16 +13,22 @@ export class ExpPopupComponent implements OnDestroy, OnChanges {
     switchMap(() => this.open$),
     tap((isOpen: boolean) => {
       if (isOpen && !this.unsubscribeClickHandler) {
+        console.log("add click handler", isOpen);
         this.unsubscribeClickHandler = this.renderer.listen('window', 'click', (event: Event) => {
           if (!this.elementRef.nativeElement.contains(event.target)) {
             if (this.skipFirst) {
               this.skipFirst = false;
               return;
             }
+            console.log("close because of click outside");
             this.open$.next(false);
           }
         });
       } else {
+        if (isOpen) {
+          return;
+        }
+        console.log("unsubscribing click handler", isOpen);
         if (this.unsubscribeClickHandler) {
           this.unsubscribeClickHandler();
         }

@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {GraphicalContentPart} from '../../exp-search-area.component';
+import {GraphicalContentPart} from '../../../../models/graphical-content-part';
 
 @Component({
   selector: 'exp-graphical-search-area',

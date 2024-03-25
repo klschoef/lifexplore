@@ -12,9 +12,14 @@ export class QueryPartPresenterElementComponent {
   @Output() onDelete: EventEmitter<QueryPart> = new EventEmitter<QueryPart>();
 
   openDetailContainer$ = new BehaviorSubject<boolean>(false);
+  openTypeSelection$ = new BehaviorSubject<boolean>(false);
 
   openDetail() {
     this.openDetailContainer$.next(true);
+  }
+
+  openTypeSelection() {
+    this.openTypeSelection$.next(true);
   }
 
   clickDelete() {
@@ -23,5 +28,10 @@ export class QueryPartPresenterElementComponent {
 
   deleteSubquery(subQuery: Subquery) {
     this.queryPart.subqueries = this.queryPart.subqueries?.filter(qp => qp !== subQuery);
+  }
+
+  selectQueryType(type: QueryPartType) {
+    this.queryPart.query_type = type;
+    this.openTypeSelection$.next(false);
   }
 }

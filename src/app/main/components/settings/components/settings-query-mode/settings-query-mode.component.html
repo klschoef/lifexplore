@@ -1,0 +1,10 @@
+<div *ngIf="searchAreaMode$ | async as searchResultMode" class="view-mode-container">
+  <div class="icon-container"
+       [class.active]="searchResultMode === HTMLSearchAreaMode.GRAPHICAL" >
+    <mat-icon fontIcon="mouse" class="exp-clickable exp-hover-scale" (click)="changeResultMode(HTMLSearchAreaMode.GRAPHICAL)"/>
+  </div>
+  <div class="icon-container"
+       [class.active]="searchResultMode === HTMLSearchAreaMode.TEXT">
+    <mat-icon fontIcon="keyboard" class="exp-clickable exp-hover-scale" (click)="changeResultMode(HTMLSearchAreaMode.TEXT)"/>
+  </div>
+</div>

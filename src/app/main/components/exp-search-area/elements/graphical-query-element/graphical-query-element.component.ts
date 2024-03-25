@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {GraphicalContentPart} from '../../exp-search-area.component';
 import {BehaviorSubject} from 'rxjs';
 import {QueryPart, QueryPartType, SubqueryType} from '../../models/query-part';
+import {GraphicalContentPart} from '../../../../models/graphical-content-part';
 
 @Component({
   selector: 'graphical-query-element',

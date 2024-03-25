@@ -1,47 +1,13 @@
-.lifelog-search-results-container {
+.top-status-bar {
+  position: relative;
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
-  gap: 32px;
-  padding: 64px;
+  justify-content: space-between;
+  padding: 8px;
+  gap: 4px;
+  z-index: 2;
 
-
-  .lifelog-search-result {
-    max-width: 350px;
-    min-width: 250px;
-    background-color: rgba(29,30,33,1);
-    color: white;
-    border-radius: 16px 16px 0 0;
-    overflow: hidden;
-    border-color: rgb(29, 30, 33);
-    border-style: solid;
-    flex: 1 1 250px;
-
-    img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-    }
-
-    .metadata {
-      display: flex;
-      flex-direction: column;
-      padding: 8px;
-
-      .line {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-
-        .heart-rate-container {
-          display: flex;
-          flex-direction: row;
-          gap: 4px;
-          justify-content: center;
-          align-items: center;
-        }
-      }
-    }
+  .settings-icon {
+    margin-top: 4px;
   }
 }

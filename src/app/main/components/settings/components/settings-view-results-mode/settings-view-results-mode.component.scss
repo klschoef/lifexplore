@@ -1,0 +1,21 @@
+.view-mode-container {
+  border: 1px solid;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+
+
+  .icon-container {
+    padding: 4px;
+
+    mat-icon {
+      margin-bottom: -4px;
+    }
+
+    &.active {
+      background: var(--exp-color-primary);
+      color: var(--exp-color-light);
+    }
+  }
+}

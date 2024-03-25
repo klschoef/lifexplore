@@ -1,0 +1,16 @@
+<div class="settings-container exp-popup-content">
+  <div class="nav-bar">
+    <div class="exp-clickable"
+         (click)="currentSettingsType = settingType"
+         [class.active]="currentSettingsType === settingType"
+         *ngFor="let settingType of settingTypes">{{ settingType }}</div>
+  </div>
+  <div class="content">
+    <ng-container *ngIf="currentSettingsType === HTMLSettingsType.General">
+      <div class="header-label">Query Mode</div>
+      <app-settings-query-mode />
+      <div class="header-label">Result Mode</div>
+      <app-settings-view-results-mode />
+    </ng-container>
+  </div>
+</div>

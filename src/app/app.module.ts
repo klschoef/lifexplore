@@ -34,6 +34,11 @@ import { GraphicalSearchAreaComponent } from './main/components/exp-search-area/
 import { QueryPartPresenterElementComponent } from './main/components/exp-search-area/elements/query-part-presenter-element/query-part-presenter-element.component';
 import { SubqueryPresenterElementComponent } from './main/components/exp-search-area/elements/subquery-presenter-element/subquery-presenter-element.component';
 import { SubqueryElementComponent } from './main/components/exp-search-area/elements/subquery-element/subquery-element.component';
+import { DefaultResultContainerComponent } from './main/components/search/components/results-containers/default-result-container/default-result-container.component';
+import { MinimalResultContainerComponent } from './main/components/search/components/results-containers/minimal-result-container/minimal-result-container.component';
+import { SettingsComponent } from './main/components/settings/settings.component';
+import { SettingsViewResultsModeComponent } from './main/components/settings/components/settings-view-results-mode/settings-view-results-mode.component';
+import { SettingsQueryModeComponent } from './main/components/settings/components/settings-query-mode/settings-query-mode.component';
 
 
 @NgModule({
@@ -52,7 +57,12 @@ import { SubqueryElementComponent } from './main/components/exp-search-area/elem
     GraphicalSearchAreaComponent,
     QueryPartPresenterElementComponent,
     SubqueryPresenterElementComponent,
-    SubqueryElementComponent
+    SubqueryElementComponent,
+    DefaultResultContainerComponent,
+    MinimalResultContainerComponent,
+    SettingsComponent,
+    SettingsViewResultsModeComponent,
+    SettingsQueryModeComponent
   ],
   imports: [
     BrowserModule,

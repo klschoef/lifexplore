@@ -1,0 +1,42 @@
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+  gap: 0;
+  padding: 0;
+
+  .nav-bar {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid;
+    background-color: var(--exp-color-secondary);
+
+    & > * {
+      flex-grow: 1;
+      padding: 4px;
+      border-right: 1px solid var(--exp-color-dark);
+      text-align: center;
+
+      &:last-child {
+        border-right: none;
+      }
+
+      &:hover {
+        background-color: var(--exp-color-hover-gray);
+      }
+
+      &.active {
+        background-color: var(--exp-color-primary);
+        color: var(--exp-color-light);
+      }
+    }
+  }
+
+  .content {
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+}
