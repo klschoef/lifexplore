@@ -23,14 +23,36 @@ import {SettingsService} from '../../services/settings.service';
 })
 export class SearchComponent {
 
+  totalResults = 0;
+  currentPage = 1;
+  totalPages = 0;
+  pages: number[] = [];
+
   results$ = this.nodeService.messages.pipe(
+    tap(msg => console.log("message here", msg)),
     filter((msg) => msg && msg.results && msg.results.length > 0),
+    tap((msg) => {
+      this.totalResults = msg.totalresults ?? 0;
+      this.totalPages = Math.ceil(this.totalResults / this.pageSize);
+
+      // Calculate start and end page numbers
+      const startPage = Math.max(this.currentPage - 3, 1);
+      const endPage = Math.min(this.currentPage + 3, this.totalPages);
+
+      // Generate the array of page numbers
+      this.pages = Array.from({ length: (endPage - startPage) + 1 }, (_, i) => startPage + i);
+    }),
     // add the base URL to the filepath, and return just the results
     map((msg) => msg.results.map((result: any) => ({...result, filepath: URLUtil.getKeyframeBaseUrl()+result.filepath}))),
     tap((msg) => console.log("Results from HERE: ", msg))
   );
   openSettings$ = new BehaviorSubject<boolean>(false);
   HTMLSearchResultMode = SearchResultMode;
+  pageSize = this.settingsService.settings$.getValue().pageSize ?? 50
+
+  // last values
+  lastValue?: string;
+  lastObjectValue?: ObjectQuery[];
 
   searchResultMode$ = this.settingsService.settings$.pipe(
     map((settings) => settings.searchResultMode ?? SearchResultMode.DEFAULT),
@@ -68,7 +90,12 @@ export class SearchComponent {
     this.performTextQuery("", value);
   }
 
-  performTextQuery(value: string, objectValues: ObjectQuery[]): void {
+  loadPage(page: number) {
+    this.currentPage = page;
+    this.performTextQuery(this.lastValue, this.lastObjectValue);
+  }
+
+  performTextQuery(value?: string, objectValues?: ObjectQuery[]): void {
     if (this.nodeService.connectionState === WSServerStatus.CONNECTED) {
 
       const queryBaseURL = URLUtil.getBaseURL();
@@ -79,17 +106,20 @@ export class SearchComponent {
         query: value,
         query_dicts: objectValues,
         maxresults: 2000,
-        resultsperpage: 50,
-        selectedpage: 1,
+        resultsperpage: this.pageSize,
+        selectedpage: this.currentPage,
         queryMode: this.queryModes[0]
       };
+
+      this.lastValue = value;
+      this.lastObjectValue = objectValues;
 
       this.nodeService.sendToNodeServer(msg);
 
       //this.historyService.saveToHistory(msg);
 
       //query logging
-      this.queryEventLogService.logJointEmbedding(value);
+      this.queryEventLogService.logJointEmbedding(value ?? "");
 
       //interaction logging
       // this.interactionLogService.logTextQuery(this.queryinput, this.selectedPage);

@@ -1,5 +1,7 @@
 <div class="lifelog-search-results-container">
-  <div class="lifelog-search-result exp-clickable exp-hover-scale animate__animated animate__fadeIn" *ngFor="let result of results; let i = index">
+  <div class="lifelog-search-result exp-clickable exp-hover-scale animate__animated animate__fadeIn"
+       (click)="clickResult(result)"
+       *ngFor="let result of results; let i = index">
     <img src="{{result.filepath}}">
     <!--<div class="metadata">
       <div class="line">
@@ -8,3 +10,6 @@
     </div>-->
   </div>
 </div>
+<expl-dialog class="expl-dialog" *ngIf="selectedResult" [title]="selectedResult.filepath" (clickOnClose)="selectedResult = undefined">
+  <img src="{{selectedResult.filepath}}">
+</expl-dialog>

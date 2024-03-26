@@ -7,4 +7,11 @@ import {Component, Input} from '@angular/core';
 })
 export class MinimalResultContainerComponent {
   @Input() results: any[] = [];
+  selectedResult?: any;
+
+
+  clickResult(result: any) {
+    console.log("result", result);
+    this.selectedResult = result;
+  }
 }

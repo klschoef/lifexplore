@@ -10,7 +10,27 @@
       <app-settings />
     </exp-popup>
   </div>
-
+  <div class="pages-container" *ngIf="pages">
+    <div
+      class="page-container exp-clickable exp-hover-scale"
+      (click)="loadPage(1)"
+      *ngIf="currentPage > 4">
+      1...
+    </div>
+    <div
+      class="page-container exp-clickable exp-hover-scale"
+      (click)="loadPage(p)"
+      [class.active]="currentPage === p"
+      *ngFor="let p of pages">
+      {{ p }}
+    </div>
+    <div
+      class="page-container exp-clickable exp-hover-scale"
+      (click)="loadPage(totalPages)"
+      *ngIf="currentPage < totalPages - 3">
+      ...{{ totalPages }}
+    </div>
+  </div>
   <app-settings-view-results-mode />
 </div>
 <ng-container *ngIf="results$ | async as results;">
