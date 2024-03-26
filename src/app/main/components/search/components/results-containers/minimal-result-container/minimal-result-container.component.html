@@ -10,6 +10,25 @@
     </div>-->
   </div>
 </div>
-<expl-dialog class="expl-dialog" *ngIf="selectedResult" [title]="selectedResult.filepath" (clickOnClose)="selectedResult = undefined">
-  <img src="{{selectedResult.filepath}}">
+<expl-dialog *ngIf="selectedResult"
+             [title]="selectedResult.filepath"
+             (clickOnClose)="selectedResult = undefined">
+  <div class="preview-container">
+    <div class="nav-bar">
+      <div class="mode-container">
+        Single | Day | Similar
+      </div>
+      <div class="title-container">Single</div>
+    </div>
+    <div class="content">
+      <div class="content-container">
+        <div class="image"><img src="{{selectedResult.filepath}}"></div>
+        <div class="metadata">
+          Hey Test<br>
+          {{selectedResult.filepath}}<br>
+          bla
+        </div>
+      </div>
+    </div>
+  </div>
 </expl-dialog>

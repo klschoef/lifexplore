@@ -25,7 +25,14 @@ export enum QueryPartType {
   heart_rate = "Heart Rate"
 }
 
+export enum QueryPartOperator {
+  plus = "+",
+  minus = "-",
+  equal = "=",
+}
+
 export interface QueryPart {
+  queryOperator?: QueryPartOperator;
   query_type: QueryPartType;
   query?: string;
   subqueries?: Subquery[];

@@ -22,7 +22,7 @@
   margin: 32px 0;
 
   .header, .body {
-    margin: 0 32px;
+    margin: var(--app-modal-header-body-margin, 0 32px);
   }
 
   .header {
