@@ -1,6 +1,7 @@
 export enum SubqueryType {
   score = "score",
-  position = "position"
+  position = "position",
+  variants = "variants"
 }
 
 export interface Subquery {
@@ -16,7 +17,7 @@ export enum QueryPartType {
   concepts = "Concepts",
   places = "Places",
   location = "Locations",
-  clip = "Clip",
+  clip = "CLIP",
   filename = "Filename",
   year = "Year",
   month = "Month",

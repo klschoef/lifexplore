@@ -10,6 +10,7 @@ export class ExplDialogComponent {
   @Input() clickOncloseOnClickOutside: boolean = true;
   @Output() clickOnClose: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
   @Output() clickOutside: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+  @Input() showCloseButton: boolean = true;
 
   @ViewChild('dialog') dialog!: ElementRef;
   firstClick = true;

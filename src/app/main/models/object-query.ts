@@ -1,6 +1,7 @@
 export interface ObjectQuerySubquery {
-  min: number,
-  max: number
+  min?: number,
+  max?: number,
+  value?: string
 }
 
 export interface ObjectQueryPart {
@@ -14,14 +15,14 @@ export default interface ObjectQuery {
   concepts: ObjectQueryPart[],
   places: ObjectQueryPart[],
   locations: ObjectQueryPart[],
-  clip?: string,
+  clip?: ObjectQueryPart,
   filename?: string,
   year?: string,
   month?: string,
   day?: string,
   weekday?: string,
   heart_rate?: {
-    min: number,
-    max: number
+    min?: number,
+    max?: number
   }
 }

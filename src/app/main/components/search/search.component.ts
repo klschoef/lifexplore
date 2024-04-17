@@ -27,9 +27,15 @@ export class SearchComponent {
   currentPage = 1;
   totalPages = 0;
   pages: number[] = [];
+  progress$ = new BehaviorSubject<string | undefined>(undefined)
+  error$ = new BehaviorSubject<string | undefined>(undefined)
 
   results$ = this.nodeService.messages.pipe(
-    tap(msg => console.log("message here", msg)),
+    tap(msg => {
+      console.log("message here", msg);
+      this.progress$.next((msg && msg.type && msg.type === 'progress') ? msg.message : undefined);
+      this.error$.next((msg && msg.type && msg.type === 'error') ? msg.error : undefined);
+    }),
     filter((msg) => msg && msg.results && msg.results.length > 0),
     tap((msg) => {
       this.totalResults = msg.totalresults ?? 0;
@@ -46,6 +52,7 @@ export class SearchComponent {
     map((msg) => msg.results.map((result: any) => ({...result, filepath: URLUtil.getKeyframeBaseUrl()+result.filepath}))),
     tap((msg) => console.log("Results from HERE: ", msg))
   );
+
   openSettings$ = new BehaviorSubject<boolean>(false);
   HTMLSearchResultMode = SearchResultMode;
   pageSize = this.settingsService.settings$.getValue().pageSize ?? 50

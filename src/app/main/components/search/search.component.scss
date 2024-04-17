@@ -10,7 +10,7 @@ exp-search-area {
   align-items: center;
   padding: 8px;
   gap: 4px;
-  z-index: 2;
+  z-index: 1;
 
   .settings-icon {
     margin-top: 4px;
@@ -44,4 +44,9 @@ exp-search-area {
       }
     }
   }
+}
+
+.error-dialog {
+  --app-modal-background: red;
+  color: white;
 }

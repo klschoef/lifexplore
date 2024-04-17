@@ -40,3 +40,10 @@
   </ng-container>
 </ng-container>
 <div>STATUS BAR</div>
+<expl-dialog [showCloseButton]="false" *ngIf="progress$ | async as progress" title="Progress">
+  {{progress}}
+</expl-dialog>
+
+<expl-dialog class="error-dialog" *ngIf="error$ | async as error" title="Error" (clickOnClose)="error$.next(undefined);">
+  {{error}}
+</expl-dialog>

@@ -12,6 +12,10 @@
     color: white;
     background-color: rgba(29,30,33,1);
     font-weight: 300;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 60px;
   }
 
   .subquery-delete, .subquery-type, .subquery-value {

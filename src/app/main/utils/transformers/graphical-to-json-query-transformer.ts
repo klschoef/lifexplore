@@ -1,6 +1,7 @@
 import {GraphicalContentPart} from '../../models/graphical-content-part';
 import {QueryPart, QueryPartType} from '../../components/exp-search-area/models/query-part';
-import ObjectQuery, {ObjectQueryPart} from '../../models/object-query';
+import ObjectQuery, {ObjectQueryPart, ObjectQuerySubquery} from '../../models/object-query';
+import {RangeValueUtil} from '../range-value-util';
 
 
 export default class GraphicalToJsonQueryTransformer {
@@ -20,7 +21,7 @@ export default class GraphicalToJsonQueryTransformer {
       texts: [],
       concepts: [],
       places: [],
-      locations: []
+      locations: [] // TODO: replace with cityname and countryname
     }
 
 
@@ -47,13 +48,13 @@ export default class GraphicalToJsonQueryTransformer {
             queryObject.places.push(objectQueryPart);
           }
           break;
-        case QueryPartType.location:
+        case QueryPartType.location: // TODO: cityname and countryname instead of location
           if (objectQueryPart) {
             queryObject.locations.push(objectQueryPart);
           }
           break;
         case QueryPartType.clip:
-          queryObject.clip = queryPart.query ?? "";
+          queryObject.clip = GraphicalToJsonQueryTransformer.queryPartToObjectQueryPart(queryPart, false);
           break;
         case QueryPartType.filename:
           queryObject.filename = queryPart.query ?? "";
@@ -71,7 +72,10 @@ export default class GraphicalToJsonQueryTransformer {
           queryObject.weekday = queryPart.query ?? "";
           break;
         case QueryPartType.heart_rate:
-          // TODO: add heart_rate min and max
+          // TODO: add graphical interface for heart rate
+          if (queryPart.query) {
+            queryObject.heart_rate = RangeValueUtil.parseRangeValues(queryPart.query)
+          }
           break;
       }
     });
@@ -79,14 +83,31 @@ export default class GraphicalToJsonQueryTransformer {
     return queryObject;
   }
 
-  static queryPartToObjectQueryPart(queryPart: QueryPart, allowEmptyQuery: boolean = false): ObjectQueryPart | null {
+  static queryPartToObjectQueryPart(queryPart: QueryPart, allowEmptyQuery: boolean = false): ObjectQueryPart | undefined {
     if (!queryPart.query && !allowEmptyQuery) {
-      return null;
+      return undefined;
     }
+
+    let subqueries: {[key: string]: string | ObjectQuerySubquery} = {};
+
+    queryPart.subqueries?.forEach((subquery) => {
+      switch (subquery.query_type) {
+        case "variants":
+          subqueries["variants"] = subquery.query ?? "";
+          break;
+        case "score":
+          const min_max = RangeValueUtil.parseRangeValues(subquery.query ?? "")
+          subqueries["score"] = {
+            min: min_max?.min,
+            max: min_max?.max
+          };
+          break;
+      }
+    });
 
     return {
       query: queryPart.query ?? "",
-      subqueries: {} // TODO: add subqueries
+      subqueries
     }
   }
 }
