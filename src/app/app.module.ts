@@ -39,6 +39,7 @@ import { MinimalResultContainerComponent } from './main/components/search/compon
 import { SettingsComponent } from './main/components/settings/settings.component';
 import { SettingsViewResultsModeComponent } from './main/components/settings/components/settings-view-results-mode/settings-view-results-mode.component';
 import { SettingsQueryModeComponent } from './main/components/settings/components/settings-query-mode/settings-query-mode.component';
+import { ResultDetailComponent } from './main/components/search/components/result-detail/result-detail.component';
 
 
 @NgModule({
@@ -62,7 +63,8 @@ import { SettingsQueryModeComponent } from './main/components/settings/component
     MinimalResultContainerComponent,
     SettingsComponent,
     SettingsViewResultsModeComponent,
-    SettingsQueryModeComponent
+    SettingsQueryModeComponent,
+    ResultDetailComponent
   ],
   imports: [
     BrowserModule,

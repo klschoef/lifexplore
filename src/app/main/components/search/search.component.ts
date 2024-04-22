@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import {getTimestampInSeconds, WSServerStatus} from '../../../global-constants';
 import URLUtil from '../../utils/url-util';
-import {VBSServerConnectionService} from '../../services/vbsserver-connection.service';
-import {NodeServerConnectionService} from '../../services/nodeserver-connection.service';
 import {ClipServerConnectionService} from '../../services/clipserver-connection.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {InteractionLogService} from '../../services/interaction-log.service';
@@ -15,6 +13,7 @@ import {map} from 'rxjs/operators';
 import ObjectQuery from '../../models/object-query';
 import {SearchResultMode} from '../settings/components/settings-view-results-mode/settings-view-results-mode.component';
 import {SettingsService} from '../../services/settings.service';
+import {PythonServerService} from '../../services/pythonserver.service';
 
 @Component({
   selector: 'app-search',
@@ -30,13 +29,13 @@ export class SearchComponent {
   progress$ = new BehaviorSubject<string | undefined>(undefined)
   error$ = new BehaviorSubject<string | undefined>(undefined)
 
-  results$ = this.nodeService.messages.pipe(
+  results$ = this.pythonServerService.receivedMessages.pipe(
     tap(msg => {
       console.log("message here", msg);
       this.progress$.next((msg && msg.type && msg.type === 'progress') ? msg.message : undefined);
       this.error$.next((msg && msg.type && msg.type === 'error') ? msg.error : undefined);
     }),
-    filter((msg) => msg && msg.results && msg.results.length > 0),
+    filter((msg) => msg && msg.results && msg.results.length > 0 && !msg.type),
     tap((msg) => {
       this.totalResults = msg.totalresults ?? 0;
       this.totalPages = Math.ceil(this.totalResults / this.pageSize);
@@ -49,7 +48,7 @@ export class SearchComponent {
       this.pages = Array.from({ length: (endPage - startPage) + 1 }, (_, i) => startPage + i);
     }),
     // add the base URL to the filepath, and return just the results
-    map((msg) => msg.results.map((result: any) => ({...result, filepath: URLUtil.getKeyframeBaseUrl()+result.filepath}))),
+    map((msg) => msg.results.map((result: any) => ({...result, originalFilepath: result.filepath, filepath: URLUtil.getKeyframeBaseUrl()+result.filepath}))),
     tap((msg) => console.log("Results from HERE: ", msg))
   );
 
@@ -73,7 +72,7 @@ export class SearchComponent {
   ];
 
   constructor(
-    public nodeService: NodeServerConnectionService,
+    public pythonServerService: PythonServerService,
     public clipService: ClipServerConnectionService,
     private route: ActivatedRoute,
     private router: Router,
@@ -103,7 +102,7 @@ export class SearchComponent {
   }
 
   performTextQuery(value?: string, objectValues?: ObjectQuery[]): void {
-    if (this.nodeService.connectionState === WSServerStatus.CONNECTED) {
+    if (this.pythonServerService.connectionState === WSServerStatus.CONNECTED) {
 
       const queryBaseURL = URLUtil.getBaseURL();
       let msg = {
@@ -121,7 +120,7 @@ export class SearchComponent {
       this.lastValue = value;
       this.lastObjectValue = objectValues;
 
-      this.nodeService.sendToNodeServer(msg);
+      this.pythonServerService.sendMessage(msg);
 
       //this.historyService.saveToHistory(msg);
 
@@ -132,7 +131,7 @@ export class SearchComponent {
       // this.interactionLogService.logTextQuery(this.queryinput, this.selectedPage);
 
     } else {
-      console.log(`CLIP or NODE connection down: ${this.clipService.connectionState} ${this.nodeService.connectionState}.`);
+      console.log(`CLIP or NODE connection down: ${this.clipService.connectionState} ${this.pythonServerService.connectionState}.`);
     }
   }
 }

@@ -29,16 +29,31 @@ export class ExpSearchAreaComponent {
     {
       queryParts: [
         {
-          query_type: QueryPartType.clip,
-          query: "yellow car",
-          subqueries: [
-            {
-              query_type: SubqueryType.variants,
-              query: "2"
-            },
-          ]
+          query_type: QueryPartType.objects,
+          query: "car",
+          subqueries: []
         }
       ],
+    },
+    {
+      queryParts: [
+        {
+          query_type: QueryPartType.objects,
+          query: "person",
+          subqueries: [
+          ]
+        }
+      ]
+    },
+    {
+      queryParts: [
+        {
+          query_type: QueryPartType.heart_rate,
+          query: "200+",
+          subqueries: [
+          ]
+        }
+      ]
     }
   ]
 

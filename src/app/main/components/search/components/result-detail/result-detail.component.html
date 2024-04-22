@@ -1,0 +1,41 @@
+<ng-container *ngIf="isOpen">
+  <expl-dialog *ngIf="receivedMetadata$ | async as receivedMetadata"
+               [title]=" receivedMetadata.filepath"
+               (clickOnClose)="isOpen = false">
+    <div class="preview-container">
+      <div class="nav-bar">
+        <div class="mode-container">
+          Single | Day | Similar
+        </div>
+        <div class="title-container">Single</div>
+      </div>
+      <div class="content">
+        <div class="content-container">
+          <div class="image"><img src="{{selectedResult.filepath}}"></div>
+          <div class="metadata">
+            {{receivedMetadata.mscaption}}<br>
+            {{receivedMetadata.filepath}}<br>
+            {{receivedMetadata.location.coordinates}}<br>
+            <h3>Objects</h3>
+            <div class="objects metadata-tags">
+              <div *ngFor="let obj of receivedMetadata.objects" class="metadata-tag exp-clickable exp-hover-scale">{{obj.object}}</div>
+            </div>
+            <h3>Concepts</h3>
+            <div class="objects metadata-tags">
+              <div *ngFor="let obj of receivedMetadata.concepts" class="metadata-tag exp-clickable exp-hover-scale">{{obj.concept}}</div>
+            </div>
+            <h3>Places</h3>
+            <div class="objects metadata-tags">
+              <div *ngFor="let obj of receivedMetadata.places" class="metadata-tag exp-clickable exp-hover-scale">{{obj.place}}</div>
+            </div>
+            <h3>Texts</h3>
+            <div class="objects metadata-tags">
+              <div *ngFor="let obj of receivedMetadata.texts" class="metadata-tag exp-clickable exp-hover-scale">{{obj.text}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </expl-dialog>
+</ng-container>
+

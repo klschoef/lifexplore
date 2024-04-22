@@ -28,7 +28,7 @@ export class ExpPopupComponent implements OnDestroy, OnChanges {
         if (isOpen) {
           return;
         }
-        console.log("unsubscribing click handler", isOpen);
+
         if (this.unsubscribeClickHandler) {
           this.unsubscribeClickHandler();
         }
@@ -48,7 +48,6 @@ export class ExpPopupComponent implements OnDestroy, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes["open$"]) {
-      console.log("open$ changed", this.open$);
       this.refresh$.next(1);
     }
   }
