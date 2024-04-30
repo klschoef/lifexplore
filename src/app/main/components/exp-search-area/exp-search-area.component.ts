@@ -111,7 +111,7 @@ export class ExpSearchAreaComponent {
       this.searchValueChange.emit(this.searchValue);
     }
     this.showHistoryActive = false;
-    //this.onSearchChange();
+    this.onSearchChange();
   }
 
   protected readonly ExpSearchAreaMode = ExpSearchAreaMode;
