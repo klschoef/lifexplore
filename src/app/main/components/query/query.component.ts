@@ -471,7 +471,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
   }
 
   getHistory() {
-    return this.historyService.fetch_history();
+    return this.historyService.fetch_raw_history_object();
   }
 
   // TODO: outsource to history service (at least parts of it)
@@ -490,8 +490,8 @@ export class QueryComponent implements AfterViewInit, OnInit {
       let queryHistory:Array<QueryType> = JSON.parse(hist);
       let msg: QueryType = queryHistory[parseInt(this.selectedHistoryEntry!)];
       if (msg.type === 'textquery') {
-        this.queryinput = msg.query;
-        this.selectedPage = msg.selectedpage;
+        this.queryinput = msg.query!;
+        this.selectedPage = msg.selectedpage!;
         this.queryMode = msg.queryMode;
         this.previousQuery = undefined;
         this.file_sim_keyframe = undefined;
@@ -518,8 +518,8 @@ export class QueryComponent implements AfterViewInit, OnInit {
       let queryHistory:Array<QueryType> = JSON.parse(hist);
       let msg: QueryType = queryHistory[0];
       if (msg.type === 'textquery') {
-        this.queryinput = msg.query;
-        this.selectedPage = msg.selectedpage;
+        this.queryinput = msg.query!;
+        this.selectedPage = msg.selectedpage!;
       }
 
       this.queryTimestamp = getTimestampInSeconds();

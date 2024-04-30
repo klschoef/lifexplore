@@ -5,6 +5,7 @@ import ObjectQuery from '../../models/object-query';
 import GraphicalToJsonQueryTransformer from '../../utils/transformers/graphical-to-json-query-transformer';
 import {map} from 'rxjs/operators';
 import {SettingsService} from '../../services/settings.service';
+import JsonToGraphicalQueryTransformer from '../../utils/transformers/json-to-graphical-query-transformer';
 
 export enum ExpSearchAreaMode {
   TEXT = 'text',
@@ -22,6 +23,8 @@ export class ExpSearchAreaComponent {
   @Output() onSearch: EventEmitter<string> = new EventEmitter<string>();
   @Output() onSearchObject: EventEmitter<ObjectQuery[]> = new EventEmitter<ObjectQuery[]>();
 
+  showHelpActive: boolean = false;
+  showHistoryActive: boolean = false;
   searchAreaMode$ = this.settingsService.settings$.pipe(
     map((settings) => settings.searchAreaMode ?? ExpSearchAreaMode.GRAPHICAL),
   );
@@ -31,7 +34,8 @@ export class ExpSearchAreaComponent {
         {
           query_type: QueryPartType.objects,
           query: "car",
-          subqueries: []
+          subqueries: [
+          ]
         }
       ],
     },
@@ -68,6 +72,7 @@ export class ExpSearchAreaComponent {
         this.onSearch.emit(this.searchValue);
         break;
       case ExpSearchAreaMode.GRAPHICAL:
+        console.log("this.graphical_content", this.graphical_content);
         this.onSearchObject.emit(GraphicalToJsonQueryTransformer.transformGraphicalArrayToJson(this.graphical_content));
         break;
     }
@@ -76,6 +81,37 @@ export class ExpSearchAreaComponent {
   clickOnReset(): void {
     this.searchValue = "";
     this.searchValueChange.emit(this.searchValue);
+  }
+
+  openHistory(): void {
+    console.log('open history');
+    this.showHistoryActive = !this.showHistoryActive;
+  }
+
+  showHelp() {
+    this.showHelpActive = !this.showHelpActive;
+  }
+
+  clickOnHistoryItem(item: any): void {
+    console.log('clickOnHistoryItem', item);
+    console.log("searchvalue", this.searchValue);
+    if (item.query_dicts && item.query_dicts.length > 0) {
+      this.settingsService.setSettings({
+        ...this.settingsService.settings$.getValue() ?? {},
+        searchAreaMode: ExpSearchAreaMode.GRAPHICAL
+      })
+      this.graphical_content = JsonToGraphicalQueryTransformer.transformJsonArrayToGraphical(item.query_dicts);
+    } else {
+      console.log("no query dicts", item)
+      this.settingsService.setSettings({
+        ...this.settingsService.settings$.getValue() ?? {},
+        searchAreaMode: ExpSearchAreaMode.TEXT
+      })
+      this.searchValue = item.query;
+      this.searchValueChange.emit(this.searchValue);
+    }
+    this.showHistoryActive = false;
+    //this.onSearchChange();
   }
 
   protected readonly ExpSearchAreaMode = ExpSearchAreaMode;

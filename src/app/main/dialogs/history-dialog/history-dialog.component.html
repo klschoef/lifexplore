@@ -1,0 +1,11 @@
+<expl-dialog title="History" (clickOnClose)="clickOnClose.emit($event)">
+  <div class="search-container">
+    <mat-icon aria-hidden="false" fontIcon="search"></mat-icon>
+    <input [(ngModel)]="searchValue" (change)="loadHistory()" type="text" class="exp-textfield" placeholder="Search ..."/>
+  </div>
+  <div class="history-results" *ngIf="historyList$ | async as historyList">
+    <div class="history-entry exp-clickable" *ngFor="let historyEntry of historyList" (click)="clickOnHistoryItem.emit(historyEntry)">
+      <div class="history-entry-text exp-hover-move-right">{{historyEntry | historyEntry}}</div>
+    </div>
+  </div>
+</expl-dialog>

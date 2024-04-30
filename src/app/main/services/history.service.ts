@@ -28,7 +28,7 @@ export class HistoryService {
   }
 
   saveToHistory(msg: QueryType) {
-    if (msg.query === '') {
+    if (msg.query === '' && msg.query_dicts.length === 0) {
       return;
     }
 
@@ -38,7 +38,7 @@ export class HistoryService {
       let containedPos = -1;
       let i = 0;
       for (let qh of queryHistory) {
-        if (qh.query === msg.query && qh.queryMode === msg.queryMode) {
+        if (qh.query === msg.query && qh.queryMode === msg.queryMode && qh.query_dicts === msg.query_dicts) {
           containedPos = i;
           break;
         }

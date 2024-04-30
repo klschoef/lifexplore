@@ -1,0 +1,25 @@
+<div class="content-container">
+  <div class="image"><img src="{{result.filepath | expImageUrl}}"></div>
+  <div class="metadata">
+    {{result.mscaption}}<br>
+    {{result.filepath}}<br>
+    {{result.location.coordinates}}<br>
+    <h3>Objects</h3>
+    <div class="objects metadata-tags">
+      <div *ngFor="let obj of result.objects" class="metadata-tag exp-clickable exp-hover-scale">{{obj.object}}</div>
+    </div>
+    <h3>Concepts</h3>
+    <div class="objects metadata-tags">
+      <div *ngFor="let obj of result.concepts" class="metadata-tag exp-clickable exp-hover-scale">{{obj.concept}}</div>
+    </div>
+    <h3>Places</h3>
+    <div class="objects metadata-tags">
+      <div *ngFor="let obj of result.places" class="metadata-tag exp-clickable exp-hover-scale">{{obj.place}}</div>
+    </div>
+    <h3>Texts</h3>
+    <div class="objects metadata-tags">
+      <div *ngFor="let obj of result.texts" class="metadata-tag exp-clickable exp-hover-scale">{{obj.text}}</div>
+    </div>
+    <app-map *ngIf="result.location.coordinates[0] !== 0" [coordinates]="result.location.coordinates"></app-map>
+  </div>
+</div>

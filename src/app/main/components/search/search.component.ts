@@ -28,6 +28,7 @@ export class SearchComponent {
   pages: number[] = [];
   progress$ = new BehaviorSubject<string | undefined>(undefined)
   error$ = new BehaviorSubject<string | undefined>(undefined)
+  requestId?: string;
 
   results$ = this.pythonServerService.receivedMessages.pipe(
     tap(msg => {
@@ -35,7 +36,7 @@ export class SearchComponent {
       this.progress$.next((msg && msg.type && msg.type === 'progress') ? msg.message : undefined);
       this.error$.next((msg && msg.type && msg.type === 'error') ? msg.error : undefined);
     }),
-    filter((msg) => msg && msg.results && msg.results.length > 0 && !msg.type),
+    filter((msg) => msg && msg.results && msg.results.length > 0 && !msg.type && msg.requestId === this.requestId),
     tap((msg) => {
       this.totalResults = msg.totalresults ?? 0;
       this.totalPages = Math.ceil(this.totalResults / this.pageSize);
@@ -104,6 +105,7 @@ export class SearchComponent {
   performTextQuery(value?: string, objectValues?: ObjectQuery[]): void {
     if (this.pythonServerService.connectionState === WSServerStatus.CONNECTED) {
 
+      this.requestId = Math.random().toString(36).substring(7);
       const queryBaseURL = URLUtil.getBaseURL();
       let msg = {
         type: "textquery",
@@ -113,13 +115,15 @@ export class SearchComponent {
         query_dicts: objectValues,
         maxresults: 2000,
         resultsperpage: this.pageSize,
-        selectedpage: this.currentPage,
-        queryMode: this.queryModes[0]
+        selectedpage: this.currentPage.toString(),
+        queryMode: this.queryModes[0].name,
+        requestId: this.requestId
       };
 
       this.lastValue = value;
       this.lastObjectValue = objectValues;
 
+      this.historyService.saveToHistory(msg);
       this.pythonServerService.sendMessage(msg);
 
       //this.historyService.saveToHistory(msg);

@@ -22,3 +22,18 @@ button {
     color: white;
   }
 }
+
+.metadata-tags {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  flex-wrap: wrap;
+  padding: 4px;
+
+  .metadata-tag {
+    padding: 4px;
+    background: var(--exp-color-primary);
+    color: var(--exp-color-light);
+    border-radius: 4px;
+  }
+}

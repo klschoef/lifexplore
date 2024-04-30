@@ -9,10 +9,34 @@
       <exp-graphical-search-area *ngIf="mode === ExpSearchAreaMode.GRAPHICAL"
                                  [graphicalContent]="graphical_content" class="animate__animated animate__fadeIn animate__delay-0.3s"/>
       <div class="action-buttons animate__animated animate__fadeIn animate__delay-0.3s">
-        <button class="secondary exp-hover-scale" (click)="onSearchChange()">Search</button>
-        <button class="delete exp-hover-scale" (click)="clickOnReset()">Reset</button>
+        <div class="buttons-first">
+          <button class="secondary exp-hover-scale" (click)="onSearchChange()">Search</button>
+          <button class="delete exp-hover-scale" (click)="clickOnReset()">Reset</button>
+        </div>
+        <div class="history-mode-container">
+          <div>
+            <mat-icon class="exp-clickable exp-hover-scale"
+                      aria-hidden="false"
+                      (click)="openHistory()"
+                      fontIcon="history"></mat-icon>
+          </div>
+          <div>
+            <mat-icon class="exp-clickable exp-hover-scale"
+                      aria-hidden="false"
+                      fontIcon="tune"></mat-icon>
+          </div>
+          <div>
+            <mat-icon class="exp-clickable exp-hover-scale"
+                      aria-hidden="false"
+                      (click)="showHelp()"
+                      fontIcon="help"></mat-icon>
+          </div>
+        </div>
       </div>
     </ng-container>
   </div>
 </div>
+<lx-query-help-dialog *ngIf="showHelpActive" (clickOnClose)="showHelpActive = false"></lx-query-help-dialog>
+<lx-history-dialog *ngIf="showHistoryActive" (clickOnClose)="showHistoryActive = false" (clickOnHistoryItem)="clickOnHistoryItem($event)"></lx-history-dialog>
+```
 

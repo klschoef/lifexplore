@@ -40,6 +40,12 @@ import { SettingsComponent } from './main/components/settings/settings.component
 import { SettingsViewResultsModeComponent } from './main/components/settings/components/settings-view-results-mode/settings-view-results-mode.component';
 import { SettingsQueryModeComponent } from './main/components/settings/components/settings-query-mode/settings-query-mode.component';
 import { ResultDetailComponent } from './main/components/search/components/result-detail/result-detail.component';
+import { MapComponent } from './main/components/search/components/map/map.component';
+import { SingleResultContainerComponent } from './main/components/search/components/result-detail/containers/single-result-container/single-result-container.component';
+import { ExpImageUrlPipe } from './main/pipes/exp-image-url.pipe';
+import { DailySummaryContainerComponent } from './main/components/search/components/result-detail/containers/daily-summary-container/daily-summary-container.component';
+import { HistoryDialogComponent } from './main/dialogs/history-dialog/history-dialog.component';
+import { HistoryEntryPipe } from './main/dialogs/history-dialog/pipes/history-entry.pipe';
 
 
 @NgModule({
@@ -64,7 +70,13 @@ import { ResultDetailComponent } from './main/components/search/components/resul
     SettingsComponent,
     SettingsViewResultsModeComponent,
     SettingsQueryModeComponent,
-    ResultDetailComponent
+    ResultDetailComponent,
+    MapComponent,
+    SingleResultContainerComponent,
+    ExpImageUrlPipe,
+    DailySummaryContainerComponent,
+    HistoryDialogComponent,
+    HistoryEntryPipe
   ],
   imports: [
     BrowserModule,

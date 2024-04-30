@@ -23,10 +23,11 @@ export enum WSServerStatus {
 
 export interface QueryType {
   type: string;
-  query: string;
+  query?: string;
+  query_dicts?: any;
   maxresults: number;
   resultsperpage: number;
-  selectedpage: string;
+  selectedpage?: string;
   queryMode: string;
 }
 

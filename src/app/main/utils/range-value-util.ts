@@ -54,4 +54,22 @@ export class RangeValueUtil {
       min: minVal,
       max: maxVal};
   }
+
+  public static stringifyRangeValues(range: {min?: number, max?: number}): string {
+    if (!range.min && !range.max) {
+      return "";
+    }
+
+    let result = "";
+
+    if (range.min !== undefined && range.max !== undefined) {
+      result += range.min === range.max ? range.min.toString() : `${range.min}+${(range.max-range.min)}`;
+    } else if (range.min !== undefined) {
+      result += `${range.min}+`;
+    } else if (range.max !== undefined) {
+      result += `${range.max}-`;
+    }
+
+    return result;
+  }
 }

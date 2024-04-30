@@ -18,7 +18,7 @@
   font-size: 12pt;
   display: flex;
   flex-direction: column;
-  max-height: calc(100% - 80px - 64px);
+  max-height: var(--max-height, calc(100% - 80px - 64px));
   margin: 32px 0;
 
   .header, .body {
@@ -33,6 +33,6 @@
   }
 
   .body {
-    overflow: scroll;
+    overflow: var(--body-overflow, scroll);
   }
 }

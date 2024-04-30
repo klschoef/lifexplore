@@ -2,6 +2,12 @@ import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core'
 import {NodeServerConnectionService} from '../../../../services/nodeserver-connection.service';
 import {PythonServerService} from '../../../../services/pythonserver.service';
 
+export enum ResultDetailComponentMode {
+  Single = 'Single',
+  Day = 'Day',
+  Similar = 'Similar'
+}
+
 @Component({
   selector: 'app-result-detail',
   templateUrl: './result-detail.component.html',
@@ -11,6 +17,9 @@ export class ResultDetailComponent implements OnChanges {
   @Input() selectedResult?: any;
   receivedMetadata$ = this.pythonService.receivedMetadata;
   isOpen = true;
+
+  modes: string[] = Object.values(ResultDetailComponentMode);
+  selectedMode: string = ResultDetailComponentMode.Single;
 
   constructor(
     private pythonService: PythonServerService
@@ -39,4 +48,6 @@ export class ResultDetailComponent implements OnChanges {
 
     this.pythonService.sendMessage(msg);
   }
+
+  protected readonly ResultDetailComponentMode = ResultDetailComponentMode;
 }
