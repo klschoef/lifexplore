@@ -15,10 +15,15 @@ export class HistoryEntryToText {
     return ""
   }
 
+  static isGraphical(value: any): boolean {
+    return value.query_dicts && value.query_dicts.length > 0;
+  }
+
   static transform(value: any): string {
+    console.log("value", value);
     let query = value.query;
 
-    if (value.query_dicts && value.query_dicts.length > 0) {
+    if (HistoryEntryToText.isGraphical(value)) {
       query = value.query_dicts.map((dict: any) => {
         let result = "";
         if (dict.clip && dict.clip.query) {
@@ -60,9 +65,9 @@ export class HistoryEntryToText {
         return result;
       }).join(" < ");
 
-      return `Graphical: ${query} (${value.queryMode})`;
+      return `${query}`;
     }
 
-    return `${value.type}: ${query} (${value.queryMode})`;
+    return `${query}`;
   }
 }

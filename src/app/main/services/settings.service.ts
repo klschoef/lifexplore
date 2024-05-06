@@ -7,6 +7,7 @@ import {BehaviorSubject} from 'rxjs';
 export class SettingsService {
 
   static LOCAL_STORAGE_SETTINGS = 'settings';
+  static LOCAL_QUERY_SETTINGS = 'querySettings';
   settings$ = new BehaviorSubject<any>({});
 
   constructor() {
@@ -29,5 +30,16 @@ export class SettingsService {
 
   loadSettings() {
     this.settings$.next(JSON.parse(localStorage.getItem(SettingsService.LOCAL_STORAGE_SETTINGS) ?? "{}"))
+  }
+
+  getQuerySettings() {
+    return this.settings$.getValue()[SettingsService.LOCAL_QUERY_SETTINGS];
+  }
+
+  saveQuerySettings(querySettings: any) {
+    this.setSettings({
+      ...this.settings$.getValue(),
+      querySettings: querySettings
+    });
   }
 }

@@ -1,0 +1,22 @@
+expl-dialog {
+  --app-modal-background: white;
+  --padding: 16px;
+  --app-modal-header-body-margin: 0 16px;
+}
+
+.distinctive-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: solid 1px;
+  border-radius: 8px;
+  overflow: hidden;
+
+  .custom {
+    background-color: var(--exp-color-mid);
+  }
+
+  .l2input {
+    padding: 0 8px 8px 8px;
+  }
+}

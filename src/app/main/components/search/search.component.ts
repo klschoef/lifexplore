@@ -107,6 +107,9 @@ export class SearchComponent {
 
       this.requestId = Math.random().toString(36).substring(7);
       const queryBaseURL = URLUtil.getBaseURL();
+
+      const querySettings = this.settingsService.getQuerySettings();
+
       let msg = {
         type: "textquery",
         version: 2,
@@ -117,7 +120,8 @@ export class SearchComponent {
         resultsperpage: this.pageSize,
         selectedpage: this.currentPage.toString(),
         queryMode: this.queryModes[0].name,
-        requestId: this.requestId
+        requestId: this.requestId,
+        ...querySettings
       };
 
       this.lastValue = value;

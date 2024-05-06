@@ -25,6 +25,7 @@ export class ExpSearchAreaComponent {
 
   showHelpActive: boolean = false;
   showHistoryActive: boolean = false;
+  showTuningActive: boolean = false;
   searchAreaMode$ = this.settingsService.settings$.pipe(
     map((settings) => settings.searchAreaMode ?? ExpSearchAreaMode.GRAPHICAL),
   );
@@ -84,8 +85,11 @@ export class ExpSearchAreaComponent {
   }
 
   openHistory(): void {
-    console.log('open history');
     this.showHistoryActive = !this.showHistoryActive;
+  }
+
+  openTuning(): void {
+    this.showTuningActive = !this.showTuningActive;
   }
 
   showHelp() {
@@ -99,6 +103,10 @@ export class ExpSearchAreaComponent {
       this.settingsService.setSettings({
         ...this.settingsService.settings$.getValue() ?? {},
         searchAreaMode: ExpSearchAreaMode.GRAPHICAL
+      })
+      this.settingsService.saveQuerySettings({
+        l2dist: item.l2dist,
+        firstPerDay: item.firstPerDay,
       })
       this.graphical_content = JsonToGraphicalQueryTransformer.transformJsonArrayToGraphical(item.query_dicts);
     } else {

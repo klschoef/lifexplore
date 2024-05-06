@@ -5,7 +5,23 @@
   </div>
   <div class="history-results" *ngIf="historyList$ | async as historyList">
     <div class="history-entry exp-clickable" *ngFor="let historyEntry of historyList" (click)="clickOnHistoryItem.emit(historyEntry)">
-      <div class="history-entry-text exp-hover-move-right">{{historyEntry | historyEntry}}</div>
+      <div class="history-entry-text exp-hover-move-right">
+        <div class="mode">
+          <mat-icon *ngIf="historyEntry | historyEntryIsGraphical; else elseBlock" fontIcon="mouse"></mat-icon>
+          <ng-template #elseBlock>
+            <mat-icon fontIcon="keyboard"></mat-icon>
+          </ng-template>
+        </div>
+        {{historyEntry | historyEntry}}
+        <div class="exp-tag-container" *ngIf="historyEntry.l2dist">
+          <div class="name">L2Dist</div>
+          <div>|</div>
+          <div class="value">{{historyEntry.l2dist}}</div>
+        </div>
+        <div class="exp-tag-container" style="background: red; color: white" *ngIf="historyEntry.firstPerDay">
+          <div class="name">FirstPerDay</div>
+        </div>
+      </div>
     </div>
   </div>
 </expl-dialog>

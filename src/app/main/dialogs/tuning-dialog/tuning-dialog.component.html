@@ -1,0 +1,17 @@
+<expl-dialog title="Tuning" (clickOnClose)="clickOnClose.emit($event)" *ngIf="currentL2Type$ | async as currentL2Type">
+  <h3>Distinctive</h3>
+  <div class="distinctive-container">
+    <div class="exp-small-nav-bar">
+      <div class="exp-clickable"
+           (click)="clickOnDistinctiveType(l2Type)"
+           [class.active]="currentL2Type === l2Type"
+           [class.custom]="l2Type === L2Type.CUSTOM && currentL2Type !== L2Type.CUSTOM"
+           *ngFor="let l2Type of l2Types">{{ l2Type }}</div>
+    </div>
+    <div *ngIf="currentL2Type !== L2Type.NONE" class="l2input">
+      L2Dist: <input type="number" [ngModel]="l2Dist$ | async" (change)="onChangeL2($event)">
+    </div>
+  </div>
+  <h3>Group</h3>
+  First per Day: <input type="checkbox" [ngModel]="firstPerDay$ | async" (change)="onChangeFirstPerDay($event)">
+</expl-dialog>

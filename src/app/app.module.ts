@@ -46,6 +46,8 @@ import { ExpImageUrlPipe } from './main/pipes/exp-image-url.pipe';
 import { DailySummaryContainerComponent } from './main/components/search/components/result-detail/containers/daily-summary-container/daily-summary-container.component';
 import { HistoryDialogComponent } from './main/dialogs/history-dialog/history-dialog.component';
 import { HistoryEntryPipe } from './main/dialogs/history-dialog/pipes/history-entry.pipe';
+import { TuningDialogComponent } from './main/dialogs/tuning-dialog/tuning-dialog.component';
+import {HistoryEntryIsGraphicalPipe} from './main/dialogs/history-dialog/pipes/history-entry-is-graphical.pipe';
 
 
 @NgModule({
@@ -76,7 +78,9 @@ import { HistoryEntryPipe } from './main/dialogs/history-dialog/pipes/history-en
     ExpImageUrlPipe,
     DailySummaryContainerComponent,
     HistoryDialogComponent,
-    HistoryEntryPipe
+    HistoryEntryPipe,
+    HistoryEntryIsGraphicalPipe,
+    TuningDialogComponent
   ],
   imports: [
     BrowserModule,

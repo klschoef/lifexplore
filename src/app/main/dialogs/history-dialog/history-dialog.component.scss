@@ -50,4 +50,11 @@ expl-dialog {
   .history-entry {
     padding: 8px;
   }
+
+  .history-entry-text {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+  }
 }

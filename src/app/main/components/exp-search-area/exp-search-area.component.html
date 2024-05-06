@@ -23,6 +23,7 @@
           <div>
             <mat-icon class="exp-clickable exp-hover-scale"
                       aria-hidden="false"
+                      (click)="openTuning()"
                       fontIcon="tune"></mat-icon>
           </div>
           <div>
@@ -38,5 +39,4 @@
 </div>
 <lx-query-help-dialog *ngIf="showHelpActive" (clickOnClose)="showHelpActive = false"></lx-query-help-dialog>
 <lx-history-dialog *ngIf="showHistoryActive" (clickOnClose)="showHistoryActive = false" (clickOnHistoryItem)="clickOnHistoryItem($event)"></lx-history-dialog>
-```
-
+<lx-tuning-dialog *ngIf="showTuningActive" (clickOnClose)="showTuningActive = false"></lx-tuning-dialog>
