@@ -21,9 +21,6 @@ export class SettingsQueryModeComponent {
   }
 
   changeResultMode(mode: ExpSearchAreaMode) {
-    this.settingsService.setSettings({
-      ...this.settingsService.settings$.getValue() ?? {},
-      searchAreaMode: mode
-    })
+    this.settingsService.setSearchAreaMode(mode);
   }
 }

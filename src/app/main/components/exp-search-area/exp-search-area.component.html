@@ -4,13 +4,13 @@
     <ng-container *ngIf="searchAreaMode$ | async as mode">
       <div *ngIf="mode === ExpSearchAreaMode.TEXT" class="search-container animate__animated animate__fadeIn animate__delay-0.3s">
         <mat-icon aria-hidden="false" fontIcon="search"></mat-icon>
-        <input [(ngModel)]="searchValue" (keydown.enter)="onSearchChange()" type="text" class="exp-textfield" placeholder="Search ..."/>
+        <input #textInput [(ngModel)]="searchValue" (focusout)="focusOutTextInput($event)" (focusin)="focusInTextInput($event)" (keydown.enter)="onSearchChange()" type="text" class="exp-textfield" placeholder="Search ..."/>
       </div>
       <exp-graphical-search-area *ngIf="mode === ExpSearchAreaMode.GRAPHICAL"
                                  [graphicalContent]="graphical_content" class="animate__animated animate__fadeIn animate__delay-0.3s"/>
       <div class="action-buttons animate__animated animate__fadeIn animate__delay-0.3s">
         <div class="buttons-first">
-          <button class="secondary exp-hover-scale" (click)="onSearchChange()">Search</button>
+          <button #searchButton class="secondary exp-hover-scale" (click)="onSearchChange()">Search</button>
           <button class="delete exp-hover-scale" (click)="clickOnReset()">Reset</button>
         </div>
         <div class="history-mode-container">
@@ -37,6 +37,6 @@
     </ng-container>
   </div>
 </div>
-<lx-query-help-dialog *ngIf="showHelpActive" (clickOnClose)="showHelpActive = false"></lx-query-help-dialog>
-<lx-history-dialog *ngIf="showHistoryActive" (clickOnClose)="showHistoryActive = false" (clickOnHistoryItem)="clickOnHistoryItem($event)"></lx-history-dialog>
-<lx-tuning-dialog *ngIf="showTuningActive" (clickOnClose)="showTuningActive = false"></lx-tuning-dialog>
+<lx-query-help-dialog *ngIf="resultPresenterService.showHelp$ | async" (clickOnClose)="resultPresenterService.showHelp$.next(false)"></lx-query-help-dialog>
+<lx-history-dialog *ngIf="resultPresenterService.showHistory$ | async" (clickOnClose)="resultPresenterService.showHistory$.next(false)" (clickOnHistoryItem)="clickOnHistoryItem($event)"></lx-history-dialog>
+<lx-tuning-dialog *ngIf="resultPresenterService.showTuning$ | async" (clickOnClose)="resultPresenterService.showTuning$.next(false)"></lx-tuning-dialog>

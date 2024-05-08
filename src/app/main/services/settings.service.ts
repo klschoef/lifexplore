@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
+import {ExpSearchAreaMode} from '../components/exp-search-area/exp-search-area.component';
+import {
+  SearchResultMode
+} from '../components/settings/components/settings-view-results-mode/settings-view-results-mode.component';
 
 @Injectable({
   providedIn: 'root'
@@ -41,5 +45,27 @@ export class SettingsService {
       ...this.settings$.getValue(),
       querySettings: querySettings
     });
+  }
+
+  setSearchAreaMode(mode: ExpSearchAreaMode) {
+    this.setSettings({
+      ...this.settings$.getValue() ?? {},
+      searchAreaMode: mode
+    })
+  }
+
+  getSearchAreaMode() {
+    return this.settings$.getValue().searchAreaMode;
+  }
+
+  setResultMode(mode: SearchResultMode) {
+    this.setSettings({
+      ...this.settings$.getValue() ?? {},
+      searchResultMode: mode
+    })
+  }
+
+  getResultMode() {
+    return this.settings$.getValue().searchResultMode;
   }
 }

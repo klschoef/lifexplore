@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {getTimestampInSeconds, WSServerStatus} from '../../../global-constants';
 import URLUtil from '../../utils/url-util';
 import {ClipServerConnectionService} from '../../services/clipserver-connection.service';
@@ -14,13 +14,16 @@ import ObjectQuery from '../../models/object-query';
 import {SearchResultMode} from '../settings/components/settings-view-results-mode/settings-view-results-mode.component';
 import {SettingsService} from '../../services/settings.service';
 import {PythonServerService} from '../../services/pythonserver.service';
+import {ResultPresenterService} from '../../services/result-presenter.service';
+import {ExpSearchAreaMode} from '../exp-search-area/exp-search-area.component';
+import {ShortcutService} from '../../services/shortcut.service';
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss']
 })
-export class SearchComponent {
+export class SearchComponent implements OnInit {
 
   totalResults = 0;
   currentPage = 1;
@@ -40,6 +43,9 @@ export class SearchComponent {
     tap((msg) => {
       this.totalResults = msg.totalresults ?? 0;
       this.totalPages = Math.ceil(this.totalResults / this.pageSize);
+
+      this.resultPresenterService.maxPages$.next(this.totalPages);
+      this.resultPresenterService.maxResultsForCurrentPage$.next(msg.num ?? 0);
 
       // Calculate start and end page numbers
       const startPage = Math.max(this.currentPage - 3, 1);
@@ -82,7 +88,24 @@ export class SearchComponent {
     private settingsService: SettingsService,
     private queryResultLogService: QueryResultLogService,
     private historyService: HistoryService,
-    private expLogService: ExpLogService) {
+    private expLogService: ExpLogService,
+    private resultPresenterService: ResultPresenterService,
+    private shortcutService: ShortcutService
+  ) {
+  }
+
+  ngOnInit() {
+    this.resultPresenterService.currentPage$.subscribe((page) => {
+      if (page && page !== this.currentPage) {
+        this.currentPage = page ?? 1;
+        this.loadPage(this.currentPage);
+      }
+    });
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    this.shortcutService.handleKeyboardEvent(event);
   }
 
   searchValueChange(value: string): void {

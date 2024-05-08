@@ -10,5 +10,5 @@
     </div>-->
   </div>
 </div>
-<app-result-detail *ngIf="selectedResult" [selectedResult]="selectedResult"></app-result-detail>
+<app-result-detail *ngIf="selectedResult$ | async as selectedResult" [selectedResult]="selectedResult"></app-result-detail>
 ```

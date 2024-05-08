@@ -1,11 +1,13 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {QueryPart, QueryPartType, SubqueryType} from './models/query-part';
 import {GraphicalContentPart} from '../../models/graphical-content-part';
 import ObjectQuery from '../../models/object-query';
 import GraphicalToJsonQueryTransformer from '../../utils/transformers/graphical-to-json-query-transformer';
-import {map} from 'rxjs/operators';
+import {map, skip} from 'rxjs/operators';
 import {SettingsService} from '../../services/settings.service';
 import JsonToGraphicalQueryTransformer from '../../utils/transformers/json-to-graphical-query-transformer';
+import {filter, Subject, takeUntil} from 'rxjs';
+import {ResultPresenterService} from '../../services/result-presenter.service';
 
 export enum ExpSearchAreaMode {
   TEXT = 'text',
@@ -17,15 +19,16 @@ export enum ExpSearchAreaMode {
   templateUrl: './exp-search-area.component.html',
   styleUrls: ['./exp-search-area.component.scss']
 })
-export class ExpSearchAreaComponent {
+export class ExpSearchAreaComponent implements OnInit, OnDestroy {
   @Input() searchValue: string = '';
   @Output() searchValueChange: EventEmitter<string> = new EventEmitter<string>();
   @Output() onSearch: EventEmitter<string> = new EventEmitter<string>();
   @Output() onSearchObject: EventEmitter<ObjectQuery[]> = new EventEmitter<ObjectQuery[]>();
 
-  showHelpActive: boolean = false;
-  showHistoryActive: boolean = false;
-  showTuningActive: boolean = false;
+  @ViewChild('textInput') textInput: any;
+  @ViewChild('searchButton') searchButton: any;
+
+  destroy$ = new Subject();
   searchAreaMode$ = this.settingsService.settings$.pipe(
     map((settings) => settings.searchAreaMode ?? ExpSearchAreaMode.GRAPHICAL),
   );
@@ -63,14 +66,48 @@ export class ExpSearchAreaComponent {
   ]
 
   constructor(
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    public resultPresenterService: ResultPresenterService
   ) {
+  }
+
+  ngOnInit() {
+    this.resultPresenterService.resetQuery$.pipe(
+      filter(val => val),
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      this.searchValue = '';
+    });
+
+    this.resultPresenterService.focusQuery$.pipe(
+      skip(1),
+      takeUntil(this.destroy$)
+    ).subscribe((val) => {
+      if (val) {
+        this.textInput.nativeElement.focus();
+        return;
+      }
+      this.searchButton.nativeElement.focus();
+    });
+
+    this.resultPresenterService.selectQuery$.pipe(
+      filter(val => val),
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      this.textInput.nativeElement.select();
+    });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next(undefined);
+    this.destroy$.complete();
   }
 
   onSearchChange(): void {
     switch (this.settingsService.settings$.getValue().searchAreaMode) {
       case ExpSearchAreaMode.TEXT:
         this.onSearch.emit(this.searchValue);
+        this.resultPresenterService.focusQuery$.next(false);
         break;
       case ExpSearchAreaMode.GRAPHICAL:
         console.log("this.graphical_content", this.graphical_content);
@@ -85,15 +122,15 @@ export class ExpSearchAreaComponent {
   }
 
   openHistory(): void {
-    this.showHistoryActive = !this.showHistoryActive;
+    this.resultPresenterService.showHistory$.next(!this.resultPresenterService.showHistory$.value);
   }
 
   openTuning(): void {
-    this.showTuningActive = !this.showTuningActive;
+    this.resultPresenterService.showTuning$.next(!this.resultPresenterService.showTuning$.value);
   }
 
   showHelp() {
-    this.showHelpActive = !this.showHelpActive;
+    this.resultPresenterService.showHelp$.next(!this.resultPresenterService.showHelp$.value);
   }
 
   clickOnHistoryItem(item: any): void {
@@ -118,9 +155,21 @@ export class ExpSearchAreaComponent {
       this.searchValue = item.query;
       this.searchValueChange.emit(this.searchValue);
     }
-    this.showHistoryActive = false;
+    this.resultPresenterService.showHistory$.next(!this.resultPresenterService.showHistory$.value);
     this.onSearchChange();
   }
 
   protected readonly ExpSearchAreaMode = ExpSearchAreaMode;
+
+  focusOutTextInput(event: any) {
+    console.log("focusOutTextInput", event);
+    this.resultPresenterService.focusQuery$.next(false);
+  }
+
+  focusInTextInput(event: any) {
+    console.log("focusInTextInput", event);
+    if (!this.resultPresenterService.focusQuery$.value) {
+      this.resultPresenterService.focusQuery$.next(true);
+    }
+  }
 }
