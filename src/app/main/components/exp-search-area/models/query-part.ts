@@ -23,7 +23,14 @@ export enum QueryPartType {
   month = "Month",
   day = "Day",
   weekday = "Weekday",
-  heart_rate = "Heart Rate"
+  heart_rate = "Heart Rate",
+  city = "City",
+  country = "Country",
+  continent = "Continent",
+  address = "Address",
+  gptr = "GPT Reg.",
+  gptra = "GPT Reg. And",
+  gpt = "GPT"
 }
 
 export enum QueryPartOperator {

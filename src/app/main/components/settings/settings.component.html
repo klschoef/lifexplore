@@ -11,6 +11,8 @@
       <app-settings-query-mode />
       <div class="header-label">Result Mode</div>
       <app-settings-view-results-mode />
+      <div class="header-label">Map Default Zoom Value (1-18)</div>
+      <input type="number" min="1" max="18" [ngModel]="mapDefaultSize$ | async" (change)="changeMapDefaultSize($event)">
     </ng-container>
   </div>
 </div>

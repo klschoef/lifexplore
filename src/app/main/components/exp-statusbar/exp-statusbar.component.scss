@@ -1,0 +1,41 @@
+.bottom-statusbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 8px;
+  gap: 8px;
+  flex-wrap: wrap;
+  background-color: var(--exp-color-primary);
+  color: var(--exp-color-light);
+  border-radius: 15px 16px 0 0;
+  box-shadow: 0 1px 5px rgb(29, 30, 33);
+
+  .connections-container {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .connection-container {
+    padding: 4px;
+    border-radius: 8px;
+    background-color: red;
+    color: var(--exp-color-light);
+
+    &.connected {
+      background-color: green;
+    }
+  }
+
+  .submit-container {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+  }
+}

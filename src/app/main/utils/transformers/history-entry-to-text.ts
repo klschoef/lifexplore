@@ -62,6 +62,21 @@ export class HistoryEntryToText {
         if (dict.weekday) {
           result += ` -wd ${dict.weekday}`;
         }
+        if (dict.address) {
+          result += ` -a ${dict.address}`;
+        }
+        if (dict.country) {
+          result += ` -co ${dict.country}`;
+        }
+        if (dict.gptr) {
+          result += ` -gptr ${dict.gptr}`;
+        }
+        if (dict.gptra) {
+          result += ` -gptra ${dict.gptra}`;
+        }
+        if (dict.gpt) {
+          result += ` -gpt ${dict.gpt}`;
+        }
         return result;
       }).join(" < ");
 

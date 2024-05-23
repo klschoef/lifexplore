@@ -73,6 +73,12 @@ export default class JsonToGraphicalQueryTransformer {
         case 'year':
         case 'month':
         case 'day':
+        case 'address':
+        case 'city':
+        case 'country':
+        case 'gptr':
+        case 'gptra':
+        case 'gpt':
         case 'weekday':
           const temporalQueryPart: QueryPart = {
             query_type: QueryPartType[key],

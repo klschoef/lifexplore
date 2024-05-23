@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {SettingsService} from '../../../../services/settings.service';
 import {map} from 'rxjs/operators';
+import {tap} from 'rxjs';
 
 export enum SearchResultMode {
   DEFAULT = 'default',

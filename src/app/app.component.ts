@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import {filter, tap} from 'rxjs';
 import {map} from 'rxjs/operators';
 import URLUtil from './main/utils/url-util';
+import {ShortcutService} from './main/services/shortcut.service';
 
 
 
@@ -24,6 +25,7 @@ export class AppComponent implements AfterViewInit {
     public vbsService: VBSServerConnectionService,
     public nodeService: NodeServerConnectionService,
     public clipService: ClipServerConnectionService,
+    private shortcutService: ShortcutService,
     private router: Router) {
       this.nodeService.messages.subscribe(msg => {
         if ('wsstatus' in msg) {
@@ -90,6 +92,18 @@ export class AppComponent implements AfterViewInit {
     } else if (this.vbsService.vbsServerState == WSServerStatus.CONNECTED) {
       this.disconnectFromVBSServer();
     }
+  }
+
+  @HostListener('document:focusin', ['$event'])
+  onFocus(event: FocusEvent): void {
+    console.log("focus on", event);
+    this.shortcutService.isInputFocusedSubject.next(true);
+  }
+
+  @HostListener('document:focusout', ['$event'])
+  onBlur(event: FocusEvent): void {
+    console.log("focus out", event);
+    this.shortcutService.isInputFocusedSubject.next(false);
   }
 
   /****************************************************************************

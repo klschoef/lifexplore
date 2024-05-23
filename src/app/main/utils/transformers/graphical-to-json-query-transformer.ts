@@ -71,6 +71,21 @@ export default class GraphicalToJsonQueryTransformer {
         case QueryPartType.weekday:
           queryObject.weekday = queryPart.query ?? "";
           break;
+        case QueryPartType.address:
+          queryObject.address = queryPart.query ?? "";
+          break;
+        case QueryPartType.country:
+          queryObject.country = queryPart.query ?? "";
+          break;
+        case QueryPartType.gptr:
+          queryObject.gptr = queryPart.query ?? "";
+          break;
+        case QueryPartType.gptra:
+          queryObject.gptra = queryPart.query ?? "";
+          break;
+        case QueryPartType.gpt:
+          queryObject.gpt = queryPart.query ?? "";
+          break;
         case QueryPartType.heart_rate:
           // TODO: add graphical interface for heart rate
           if (queryPart.query) {
@@ -101,6 +116,9 @@ export default class GraphicalToJsonQueryTransformer {
             min: min_max?.min,
             max: min_max?.max
           };
+          break;
+        case "position":
+          subqueries["position"] = subquery.query ?? "";
           break;
       }
     });

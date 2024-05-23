@@ -75,3 +75,69 @@ Finally, generate the TypeScript files with these commands:
 
 Simply import the generated files like this:
 `import {SubmissionService} from '../../openapi/dres/api/submission.service';`
+
+# Development
+
+## Add new query-type
+
+1. Add new type to the QueryPartType enum in app/main/components/exp-search-area/models/query-parts.ts
+
+````
+export enum QueryPartType {
+  objects = "Objects",
+  texts = "Texts",
+  concepts = "Concepts",
+  ...
+  new_type_key = "New Type"
+}
+````
+2. Extend the enum in app/main/models/object-query.ts
+This is the model of the query object itself, which will be stored and transmitted to the backend.
+Add your new type here.
+
+````
+export default interface ObjectQuery {
+  objects: ObjectQueryPart[],
+  texts: ObjectQueryPart[],
+  concepts: ObjectQueryPart[],
+  places: ObjectQueryPart[],
+  ...
+  address?: string,
+  country?: string,
+  new_type_key?: string
+}
+````
+
+3. Add case to main/utils/transformers/graphical-to-json-query-transformer.ts in transformGraphicalContentPartToJson method.
+This is needed for the graphical user interface output to get a json object out of it, to store and send it to the backend.
+The queryObject is the json object, so you need to set the value with the right key here.
+```
+        case QueryPartType.weekday:
+          queryObject.weekday = queryPart.query ?? "";
+          break;
+        case QueryPartType.address:
+          queryObject.address = queryPart.query ?? "";
+          break;
+        case QueryPartType.new_type_key:
+          queryObject.new_type_key = queryPart.query ?? "";
+          break;
+```
+
+4. Add case to main/utils/transformers/json-to-graphical-query-transformer.ts in transformObjectQueryToGraphicalContentPart method.
+This is needed to translate a stored json query to a graphical user interface object, to use it there.
+```
+        case 'address':
+        case 'city':
+        case 'country':
+        case 'new_type_key':
+```
+
+5. Add if statement for main/utils/history-entry-to-text.ts, to translate the query object to a human readable string.
+```
+        if (dict.country) {
+          result += ` -co ${dict.country}`;
+        }
+        if (dict.new_type_key) {
+          result += ` -ntk ${dict.new_type_key}`;
+        }
+```

@@ -24,5 +24,10 @@ export default interface ObjectQuery {
   heart_rate?: {
     min?: number,
     max?: number
-  }
+  },
+  address?: string,
+  country?: string,
+  gptr?: string,
+  gptra?: string,
+  gpt?: string,
 }

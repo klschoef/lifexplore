@@ -1,9 +1,14 @@
 <div class="content-container">
   <div class="image"><img src="{{result.filepath | expImageUrl}}"></div>
   <div class="metadata">
-    {{result.mscaption}}<br>
-    {{result.filepath}}<br>
-    {{result.location.coordinates}}<br>
+    <h3>Metadata</h3>
+    <ng-container *ngIf="result.gpt_description?.description as descr">
+      <strong>GPT Description:</strong> {{descr}}<br>
+    </ng-container>
+    <strong>MSCaption:</strong> {{result.mscaption}}<br>
+    <strong>Filepath:</strong> {{result.filepath}}<br>
+    <strong>Coordinates:</strong> {{result.location?.coordinates}}<br>
+      <strong>Address:</strong> {{result.location_metadata?.address}}<br>
     <h3>Objects</h3>
     <div class="objects metadata-tags">
       <div *ngFor="let obj of result.objects" class="metadata-tag exp-clickable exp-hover-scale">{{obj.object}}</div>

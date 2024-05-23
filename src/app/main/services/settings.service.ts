@@ -12,6 +12,7 @@ export class SettingsService {
 
   static LOCAL_STORAGE_SETTINGS = 'settings';
   static LOCAL_QUERY_SETTINGS = 'querySettings';
+  static LOCAL_MAP_SETTINGS = 'mapSettings';
   settings$ = new BehaviorSubject<any>({});
 
   constructor() {
@@ -67,5 +68,16 @@ export class SettingsService {
 
   getResultMode() {
     return this.settings$.getValue().searchResultMode;
+  }
+
+  getMapSettings() {
+    return this.settings$.getValue().mapSettings;
+  }
+
+  setMapSettings(mapSettings: any) {
+    this.setSettings({
+      ...this.settings$.getValue() ?? {},
+      mapSettings: mapSettings
+    })
   }
 }

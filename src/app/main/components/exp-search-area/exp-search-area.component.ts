@@ -110,7 +110,6 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
         this.resultPresenterService.focusQuery$.next(false);
         break;
       case ExpSearchAreaMode.GRAPHICAL:
-        console.log("this.graphical_content", this.graphical_content);
         this.onSearchObject.emit(GraphicalToJsonQueryTransformer.transformGraphicalArrayToJson(this.graphical_content));
         break;
     }

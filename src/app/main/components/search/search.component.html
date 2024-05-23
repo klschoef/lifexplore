@@ -39,7 +39,7 @@
     <app-minimal-result-container *ngIf="searchResultMode === HTMLSearchResultMode.MINIMAL" [results]="results"/>
   </ng-container>
 </ng-container>
-<div>STATUS BAR</div>
+<exp-statusbar/>
 <expl-dialog [showCloseButton]="false" *ngIf="progress$ | async as progress" title="Progress">
   {{progress}}
 </expl-dialog>

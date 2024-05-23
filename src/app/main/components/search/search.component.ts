@@ -39,7 +39,7 @@ export class SearchComponent implements OnInit {
       this.progress$.next((msg && msg.type && msg.type === 'progress') ? msg.message : undefined);
       this.error$.next((msg && msg.type && msg.type === 'error') ? msg.error : undefined);
     }),
-    filter((msg) => msg && msg.results && msg.results.length > 0 && !msg.type && msg.requestId === this.requestId),
+    filter((msg) => msg && msg.results && !msg.type && msg.requestId === this.requestId),
     tap((msg) => {
       this.totalResults = msg.totalresults ?? 0;
       this.totalPages = Math.ceil(this.totalResults / this.pageSize);
@@ -165,4 +165,6 @@ export class SearchComponent implements OnInit {
       console.log(`CLIP or NODE connection down: ${this.clipService.connectionState} ${this.pythonServerService.connectionState}.`);
     }
   }
+
+  protected readonly WSServerStatus = WSServerStatus;
 }

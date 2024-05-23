@@ -48,6 +48,7 @@ import { HistoryDialogComponent } from './main/dialogs/history-dialog/history-di
 import { HistoryEntryPipe } from './main/dialogs/history-dialog/pipes/history-entry.pipe';
 import { TuningDialogComponent } from './main/dialogs/tuning-dialog/tuning-dialog.component';
 import {HistoryEntryIsGraphicalPipe} from './main/dialogs/history-dialog/pipes/history-entry-is-graphical.pipe';
+import { ExpStatusbarComponent } from './main/components/exp-statusbar/exp-statusbar.component';
 
 
 @NgModule({
@@ -80,7 +81,8 @@ import {HistoryEntryIsGraphicalPipe} from './main/dialogs/history-dialog/pipes/h
     HistoryDialogComponent,
     HistoryEntryPipe,
     HistoryEntryIsGraphicalPipe,
-    TuningDialogComponent
+    TuningDialogComponent,
+    ExpStatusbarComponent
   ],
   imports: [
     BrowserModule,

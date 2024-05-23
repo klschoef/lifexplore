@@ -1,5 +1,5 @@
 button {
-  &.primary, &.secondary, &.delete {
+  &.primary, &.secondary, &.delete, &.green {
     border-radius: 8px;
     padding: 8px;
     height: auto;
@@ -19,6 +19,11 @@ button {
 
   &.delete {
     background-color: red;
+    color: white;
+  }
+
+  &.green {
+    background-color: green;
     color: white;
   }
 }

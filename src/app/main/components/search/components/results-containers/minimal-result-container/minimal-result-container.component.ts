@@ -10,6 +10,8 @@ import {filter} from 'rxjs';
 })
 export class MinimalResultContainerComponent {
   @Input() results: any[] = [];
+  @Input() localMode = false;
+  localResult?: any;
   selectedResult$ = this.resultPresenterService.currentResultIndex$.pipe(
     map(index => index !== undefined ? this.results[index] : undefined),
   );
@@ -21,6 +23,10 @@ export class MinimalResultContainerComponent {
 
   clickResult(result: any) {
     console.log("result", result);
+    if (this.localMode) {
+      this.localResult = result;
+      return;
+    }
     this.resultPresenterService.currentResultIndex$.next(this.results.indexOf(result));
   }
 }
