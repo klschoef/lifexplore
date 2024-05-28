@@ -7,7 +7,7 @@ import { InfoComponent } from './main/components/info/info.component';
 import {SearchComponent} from './main/components/search/search.component';
 
 const routes: Routes = [
-  {path: '', redirectTo: 'query', pathMatch: 'full'}, // component: AppComponent
+  {path: '', redirectTo: 'search', pathMatch: 'full'}, // component: AppComponent
   {path: 'query', component: QueryComponent},
   {path: 'search', component: SearchComponent},
   {path: 'query/:filename', component: QueryComponent},
