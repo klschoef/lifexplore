@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {ExpLogService} from './exp-log.service';
-import {QueryEvent} from '../../../../openapi/dres';
-import {getTimestampInSeconds} from '../../global-constants';
+import {QueryEvent, QueryEventCategory} from '../../../../openapi/dres';
+import {getTimestampInSeconds} from '../../shared/config/global-constants';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class QueryEventLogService {
   public logJointEmbedding(query: string) {
     let queryEvent:QueryEvent = {
       timestamp: getTimestampInSeconds(),
-      category: QueryEvent.CategoryEnum.TEXT,
+      category: QueryEventCategory.TEXT,
       type: 'jointEmbedding',
       value: query
     }
@@ -25,7 +25,7 @@ export class QueryEventLogService {
   public logFeedbackModel(query: string) {
     let queryEvent:QueryEvent = {
       timestamp: getTimestampInSeconds(),
-      category: QueryEvent.CategoryEnum.IMAGE,
+      category: QueryEventCategory.IMAGE,
       type: 'feedbackModel',
       value: query
     }
@@ -35,7 +35,7 @@ export class QueryEventLogService {
   public logQueryRepetitionQuery(value: string) {
     let queryEvent:QueryEvent = {
       timestamp: getTimestampInSeconds(),
-      category: QueryEvent.CategoryEnum.OTHER,
+      category: QueryEventCategory.OTHER,
       type: 'queryRepetition',
       value: value
     }
@@ -45,7 +45,7 @@ export class QueryEventLogService {
   public logSubmitAnswer(value: string) {
     let queryEvent:QueryEvent = {
       timestamp: getTimestampInSeconds(),
-      category: QueryEvent.CategoryEnum.OTHER,
+      category: QueryEventCategory.OTHER,
       type: 'submitanswer',
       value: value
     }
@@ -55,7 +55,7 @@ export class QueryEventLogService {
   public logSubmit(value: string) {
     let queryEvent:QueryEvent = {
       timestamp: getTimestampInSeconds(),
-      category: QueryEvent.CategoryEnum.OTHER,
+      category: QueryEventCategory.OTHER,
       type: 'submit',
       value: value
     }

@@ -1,12 +1,12 @@
 import {ViewChild, ElementRef, Component, AfterViewInit, OnInit} from '@angular/core';
 import { HostListener } from '@angular/core';
-import { GlobalConstants, WSServerStatus, QueryType, getTimestampInSeconds } from '../../../global-constants';
+import { GlobalConstants, WSServerStatus, QueryType, getTimestampInSeconds } from '../../../shared/config/global-constants';
 import { VBSServerConnectionService } from '../../services/vbsserver-connection.service';
 import { NodeServerConnectionService } from '../../services/nodeserver-connection.service';
 import { ClipServerConnectionService } from '../../services/clipserver-connection.service';
 import { Router,ActivatedRoute } from '@angular/router';
-import { QueryResult} from 'openapi/dres';
-import { LocalConfig } from '../../../local-config';
+//import { QueryResult} from 'openapi/dres'; // OLD VERSION OF DRES
+import { LocalConfig } from '../../../shared/config/local-config';
 import {ExpLogService} from '../../services/exp-log.service';
 import {InteractionLogService} from '../../services/interaction-log.service';
 import {QueryEventLogService} from '../../services/query-event-log.service';
@@ -661,6 +661,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
     this.querydataset = qresults.dataset;
     let keyframeBase = URLUtil.getBaseURL(); //TODO + 'thumbs/';
 
+    /* OLD VERSION OF DRES
     let logResults:Array<QueryResult> = [];
     for (let i = 0; i < qresults.results.length; i++) {
       let e = qresults.results[i];
@@ -676,7 +677,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
       }
       logResults.push(logResult)
       resultnum++;
-    }
+    }*/
 
     this.inputfield.nativeElement.blur();
 
@@ -685,7 +686,8 @@ export class QueryComponent implements AfterViewInit, OnInit {
 
 
     //create and send log
-    this.queryResultLogService.logQueryResult(this.queryTimestamp, 'rankingModel @ ' + this.queryType, '' + Math.min(this.resultsPerPage, qresults.totalresults), logResults);
+    // OLD VERSION OF DRES
+    //this.queryResultLogService.logQueryResult(this.queryTimestamp, 'rankingModel @ ' + this.queryType, '' + Math.min(this.resultsPerPage, qresults.totalresults), logResults);
 
     this.nodeServerInfo = undefined;
   }
@@ -697,7 +699,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
   submitResult(index: number) {
     const imageID = this.getFilenameFromItem(this.resultURLs[index])
     console.log(`${imageID}`);
-    this.vbsService.submitImageID(imageID);
+    //this.vbsService.submitImageID(imageID); OLD VERSION OF DRES
 
     this.queryEventLogService.logSubmit(`result:${index}`);
     this.expLogService.submitLog();

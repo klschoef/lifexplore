@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { WSServerStatus,GlobalConstants } from "../../global-constants";
+import { WSServerStatus,GlobalConstants } from "../../shared/config/global-constants";
 import {BehaviorSubject, filter, tap} from 'rxjs';
 import {map} from 'rxjs/operators';
 

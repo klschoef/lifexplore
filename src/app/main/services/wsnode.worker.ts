@@ -1,6 +1,6 @@
 /// <reference lib="webworker" />
 
-import { WebSocketEvent,GlobalConstants } from "../../global-constants";
+import { WebSocketEvent,GlobalConstants } from "../../shared/config/global-constants";
 
 var nodeSocket: WebSocket = new WebSocket(GlobalConstants.nodeServerURL);
 

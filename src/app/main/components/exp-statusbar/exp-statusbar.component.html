@@ -2,10 +2,13 @@
   <div class="connections-container">
     <div class="connection-container" [class.connected]="pythonServerService.connectionState === WSServerStatus.CONNECTED">Backend</div>
     DRESUser: mrader
+    <select (change)="changeEvaluation($event)" [ngModel]="vbsServerConnectionService.selectedEvaluation">
+      <option *ngFor="let v of vbsServerConnectionService.evaluations" [value]="v.id">{{ v.name }}</option>
+    </select>
   </div>
   <div class="submit-container">
     Topic Answer
-    <input class="exp-textfield" type="text">
-    <button class="green exp-hover-scale">Submit</button>
+    <input #topicInput class="exp-textfield" type="text">
+    <button class="green exp-hover-scale" (click)="submitTopic(topicInput)">Submit</button>
   </div>
 </div>

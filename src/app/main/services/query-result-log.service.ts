@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {ExpLogService} from './exp-log.service';
-import {QueryResult, QueryResultLog} from '../../../../openapi/dres';
+import {QueryResultLog, RankedAnswer} from '../../../../openapi/dres';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,7 @@ export class QueryResultLogService {
     private expLogService: ExpLogService
   ) { }
 
-  public logQueryResult(queryTimestamp: number, sortType: string, resultSetAvailability: string, logResults: QueryResult[]) {
+  public logQueryResult(queryTimestamp: number, sortType: string, resultSetAvailability: string, logResults: RankedAnswer[]) {
     let log : QueryResultLog = {
       timestamp: queryTimestamp,
       sortType: sortType,

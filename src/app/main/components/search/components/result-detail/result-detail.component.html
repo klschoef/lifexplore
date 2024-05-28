@@ -10,6 +10,7 @@
           </div>
         </div>
         <div class="title-container">{{selectedMode}}</div>
+        <div (click)="submitImage()">Submit</div>
       </div>
       <div class="content">
         <app-single-result-container *ngIf="selectedMode === ResultDetailComponentMode.Single" [result]="receivedMetadata"></app-single-result-container>

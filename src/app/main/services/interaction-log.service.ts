@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {GUIAction, GUIActionType} from '../models/gui-action';
-import {getTimestampInSeconds} from '../../global-constants';
+import {getTimestampInSeconds} from '../../shared/config/global-constants';
 import {ExpLogService} from './exp-log.service';
 import URLUtil from '../utils/url-util';
 

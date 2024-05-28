@@ -1,5 +1,5 @@
 import {Component, HostListener, OnInit} from '@angular/core';
-import {getTimestampInSeconds, WSServerStatus} from '../../../global-constants';
+import {getTimestampInSeconds, WSServerStatus} from '../../../shared/config/global-constants';
 import URLUtil from '../../utils/url-util';
 import {ClipServerConnectionService} from '../../services/clipserver-connection.service';
 import {ActivatedRoute, Router} from '@angular/router';

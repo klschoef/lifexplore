@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import {WSServerStatus} from '../../../global-constants';
+import {WSServerStatus} from '../../../shared/config/global-constants';
 import {PythonServerService} from '../../services/pythonserver.service';
+import {VBSServerConnectionService} from '../../services/vbsserver-connection.service';
 
 @Component({
   selector: 'exp-statusbar',
@@ -13,5 +14,17 @@ export class ExpStatusbarComponent {
 
     constructor(
       public pythonServerService: PythonServerService,
+      public vbsServerConnectionService: VBSServerConnectionService
     ) { }
+
+  changeEvaluation(event: any) {
+      console.log("changeEvaluation:", event, event.target.selectedIndex, event.target.value);
+      this.vbsServerConnectionService.selectedEvaluation = event.target.value;
+  }
+
+  submitTopic(topicInput:any ) {
+      const inputVal = topicInput.value;
+      this.vbsServerConnectionService.submitText(inputVal);
+      // this.vbsServerConnectionService.submitTopic(topicInput);
+  }
 }

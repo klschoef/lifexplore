@@ -12,7 +12,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { ApiModule,Configuration } from 'openapi/dres';
-import { GlobalConstants } from './global-constants';
+import { GlobalConstants } from './shared/config/global-constants';
 import { HttpClientModule } from '@angular/common/http';
 import { VBSServerConnectionService } from './main/services/vbsserver-connection.service';
 

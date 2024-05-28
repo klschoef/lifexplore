@@ -1,6 +1,7 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {NodeServerConnectionService} from '../../../../services/nodeserver-connection.service';
 import {PythonServerService} from '../../../../services/pythonserver.service';
+import {VBSServerConnectionService} from '../../../../services/vbsserver-connection.service';
 
 export enum ResultDetailComponentMode {
   Single = 'Single',
@@ -22,7 +23,8 @@ export class ResultDetailComponent implements OnChanges {
   selectedMode: string = ResultDetailComponentMode.Single;
 
   constructor(
-    private pythonService: PythonServerService
+    private pythonService: PythonServerService,
+    private vbsServerConnectionService: VBSServerConnectionService
   ) {
   }
 
@@ -47,6 +49,11 @@ export class ResultDetailComponent implements OnChanges {
 
 
     this.pythonService.sendMessage(msg);
+  }
+
+  submitImage() {
+    console.log("SUBMIT IMAGE", this.selectedResult);
+    this.vbsServerConnectionService.submitImageID(this.selectedResult.filename);
   }
 
   protected readonly ResultDetailComponentMode = ResultDetailComponentMode;

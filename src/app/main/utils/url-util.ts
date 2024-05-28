@@ -1,4 +1,4 @@
-import {GlobalConstants} from '../../global-constants';
+import {GlobalConstants} from '../../shared/config/global-constants';
 
 export default class URLUtil {
   static removeBaseURL(val:string):string {

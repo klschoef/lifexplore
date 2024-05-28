@@ -1,6 +1,6 @@
 import { ViewChild,ElementRef,Component, AfterViewInit } from '@angular/core';
 import { HostListener } from '@angular/core';
-import { GlobalConstants, WSServerStatus, WebSocketEvent } from './global-constants';
+import { GlobalConstants, WSServerStatus, WebSocketEvent } from './shared/config/global-constants';
 import { VBSServerConnectionService } from './main/services/vbsserver-connection.service';
 import { NodeServerConnectionService } from './main/services/nodeserver-connection.service';
 import { ClipServerConnectionService } from './main/services/clipserver-connection.service';

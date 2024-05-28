@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {QueryType} from '../../global-constants';
+import {QueryType} from '../../shared/config/global-constants';
 
 @Injectable({
   providedIn: 'root'

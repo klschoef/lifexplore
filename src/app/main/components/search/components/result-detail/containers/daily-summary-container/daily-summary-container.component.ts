@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import ObjectQuery from '../../../../../../models/object-query';
-import {WSServerStatus} from '../../../../../../../global-constants';
+import {WSServerStatus} from '../../../../../../../shared/config/global-constants';
 import URLUtil from '../../../../../../utils/url-util';
 import {PythonServerService} from '../../../../../../services/pythonserver.service';
 import {filter, tap} from 'rxjs';

@@ -49,14 +49,16 @@ export class ExpLogService {
   submitLog() {
     if (this.resultLog.length > 0 && this.queryEvents.length > 0) {
       this.resultLog[this.resultLog.length-1].events = this.queryEvents;
-      this.logService.postApiV1LogResult(this.connectionService.sessionId!, this.resultLog[this.resultLog.length-1]).pipe(
+      // TODO: fix this
+      //this.logService.postApiV2LogResultByEvaluationId(this.resultLog[this.resultLog.length-1], this.connectionService.sessionId!)
+      /*this.logService.postApiV1LogResult(this.connectionService.sessionId!, this.resultLog[this.resultLog.length-1]).pipe(
         tap(o => {
           console.log(`Successfully submitted result log to DRES!`);
         }),
         catchError((err) => {
           return of(`Failed to submit segment to DRES due to a HTTP error (${err.status}).`)
         })
-      ).subscribe();
+      ).subscribe();*/
     }
   }
 }

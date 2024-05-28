@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NodeServerConnectionService } from '../../services/nodeserver-connection.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GlobalConstants, WSServerStatus } from '../../../global-constants';
+import { GlobalConstants, WSServerStatus } from '../../../shared/config/global-constants';
 
 export interface EntityInfo {
   name: string;
