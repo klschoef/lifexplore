@@ -26,6 +26,10 @@ expl-dialog {
       display: flex;
       flex-direction: row;
       gap: 8px;
+
+      .active-tab {
+        color: var(--exp-color-secondary);
+      }
     }
 
     .mode-color {

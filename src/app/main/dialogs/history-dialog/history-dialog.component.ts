@@ -28,6 +28,10 @@ export class HistoryDialogComponent implements OnInit {
     console.log('loadHistory');
     const historyObjectList: any[] = JSON.parse(this.historyService.fetch_raw_history_object() ?? '[]');
     // TODO: add support for query_dicts
-    this.historyList$.next(historyObjectList.filter(item => HistoryEntryToText.transform(item).includes(this.searchValue)));
+    this.historyList$.next(
+      historyObjectList.filter(item =>
+        HistoryEntryToText.transform(item).toLowerCase().includes(this.searchValue.toLowerCase())
+      )
+    );
   }
 }
