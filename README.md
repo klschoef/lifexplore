@@ -28,6 +28,8 @@ npm run-script gen-dres-client
 npm run-script gen-dres-dev-client
 ```
 
+6. Copy src/app/shared/services/local-config-example.ts to src/app/shared/services/local-config.ts and adjust the values to your needs.
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.

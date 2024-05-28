@@ -36,32 +36,12 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
     {
       queryParts: [
         {
-          query_type: QueryPartType.objects,
-          query: "car",
+          query_type: QueryPartType.clip,
+          query: "",
           subqueries: [
           ]
         }
       ],
-    },
-    {
-      queryParts: [
-        {
-          query_type: QueryPartType.objects,
-          query: "person",
-          subqueries: [
-          ]
-        }
-      ]
-    },
-    {
-      queryParts: [
-        {
-          query_type: QueryPartType.heart_rate,
-          query: "200+",
-          subqueries: [
-          ]
-        }
-      ]
     }
   ]
 
