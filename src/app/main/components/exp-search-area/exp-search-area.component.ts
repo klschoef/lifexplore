@@ -76,6 +76,13 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
     ).subscribe(() => {
       this.textInput.nativeElement.select();
     });
+
+    this.resultPresenterService.triggerSearch$.pipe(
+        filter(val => val),
+        takeUntil(this.destroy$)
+        ).subscribe(() => {
+          this.onSearchChange();
+        });
   }
 
   ngOnDestroy() {

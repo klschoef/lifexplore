@@ -2,6 +2,7 @@ import {Component, HostListener, Input} from '@angular/core';
 import {ResultPresenterService} from '../../../../../services/result-presenter.service';
 import {map} from 'rxjs/operators';
 import {filter} from 'rxjs';
+import {ShortcutService} from '../../../../../services/shortcut.service';
 
 @Component({
   selector: 'app-minimal-result-container',
@@ -17,7 +18,8 @@ export class MinimalResultContainerComponent {
   );
 
   constructor(
-    private resultPresenterService: ResultPresenterService
+    private resultPresenterService: ResultPresenterService,
+    public shortcutService: ShortcutService
   ) {
   }
 

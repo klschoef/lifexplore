@@ -13,20 +13,35 @@ import {BehaviorSubject} from 'rxjs';
 export class ShortcutService {
 
   public isInputFocusedSubject = new BehaviorSubject<boolean>(false);
+  public shiftKeyIsPressedSubject = new BehaviorSubject<boolean>(false);
 
   constructor(
     private resultPresenterService: ResultPresenterService,
     private settingsService: SettingsService
   ) { }
 
+  handleKeyboardEventUp(event: KeyboardEvent) {
+    this.shiftKeyIsPressedSubject.next(event.shiftKey);
+  }
+
   handleKeyboardEvent(event: KeyboardEvent) {
     console.log("event", event);
+    this.shiftKeyIsPressedSubject.next(event.shiftKey);
+
     if (event.key === 'ArrowLeft') {
       console.log("ArrowLeft");
-      this.resultPresenterService.previousResult();
+      if (!this.isInputFocusedSubject.value) {
+        this.resultPresenterService.previousResult();
+      }
     } else if (event.key === 'ArrowRight') {
       console.log("ArrowRight");
-      this.resultPresenterService.nextResult();
+      if (!this.isInputFocusedSubject.value) {
+        this.resultPresenterService.nextResult();
+      }
+    } else if (event.key === 'Enter' && event.shiftKey) {
+      this.resultPresenterService.triggerSearch$.next(true);
+      console.log("Enter + shift");
+      //this.resultPresenterService.search$.next(true);
     } else if (event.key === 'Tab' && event.shiftKey) {
       console.log("Tab + shift");
       this.resultPresenterService.previousPage();

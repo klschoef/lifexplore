@@ -1,5 +1,6 @@
 <div class="lifelog-search-results-container">
   <div class="lifelog-search-result exp-clickable exp-hover-scale animate__animated animate__fadeIn"
+       [class.shift]="shortcutService.shiftKeyIsPressedSubject | async"
        (click)="clickResult(result)"
        *ngFor="let result of results; let i = index">
     <img src="{{result.filepath}}">

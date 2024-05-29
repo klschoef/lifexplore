@@ -108,6 +108,11 @@ export class SearchComponent implements OnInit {
     this.shortcutService.handleKeyboardEvent(event);
   }
 
+  @HostListener('document:keyup', ['$event'])
+  handleKeyboardEventUp(event: KeyboardEvent) {
+    this.shortcutService.handleKeyboardEventUp(event);
+  }
+
   searchValueChange(value: string): void {
     console.log(value);
   }

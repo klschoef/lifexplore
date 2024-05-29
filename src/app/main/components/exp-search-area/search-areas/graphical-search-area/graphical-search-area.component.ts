@@ -1,5 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {GraphicalContentPart} from '../../../../models/graphical-content-part';
+import {QueryPartType} from '../../models/query-part';
 
 @Component({
   selector: 'exp-graphical-search-area',
@@ -11,7 +12,14 @@ export class GraphicalSearchAreaComponent {
 
   addGraphicalContentPart() {
     this.graphicalContent.push({
-      queryParts: []
+      queryParts: [
+        {
+          query_type: QueryPartType.clip,
+          query: "",
+          subqueries: [
+          ]
+        }
+      ]
     });
   }
 

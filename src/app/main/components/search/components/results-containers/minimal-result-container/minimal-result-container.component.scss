@@ -15,7 +15,11 @@
 
     &:hover {
       z-index: 2;
-      transform: scale(1.5);
+      transform: scale(1.05);
+    }
+
+    &.shift:hover {
+      transform: scale(4);
     }
 
     img {

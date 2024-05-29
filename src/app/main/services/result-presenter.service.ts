@@ -15,6 +15,7 @@ export class ResultPresenterService {
   showHistory$ = new BehaviorSubject<boolean>(false);
   showHelp$ = new BehaviorSubject<boolean>(false);
   showTuning$ = new BehaviorSubject<boolean>(false);
+  triggerSearch$ = new BehaviorSubject<boolean>(false);
 
   constructor() { }
 
