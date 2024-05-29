@@ -4,6 +4,13 @@
        (click)="clickResult(result)"
        *ngFor="let result of results; let i = index">
     <img src="{{result.filepath}}">
+    <div
+      [class.submitted-pending]="submissionLogService.submissionLog$ | async | submissionPending:result.filename:1"
+      [class.submitted-success]="submissionLogService.submissionLog$ | async | submissionPending:result.filename:2"
+      [class.submitted-failure]="submissionLogService.submissionLog$ | async | submissionPending:result.filename:3"
+    >
+
+    </div>
     <!--<div class="metadata">
       <div class="line">
         <div class="datetime">{{result.datetime}}</div>

@@ -3,6 +3,7 @@ import {ResultPresenterService} from '../../../../../services/result-presenter.s
 import {map} from 'rxjs/operators';
 import {filter} from 'rxjs';
 import {ShortcutService} from '../../../../../services/shortcut.service';
+import {SubmissionLogService} from '../../../../../services/submission-log.service';
 
 @Component({
   selector: 'app-minimal-result-container',
@@ -19,7 +20,8 @@ export class MinimalResultContainerComponent {
 
   constructor(
     private resultPresenterService: ResultPresenterService,
-    public shortcutService: ShortcutService
+    public shortcutService: ShortcutService,
+    public submissionLogService: SubmissionLogService
   ) {
   }
 

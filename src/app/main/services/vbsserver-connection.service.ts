@@ -33,6 +33,7 @@ import { GlobalConstants, WSServerStatus } from '../../shared/config/global-cons
 import { catchError, Observable, of, tap } from 'rxjs';
 import { AppComponent } from '../../app.component';
 import { GlobalConstantsService } from '../../shared/config/services/global-constants.service';
+import {SubmissionLogService} from './submission-log.service';
 
 interface ExtendedQueryResultLog extends QueryResultLog {
   serverTime: number;
@@ -79,7 +80,8 @@ export class VBSServerConnectionService {
     private evaluationService: EvaluationService,
     private submissionService: SubmissionService,
     private logService: LogService,
-    private statusService: StatusService
+    private statusService: StatusService,
+    private submissionLogService: SubmissionLogService
   ) {
     this.println(`VBSServerConnectionService created`);
     this.activeUsername = this.globalConstants.configUSER; //GlobalConstants.configUSER;
@@ -280,8 +282,10 @@ export class VBSServerConnectionService {
       this.sessionId!).pipe(
       tap((status: SuccessfulSubmissionsStatus) => {
         this.handleSubmissionSuccess(status, ''+imageID);
+        this.submissionLogService.addEntryToLog(imageID, true, lastEvaluationId);
       }),
       catchError(err => {
+        this.submissionLogService.addEntryToLog(imageID, false, lastEvaluationId);
         return this.handleSubmissionError(err);
       })
     ).subscribe()

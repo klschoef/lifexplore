@@ -2,6 +2,7 @@ import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core'
 import {NodeServerConnectionService} from '../../../../services/nodeserver-connection.service';
 import {PythonServerService} from '../../../../services/pythonserver.service';
 import {VBSServerConnectionService} from '../../../../services/vbsserver-connection.service';
+import {SubmissionLogService} from '../../../../services/submission-log.service';
 
 export enum ResultDetailComponentMode {
   Single = 'Single',
@@ -24,7 +25,8 @@ export class ResultDetailComponent implements OnChanges {
 
   constructor(
     private pythonService: PythonServerService,
-    private vbsServerConnectionService: VBSServerConnectionService
+    private vbsServerConnectionService: VBSServerConnectionService,
+    private submissionLogService: SubmissionLogService
   ) {
   }
 
