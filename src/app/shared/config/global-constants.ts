@@ -58,8 +58,6 @@ export interface ResultLog {
 
 export class GlobalConstants {
   public static configVBSSERVER = 'https://vbs.videobrowsing.org';
-  public static configUSER = 'lscteam132'; //might be overriden by LocalStorage
-  public static configPASS = 'OOWyxo0F9H1qg2Y'; //might be overriden by LocalStorage //'MRT7jDaRUq';
 
   public static clipServerURL: string = 'ws://' + LocalConfig.config_CLIP_SERVER_HOST + ':' + LocalConfig.config_CLIP_SERVER_PORT;
   public static nodeServerURL: string = 'ws://' + LocalConfig.config_NODE_SERVER_HOST + ':' + LocalConfig.config_NODE_SERVER_PORT;
