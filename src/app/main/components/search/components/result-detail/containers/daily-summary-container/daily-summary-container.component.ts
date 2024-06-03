@@ -59,8 +59,6 @@ export class DailySummaryContainerComponent implements OnInit {
 
       // generate new request id
       this.requestId = Math.random().toString(36).substring(7);
-      console.log("day?", this.result);
-      console.log("date?", this.navigated_date?.getDate(), this.navigated_date?.getMonth(), this.navigated_date?.getFullYear());
 
       let msg = {
         type: "textquery",
