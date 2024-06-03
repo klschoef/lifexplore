@@ -59,7 +59,7 @@ export class DailySummaryContainerComponent implements OnInit {
 
       // generate new request id
       this.requestId = Math.random().toString(36).substring(7);
-
+      console.log("day?", this.result);
       console.log("date?", this.navigated_date?.getDate(), this.navigated_date?.getMonth(), this.navigated_date?.getFullYear());
 
       let msg = {
@@ -69,7 +69,7 @@ export class DailySummaryContainerComponent implements OnInit {
         query_dicts: [
           {
             day: this.navigated_date?.getDate() ?? this.result.day,
-            month: this.navigated_date?.getMonth() ?? this.result.month,
+            month: (this.navigated_date?.getMonth() ?? this.result.month-1)+1,
             year: this.navigated_date?.getFullYear() ?? this.result.year,
           }
         ],
