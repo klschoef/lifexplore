@@ -118,10 +118,12 @@ export class SearchComponent implements OnInit {
   }
 
   onSearch(value: string): void {
+    this.currentPage = 1;
     this.performTextQuery(value, []);
   }
 
   onSearchObject(value: ObjectQuery[]): void {
+    this.currentPage = 1;
     this.performTextQuery("", value);
   }
 
