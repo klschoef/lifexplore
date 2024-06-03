@@ -3,6 +3,8 @@ import {NodeServerConnectionService} from '../../../../services/nodeserver-conne
 import {PythonServerService} from '../../../../services/pythonserver.service';
 import {VBSServerConnectionService} from '../../../../services/vbsserver-connection.service';
 import {SubmissionLogService} from '../../../../services/submission-log.service';
+import {BehaviorSubject, combineLatest, filter, switchMap, tap} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 export enum ResultDetailComponentMode {
   Single = 'Single',
@@ -22,6 +24,15 @@ export class ResultDetailComponent implements OnChanges {
 
   modes: string[] = Object.values(ResultDetailComponentMode);
   selectedMode: string = ResultDetailComponentMode.Single;
+  newSelectedResult$ = new BehaviorSubject(null);
+  submissionEntry$ = combineLatest([this.submissionLogService.logOrModeChange$, this.newSelectedResult$]).pipe(
+    switchMap(_ => this.submissionLogService.submissionLog$),
+    filter(log => !!this.vbsServerConnectionService.selectedEvaluation),
+    map(log => log[this.vbsServerConnectionService.selectedEvaluation!]),
+    filter(log => log),
+    tap(log => console.log("SUBMISSION ENTRY", log, this.selectedResult.filename)),
+    map(log => log.find((entry: any) => entry.image === this.selectedResult.filename))
+  );
 
   constructor(
     private pythonService: PythonServerService,
@@ -38,6 +49,7 @@ export class ResultDetailComponent implements OnChanges {
     if (this.selectedResult) {
       this.fetchDetails();
       this.isOpen = true;
+      this.newSelectedResult$.next(this.selectedResult);
     }
   }
 

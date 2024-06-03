@@ -1,6 +1,6 @@
 import { Injectable, EventEmitter, OnInit } from '@angular/core';
 
-import { UserService } from '../../../../openapi/dres';
+import {ApiVerdictStatus, UserService} from '../../../../openapi/dres';
 import { EvaluationClientService } from '../../../../openapi/dres';
 import { SubmissionService } from '../../../../openapi/dres';
 import { VbsServiceCommunication } from '../../shared/interfaces/vbs-task-interface';
@@ -138,6 +138,7 @@ export class VBSServerConnectionService {
             // set the selected evaluation to the last one, if it is not set or the current selected evaluation isn't in the list anymore
             if (this.selectedEvaluation == undefined || !evaluations.some(evaluation => evaluation.id === this.selectedEvaluation)) {
               this.selectedEvaluation = this.serverRunIDs[this.serverRunIDs.length - 1];
+              this.submissionLogService.logOrModeChange$.next(null);
             }
           });
         });
@@ -281,11 +282,20 @@ export class VBSServerConnectionService {
 
       this.sessionId!).pipe(
       tap((status: SuccessfulSubmissionsStatus) => {
-        this.handleSubmissionSuccess(status, ''+imageID);
-        this.submissionLogService.addEntryToLog(imageID, true, lastEvaluationId);
+        console.log("submission response status", status);
+        let success = status.submission === ApiVerdictStatus.CORRECT;
+        const indeterminate = status.submission === ApiVerdictStatus.INDETERMINATE;
+        const undecidable = status.submission === ApiVerdictStatus.UNDECIDABLE;
+        if (success) {
+          this.handleSubmissionSuccess(status, ''+imageID);
+        } else {
+          console.error('Submission failed');
+        }
+
+        this.submissionLogService.addEntryToLog(imageID, success, indeterminate, undecidable, lastEvaluationId, false, null, status);
       }),
       catchError(err => {
-        this.submissionLogService.addEntryToLog(imageID, false, lastEvaluationId);
+        this.submissionLogService.addEntryToLog(imageID, false, false, false, lastEvaluationId, true, err.error, null);
         return this.handleSubmissionError(err);
       })
     ).subscribe()
@@ -313,9 +323,11 @@ export class VBSServerConnectionService {
       this.sessionId!).subscribe((submissionResponse: SuccessfulSubmissionsStatus) => {
         // Check if submission as successful
         this.handleSubmissionSuccess(submissionResponse, 't:' + text);
+        this.submissionLogService.addEntryToLog(text, false, true, false, lastEvaluationId, false, null, submissionResponse);
       }
       , error => {
         this.handleSubmissionError(error);
+        this.submissionLogService.addEntryToLog(text, false, false, false, lastEvaluationId, true, error.error, null);
       });
   }
 

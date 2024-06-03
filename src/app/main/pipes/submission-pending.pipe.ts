@@ -8,15 +8,18 @@ import {VBSServerConnectionService} from '../services/vbsserver-connection.servi
 export class SubmissionPendingPipe implements PipeTransform {
 
   transform(value: any, filename: string, mode: number): boolean {
-    console.log("VALUE", value, filename, this.vbsServerConnection.selectedEvaluation);
+    value = this.submissionLogService.submissionLog$.value;
+    console.log("submissionPendingPipe transform");
     if (this.vbsServerConnection.selectedEvaluation) {
       const log = value[this.vbsServerConnection.selectedEvaluation];
-      if (mode == 2) {
-        return log.some((entry: any) => entry.image === filename && entry.success === true);
-      } else if (mode == 3) {
-        return log.some((entry: any) => entry.image === filename && entry.success === false);
+      if (log && log.some) {
+        if (mode == 2) {
+          return log.some((entry: any) => entry.image === filename && entry.success === true);
+        } else if (mode == 3) {
+          return log.some((entry: any) => entry.image === filename && entry.success === false);
+        }
+        return log.some((entry: any) => entry.image === filename);
       }
-      return log.some((entry: any) => entry.image === filename);
     }
     return false
   }
@@ -25,5 +28,6 @@ export class SubmissionPendingPipe implements PipeTransform {
     public submissionLogService: SubmissionLogService,
     public vbsServerConnection: VBSServerConnectionService
   ) {
+    console.log("submissionPendingPipe construct");
   }
 }

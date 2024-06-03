@@ -50,6 +50,7 @@ import { TuningDialogComponent } from './main/dialogs/tuning-dialog/tuning-dialo
 import {HistoryEntryIsGraphicalPipe} from './main/dialogs/history-dialog/pipes/history-entry-is-graphical.pipe';
 import { ExpStatusbarComponent } from './main/components/exp-statusbar/exp-statusbar.component';
 import { SubmissionPendingPipe } from './main/pipes/submission-pending.pipe';
+import { SubmissionResultMarkerComponent } from './main/components/search/components/results-containers/shared/submission-result-marker/submission-result-marker.component';
 
 
 @NgModule({
@@ -84,7 +85,8 @@ import { SubmissionPendingPipe } from './main/pipes/submission-pending.pipe';
     HistoryEntryIsGraphicalPipe,
     TuningDialogComponent,
     ExpStatusbarComponent,
-    SubmissionPendingPipe
+    SubmissionPendingPipe,
+    SubmissionResultMarkerComponent
   ],
   imports: [
     BrowserModule,

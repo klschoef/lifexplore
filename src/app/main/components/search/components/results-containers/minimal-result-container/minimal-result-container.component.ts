@@ -1,4 +1,4 @@
-import {Component, HostListener, Input} from '@angular/core';
+import {Component, HostListener, Input, OnInit} from '@angular/core';
 import {ResultPresenterService} from '../../../../../services/result-presenter.service';
 import {map} from 'rxjs/operators';
 import {filter} from 'rxjs';
@@ -10,7 +10,7 @@ import {SubmissionLogService} from '../../../../../services/submission-log.servi
   templateUrl: './minimal-result-container.component.html',
   styleUrls: ['./minimal-result-container.component.scss']
 })
-export class MinimalResultContainerComponent {
+export class MinimalResultContainerComponent implements OnInit {
   @Input() results: any[] = [];
   @Input() localMode = false;
   localResult?: any;
@@ -23,6 +23,12 @@ export class MinimalResultContainerComponent {
     public shortcutService: ShortcutService,
     public submissionLogService: SubmissionLogService
   ) {
+  }
+
+  ngOnInit() {
+    this.submissionLogService.logOrModeChange$.subscribe(() => {
+      console.log("logOrModeChange$");
+    });
   }
 
   clickResult(result: any) {

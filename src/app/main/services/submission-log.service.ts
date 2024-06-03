@@ -7,7 +7,8 @@ import { BehaviorSubject } from 'rxjs';
 export class SubmissionLogService {
 
   private localStorageKey = 'submissionLog';
-  submissionLog$ = new BehaviorSubject<any>(this.loadLogFromLocalStorage());
+  public submissionLog$ = new BehaviorSubject<any>(this.loadLogFromLocalStorage());
+  public logOrModeChange$ = new BehaviorSubject(null);
 
   constructor() {
     const savedLog = this.loadLogFromLocalStorage();
@@ -16,16 +17,24 @@ export class SubmissionLogService {
     }
   }
 
-  addEntryToLog(image: string, success: boolean, evaluation: string) {
+  addEntryToLog(image: string, success: boolean, indeterminate: boolean, undecidable: boolean, evaluation: string, requestError: boolean, errorObject?: any, responseObject?: any) {
     let log = this.submissionLog$.value;
 
     if (!log[evaluation]) {
       log[evaluation] = [];
     }
-    const newEntry = { success: success, image: image };
+    const newEntry = {
+      success: success,
+      indeterminate: indeterminate,
+      requestError: requestError,
+      undecidable: undecidable,
+      errorObject: errorObject,
+      responseObject: responseObject,
+      image: image };
     log[evaluation].push(newEntry);
     console.log("new log", log);
     this.submissionLog$.next(log);
+    this.logOrModeChange$.next(null);
     this.saveLogToLocalStorage(log);
   }
 

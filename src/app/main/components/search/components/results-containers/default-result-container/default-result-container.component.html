@@ -2,7 +2,10 @@
   <div class="lifelog-search-result exp-clickable exp-hover-move-up animate__animated animate__fadeIn"
        (click)="clickResult(result)"
        *ngFor="let result of results; let i = index">
-    <img src="{{result.filepath}}">
+    <div class="image-container">
+      <img src="{{result.filepath}}">
+      <app-submission-result-marker [result]="result"></app-submission-result-marker>
+    </div>
     <div class="metadata">
       <div class="line">
         <div *ngIf="result.heart_rate" class="heart-rate-container">

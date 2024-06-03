@@ -5,6 +5,12 @@
     <select (change)="changeEvaluation($event)" [ngModel]="vbsServerConnectionService.selectedEvaluation">
       <option *ngFor="let v of vbsServerConnectionService.evaluations" [value]="v.id">{{ v.name }}</option>
     </select>
+    <div class="submission-container">
+      <div class="success" *ngIf="{val: submissionLogSuccessCount$ | async } as data">{{ data.val ?? 0 }}</div>
+      <div class="pending" *ngIf="{val: submissionLogPendingCount$ | async } as data">{{ data.val ?? 0 }}</div>
+      <div class="wrong" *ngIf="{val: submissionLogWrongCount$ | async } as data">{{ data.val ?? 0 }}</div>
+      <div class="request-failure" *ngIf="{val: submissionLogRequestFailureCount$ | async } as data">{{ data.val ?? 0 }}</div>
+    </div>
   </div>
   <div class="submit-container">
     Topic Answer

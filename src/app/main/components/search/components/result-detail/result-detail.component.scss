@@ -22,6 +22,30 @@ expl-dialog {
     color: white;
     padding: 8px;
 
+    .submission-text {
+      font-size: 20px;
+
+      &.request-error {
+        color: var(--exp-color-request-failure);
+        text-shadow: 0 0 1px white;
+      }
+
+      &.success {
+        color: var(--exp-color-success);
+        text-shadow: 0 0 5px var(--exp-color-success);
+      }
+
+      &.pending {
+        color: var(--exp-color-pending);
+        text-shadow: 0 0 5px var(--exp-color-pending);
+      }
+
+      &.wrong {
+        color: var(--exp-color-wrong);
+        text-shadow: 0 0 5px var(--exp-color-wrong);
+      }
+    }
+
     .mode-container {
       display: flex;
       flex-direction: row;

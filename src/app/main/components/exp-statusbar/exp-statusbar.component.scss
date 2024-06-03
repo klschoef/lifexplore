@@ -38,4 +38,34 @@
     gap: 8px;
     align-items: center;
   }
+
+  .submission-container {
+    border-radius: 8px;
+    border-color: var(--exp-color-light);
+    border-style: solid;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+
+    .success, .pending, .wrong, .request-failure {
+      background-color: var(--exp-color-success);
+      color: var(--exp-color-light);
+      padding: 4px;
+      border-right: 1px;
+      border-right: solid;
+    }
+
+    .request-failure {
+      background-color: var(--exp-color-request-failure);
+      border-right: none;
+    }
+
+    .pending {
+      background-color: var(--exp-color-pending);
+    }
+
+    .wrong {
+      background-color: var(--exp-color-wrong);
+    }
+  }
 }
