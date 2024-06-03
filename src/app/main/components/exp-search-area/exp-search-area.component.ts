@@ -8,6 +8,7 @@ import {SettingsService} from '../../services/settings.service';
 import JsonToGraphicalQueryTransformer from '../../utils/transformers/json-to-graphical-query-transformer';
 import {filter, Subject, takeUntil} from 'rxjs';
 import {ResultPresenterService} from '../../services/result-presenter.service';
+import {Router} from '@angular/router';
 
 export enum ExpSearchAreaMode {
   TEXT = 'text',
@@ -47,7 +48,8 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
 
   constructor(
     private settingsService: SettingsService,
-    public resultPresenterService: ResultPresenterService
+    public resultPresenterService: ResultPresenterService,
+    private router: Router
   ) {
   }
 
@@ -156,6 +158,15 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
     console.log("focusInTextInput", event);
     if (!this.resultPresenterService.focusQuery$.value) {
       this.resultPresenterService.focusQuery$.next(true);
+    }
+  }
+
+  navigateToSearch(): void {
+    console.log("navigateToSearch", this.router.url);
+    if (this.router.url === '/search') {
+      window.location.reload();
+    } else {
+      this.router.navigate(['/search']);
     }
   }
 }

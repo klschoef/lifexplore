@@ -17,6 +17,8 @@ export class DailySummaryContainerComponent implements OnInit {
   currentPage = 1;
   totalResults = 0;
   totalPages = 0;
+  navigated_day = 0;
+  ascending = true;
   pages: number[] = [];
   requestId?: string;
   results$ = this.pythonServerService.receivedMessages.pipe(
@@ -46,6 +48,11 @@ export class DailySummaryContainerComponent implements OnInit {
     this.performDailyQuery();
   }
 
+  changeSorting() {
+    this.ascending = !this.ascending;
+    this.performDailyQuery();
+  }
+
   performDailyQuery() {
     if (this.pythonServerService.connectionState === WSServerStatus.CONNECTED) {
 
@@ -65,7 +72,7 @@ export class DailySummaryContainerComponent implements OnInit {
         ],
         sorting: {
           field: "datetime",
-          order: "asc"
+          order: this.ascending ? "asc": "desc",
         },
         maxresults: 2000,
         resultsperpage: this.pageSize,

@@ -1,10 +1,12 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {NodeServerConnectionService} from '../../../../services/nodeserver-connection.service';
 import {PythonServerService} from '../../../../services/pythonserver.service';
 import {VBSServerConnectionService} from '../../../../services/vbsserver-connection.service';
 import {SubmissionLogService} from '../../../../services/submission-log.service';
-import {BehaviorSubject, combineLatest, filter, switchMap, tap} from 'rxjs';
+import {BehaviorSubject, combineLatest, filter, Subject, switchMap, takeUntil, tap} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {ShortcutService} from '../../../../services/shortcut.service';
+import {ResultPresenterService} from '../../../../services/result-presenter.service';
 
 export enum ResultDetailComponentMode {
   Single = 'Single',
@@ -17,8 +19,9 @@ export enum ResultDetailComponentMode {
   templateUrl: './result-detail.component.html',
   styleUrls: ['./result-detail.component.scss']
 })
-export class ResultDetailComponent implements OnChanges {
+export class ResultDetailComponent implements OnChanges, OnInit, OnDestroy {
   @Input() selectedResult?: any;
+  @Input() openTrigger?: BehaviorSubject<any> = new BehaviorSubject(undefined);
   receivedMetadata$ = this.pythonService.receivedMetadata;
   isOpen = true;
 
@@ -33,15 +36,36 @@ export class ResultDetailComponent implements OnChanges {
     tap(log => console.log("SUBMISSION ENTRY", log, this.selectedResult.filename)),
     map(log => log.find((entry: any) => entry.image === this.selectedResult.filename))
   );
+  destroy$ = new Subject<void>();
 
   constructor(
     private pythonService: PythonServerService,
     private vbsServerConnectionService: VBSServerConnectionService,
-    private submissionLogService: SubmissionLogService
+    private submissionLogService: SubmissionLogService,
+    private shortcutService: ShortcutService,
+    private resultPresenterService: ResultPresenterService
   ) {
   }
 
   ngOnInit() {
+    this.shortcutService.isSPressed.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(isSPressed => {
+      if (isSPressed) {
+        this.submitImage();
+      }
+    });
+
+    this.openTrigger?.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      this.isOpen = true;
+    });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next(undefined);
+    this.destroy$.complete();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -51,6 +75,10 @@ export class ResultDetailComponent implements OnChanges {
       this.isOpen = true;
       this.newSelectedResult$.next(this.selectedResult);
     }
+  }
+
+  closeDialog() {
+    this.resultPresenterService.currentResultIndex$.next(undefined);
   }
 
   fetchDetails() {

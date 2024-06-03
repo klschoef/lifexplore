@@ -11,5 +11,5 @@
   <app-result-detail *ngIf="localResult" [selectedResult]="localResult"></app-result-detail>
 </ng-container>
 <ng-template #globalResultDetail>
-  <app-result-detail *ngIf="selectedResult$ | async as selectedResult" [selectedResult]="selectedResult"></app-result-detail>
+  <app-result-detail *ngIf="selectedResult$ | async as selectedResult" [selectedResult]="selectedResult" [openTrigger]="openNewResultTrigger$"></app-result-detail>
 </ng-template>

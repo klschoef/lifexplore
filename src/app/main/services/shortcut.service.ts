@@ -14,6 +14,7 @@ export class ShortcutService {
 
   public isInputFocusedSubject = new BehaviorSubject<boolean>(false);
   public shiftKeyIsPressedSubject = new BehaviorSubject<boolean>(false);
+  public isSPressed = new BehaviorSubject(false);
 
   constructor(
     private resultPresenterService: ResultPresenterService,
@@ -22,6 +23,13 @@ export class ShortcutService {
 
   handleKeyboardEventUp(event: KeyboardEvent) {
     this.shiftKeyIsPressedSubject.next(event.shiftKey);
+
+    if (event.key === 's') { // submit
+      if (!this.isInputFocusedSubject.value) {
+        this.isSPressed.next(false);
+        event.preventDefault();
+      }
+    }
   }
 
   handleKeyboardEvent(event: KeyboardEvent) {
@@ -66,6 +74,11 @@ export class ShortcutService {
     } else if (event.key === 'q') { // select
       if (!this.isInputFocusedSubject.value) {
         this.resultPresenterService.selectQuery$.next(true);
+        event.preventDefault();
+      }
+    } else if (event.key === 's') { // submit
+      if (!this.isInputFocusedSubject.value) {
+        this.isSPressed.next(true);
         event.preventDefault();
       }
     } else if (event.key === 'e') { // focus

@@ -1,3 +1,27 @@
+.daily-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  .sorting-container {
+    display: flex;
+    flex-direction: row;
+
+    .first {
+      margin-right: -6px;
+    }
+
+    mat-icon {
+      color: #aaa;
+    }
+
+    .active {
+      color: var(--exp-color-primary);
+    }
+  }
+}
+
 .pages-container {
   display: flex;
   flex-direction: row;
