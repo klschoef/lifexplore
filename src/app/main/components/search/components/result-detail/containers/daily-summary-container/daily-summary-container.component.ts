@@ -17,7 +17,7 @@ export class DailySummaryContainerComponent implements OnInit {
   currentPage = 1;
   totalResults = 0;
   totalPages = 0;
-  navigated_day = 0;
+  navigated_date?: Date = undefined;
   ascending = true;
   pages: number[] = [];
   requestId?: string;
@@ -45,6 +45,7 @@ export class DailySummaryContainerComponent implements OnInit {
 
   ngOnInit() {
     console.log('result', this.result);
+    this.navigated_date = new Date(this.result.year, this.result.month - 1, this.result.day);
     this.performDailyQuery();
   }
 
@@ -59,15 +60,17 @@ export class DailySummaryContainerComponent implements OnInit {
       // generate new request id
       this.requestId = Math.random().toString(36).substring(7);
 
+      console.log("date?", this.navigated_date?.getDate(), this.navigated_date?.getMonth(), this.navigated_date?.getFullYear());
+
       let msg = {
         type: "textquery",
         version: 2,
         clientId: "direct",
         query_dicts: [
           {
-            day: this.result.day,
-            month: this.result.month,
-            year: this.result.year,
+            day: this.navigated_date?.getDate() ?? this.result.day,
+            month: this.navigated_date?.getMonth() ?? this.result.month,
+            year: this.navigated_date?.getFullYear() ?? this.result.year,
           }
         ],
         sorting: {
@@ -87,6 +90,21 @@ export class DailySummaryContainerComponent implements OnInit {
 
   loadPage(page: number) {
     this.currentPage = page;
+    this.performDailyQuery();
+  }
+
+  increaseDateByOneDay() {
+    if (!this.navigated_date) {
+      return;
+    }
+    this.navigated_date = new Date(this.navigated_date?.setDate(this.navigated_date.getDate() + 1));
+    this.performDailyQuery();
+  }
+  decreaseDateByOneDay() {
+    if (!this.navigated_date) {
+      return;
+    }
+    this.navigated_date = new Date(this.navigated_date?.setDate(this.navigated_date.getDate() - 1));
     this.performDailyQuery();
   }
 }

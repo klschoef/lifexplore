@@ -4,6 +4,14 @@
   justify-content: space-between;
   align-items: center;
 
+  .previous-next-container {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    justify-content: space-between;
+    align-items: center;
+  }
+
   .sorting-container {
     display: flex;
     flex-direction: row;
