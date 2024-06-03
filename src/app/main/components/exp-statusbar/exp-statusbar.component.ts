@@ -5,6 +5,7 @@ import {VBSServerConnectionService} from '../../services/vbsserver-connection.se
 import {SubmissionLogService} from '../../services/submission-log.service';
 import {map} from 'rxjs/operators';
 import {filter, switchMap} from 'rxjs';
+import {GlobalConstantsService} from '../../../shared/config/services/global-constants.service';
 
 @Component({
   selector: 'exp-statusbar',
@@ -14,11 +15,12 @@ import {filter, switchMap} from 'rxjs';
 export class ExpStatusbarComponent {
 
     protected readonly WSServerStatus = WSServerStatus;
+    dresUser = this.globalConstants.configUSER;
 
     submissionLog$ = this.submissionLogService.logOrModeChange$.pipe(
       switchMap(_ => this.submissionLogService.submissionLog$),
       filter(log => !!this.vbsServerConnectionService.selectedEvaluation),
-      map(log => log[this.vbsServerConnectionService.selectedEvaluation!]),
+      map(log => log[this.vbsServerConnectionService.selectedEvaluation!] ?? []),
       filter(log => log));
 
     submissionLogSuccessCount$ = this.submissionLog$.pipe(
@@ -38,6 +40,7 @@ export class ExpStatusbarComponent {
   );
 
     constructor(
+      private globalConstants: GlobalConstantsService,
       public pythonServerService: PythonServerService,
       public vbsServerConnectionService: VBSServerConnectionService,
       private submissionLogService: SubmissionLogService

@@ -63,6 +63,10 @@ export class DailySummaryContainerComponent implements OnInit {
             year: this.result.year,
           }
         ],
+        sorting: {
+          field: "datetime",
+          order: "asc"
+        },
         maxresults: 2000,
         resultsperpage: this.pageSize,
         selectedpage: this.currentPage,
