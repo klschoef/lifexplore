@@ -2,7 +2,7 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {ResultPresenterService} from '../../../../../../services/result-presenter.service';
 import {ShortcutService} from '../../../../../../services/shortcut.service';
 import {SubmissionLogService} from '../../../../../../services/submission-log.service';
-import {Subject, takeUntil} from 'rxjs';
+import {combineLatest, Subject, takeUntil} from 'rxjs';
 import {VBSServerConnectionService} from '../../../../../../services/vbsserver-connection.service';
 
 @Component({
@@ -24,13 +24,17 @@ export class SubmissionResultMarkerComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.submissionLogService.logOrModeChange$.pipe(
+    combineLatest([
+      this.submissionLogService.logOrModeChange$,
+      this.vbsServerConnection.currentTaskState$
+    ]).pipe(
       takeUntil(this.destroy$)
     ).subscribe(() => {
       const submissionLog = this.submissionLogService.submissionLog$.value;
-      if (this.vbsServerConnection.selectedEvaluation) {
+      const taskId = this.vbsServerConnection.currentTaskState$.value?.taskId;
+      if (this.vbsServerConnection.selectedEvaluation && taskId) {
 
-        const log = submissionLog[this.vbsServerConnection.selectedEvaluation];
+        const log = (submissionLog[this.vbsServerConnection.selectedEvaluation] ?? {})[taskId];
         if (log && log.some) {
           let found = false;
           for (let i = 0; i < log.length; i++) {

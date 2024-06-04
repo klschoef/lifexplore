@@ -33,8 +33,8 @@ export class ResultDetailComponent implements OnChanges, OnInit, OnDestroy {
   newSelectedResult$ = new BehaviorSubject(null);
   submissionEntry$ = combineLatest([this.submissionLogService.logOrModeChange$, this.newSelectedResult$]).pipe(
     switchMap(_ => this.submissionLogService.submissionLog$),
-    filter(log => !!this.vbsServerConnectionService.selectedEvaluation),
-    map(log => log[this.vbsServerConnectionService.selectedEvaluation!]),
+    filter(log => !!this.vbsServerConnectionService.selectedEvaluation && !!this.vbsServerConnectionService.currentTaskState$.value),
+    map(log => (log[this.vbsServerConnectionService.selectedEvaluation!] ?? {})[this.vbsServerConnectionService.currentTaskState$.value!.taskId!]),
     filter(log => log),
     tap(log => console.log("SUBMISSION ENTRY", log, this.selectedResult.filename)),
     map(log => log.find((entry: any) => entry.image === this.selectedResult.filename))

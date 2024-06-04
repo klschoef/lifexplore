@@ -32,6 +32,23 @@
     }
   }
 
+  .task-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    justify-content: center;
+    align-items: center;
+
+    .task-id {
+      width: 100px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      word-wrap: break-word;
+      display: block;
+    }
+  }
+
   .submit-container {
     display: flex;
     flex-direction: row;

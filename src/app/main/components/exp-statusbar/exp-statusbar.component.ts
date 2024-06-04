@@ -4,7 +4,7 @@ import {PythonServerService} from '../../services/pythonserver.service';
 import {VBSServerConnectionService} from '../../services/vbsserver-connection.service';
 import {SubmissionLogService} from '../../services/submission-log.service';
 import {map} from 'rxjs/operators';
-import {filter, switchMap} from 'rxjs';
+import {combineLatest, filter, switchMap, tap} from 'rxjs';
 import {GlobalConstantsService} from '../../../shared/config/services/global-constants.service';
 
 @Component({
@@ -17,10 +17,13 @@ export class ExpStatusbarComponent {
     protected readonly WSServerStatus = WSServerStatus;
     dresUser = this.globalConstants.configUSER;
 
-    submissionLog$ = this.submissionLogService.logOrModeChange$.pipe(
+    submissionLog$ = combineLatest([
+      this.submissionLogService.logOrModeChange$,
+      this.vbsServerConnectionService.currentTaskState$
+    ]).pipe(
       switchMap(_ => this.submissionLogService.submissionLog$),
-      filter(log => !!this.vbsServerConnectionService.selectedEvaluation),
-      map(log => log[this.vbsServerConnectionService.selectedEvaluation!] ?? []),
+      filter(log => !!this.vbsServerConnectionService.selectedEvaluation && !!this.vbsServerConnectionService.currentTaskState$.value?.taskId),
+      map(log => (log[this.vbsServerConnectionService.selectedEvaluation!] ?? {})[this.vbsServerConnectionService.currentTaskState$.value?.taskId!] ?? []),
       filter(log => log));
 
     submissionLogSuccessCount$ = this.submissionLog$.pipe(
@@ -34,6 +37,10 @@ export class ExpStatusbarComponent {
     submissionLogPendingCount$ = this.submissionLog$.pipe(
       map(log => log.filter((entry: any) => entry.indeterminate || entry.undecidable).length)
     );
+
+  currentTaskState$ = this.vbsServerConnectionService.currentTaskState$.pipe(
+    tap(taskState => console.log('currentTaskState', taskState))
+  );
 
   submissionLogRequestFailureCount$ = this.submissionLog$.pipe(
     map(log => log.filter((entry: any) => entry.requestError).length)

@@ -11,6 +11,10 @@
       <div class="wrong" *ngIf="{val: submissionLogWrongCount$ | async } as data">{{ data.val ?? 0 }}</div>
       <div class="request-failure" *ngIf="{val: submissionLogRequestFailureCount$ | async } as data">{{ data.val ?? 0 }}</div>
     </div>
+    <div *ngIf="currentTaskState$ | async as task" class="task-info">
+      <div>{{ task.timeLeft | taskTime }}</div>
+      <div class="task-id">{{ task.taskId}}</div>
+    </div>
   </div>
   <div class="submit-container" help="QA-Answer">
     Topic Answer

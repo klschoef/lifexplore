@@ -30,7 +30,7 @@ import {
   StatusService
 } from '../../../../openapi/dres';
 import { GlobalConstants, WSServerStatus } from '../../shared/config/global-constants';
-import { catchError, Observable, of, tap } from 'rxjs';
+import {BehaviorSubject, catchError, Observable, of, tap} from 'rxjs';
 import { AppComponent } from '../../app.component';
 import { GlobalConstantsService } from '../../shared/config/services/global-constants.service';
 import {SubmissionLogService} from './submission-log.service';
@@ -60,6 +60,7 @@ export class VBSServerConnectionService {
   serverRunsRemainingSecs = new Map();
   currentTaskIsAVS = false;
   selectedEvaluation: string | undefined = undefined;
+  currentTaskState$ = new BehaviorSubject<ApiEvaluationState | null>(null);
 
   serverTimestamp = 0;
   serverTimeDiff = 0;
@@ -148,13 +149,41 @@ export class VBSServerConnectionService {
           this.getServerTime();
         }, 10000);
 
+        this.evaluationService.configuration.username = this.globalConstants.configUSER;
+        this.evaluationService.configuration.password = this.globalConstants.configPASS;
+
+        setInterval(() => {
+          if (this.selectedEvaluation) {
+            this.evaluationService.getApiV2EvaluationByEvaluationIdState(this.selectedEvaluation,
+              undefined,
+              undefined,
+              {
+
+              })
+              .subscribe((taskState: ApiEvaluationState | null) => {
+              console.log("current task info", taskState);
+              this.currentTaskState$.next(taskState);
+            });
+          }
+        }, 1000);
+
+        this.submissionLogService.logOrModeChange$.subscribe(() => {
+          if (this.selectedEvaluation) {
+            this.evaluationService.getApiV2EvaluationByEvaluationIdState(this.selectedEvaluation)
+              .subscribe((taskState: ApiEvaluationState | null) => {
+                console.log("current task info", taskState);
+                this.currentTaskState$.next(taskState);
+              });
+          }
+        });
+
       }, error => {
         console.log("cannot log in");
         this.vbsServerState = WSServerStatus.DISCONNECTED;
       });
   }
 
-  getClientTaskInfo(runId: string, comm: VbsServiceCommunication) {
+  getClientTaskInfo(runId: string, comm: VbsServiceCommunication) { // Only used from old query
     try {
       if (this.lastRunInfoRequestReturned404 || this.intervalUpdateError) {
         return;
@@ -292,10 +321,30 @@ export class VBSServerConnectionService {
           console.error('Submission failed');
         }
 
-        this.submissionLogService.addEntryToLog(imageID, success, indeterminate, undecidable, lastEvaluationId, false, null, status);
+        this.submissionLogService.addEntryToLog({
+          image: imageID,
+          success: success,
+          indeterminate: indeterminate,
+          undecidable: undecidable,
+          evaluation: lastEvaluationId,
+          task: this.currentTaskState$.value ?? {} as ApiEvaluationState,
+          requestError: false,
+          errorObject: null,
+          responseObject: status
+        });
       }),
       catchError(err => {
-        this.submissionLogService.addEntryToLog(imageID, false, false, false, lastEvaluationId, true, err.error, null);
+        this.submissionLogService.addEntryToLog({
+            image: imageID,
+            success: false,
+            indeterminate: false,
+            undecidable: false,
+            evaluation: lastEvaluationId,
+            task: this.currentTaskState$.value ?? {} as ApiEvaluationState,
+            requestError: true,
+            errorObject: err.error,
+            responseObject: null
+          });
         return this.handleSubmissionError(err);
       })
     ).subscribe()
@@ -323,11 +372,31 @@ export class VBSServerConnectionService {
       this.sessionId!).subscribe((submissionResponse: SuccessfulSubmissionsStatus) => {
         // Check if submission as successful
         this.handleSubmissionSuccess(submissionResponse, 't:' + text);
-        this.submissionLogService.addEntryToLog(text, false, true, false, lastEvaluationId, false, null, submissionResponse);
+        this.submissionLogService.addEntryToLog({
+            image: text,
+            success: false,
+            indeterminate: true,
+            undecidable: false,
+            evaluation: lastEvaluationId,
+            task: this.currentTaskState$.value ?? {} as ApiEvaluationState,
+            requestError: false,
+            errorObject: null,
+            responseObject: submissionResponse
+          });
       }
       , error => {
         this.handleSubmissionError(error);
-        this.submissionLogService.addEntryToLog(text, false, false, false, lastEvaluationId, true, error.error, null);
+        this.submissionLogService.addEntryToLog({
+            image: text,
+            success: false,
+            indeterminate: false,
+            undecidable: false,
+            evaluation: lastEvaluationId,
+            task: this.currentTaskState$.value ?? {} as ApiEvaluationState,
+            requestError: true,
+            errorObject: error.error,
+            responseObject: null
+          });
       });
   }
 
