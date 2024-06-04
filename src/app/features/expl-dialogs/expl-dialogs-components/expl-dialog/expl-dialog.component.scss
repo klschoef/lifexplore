@@ -15,6 +15,7 @@
   padding: var(--padding, 40px);
   background-color: var(--app-modal-background, white);
   border-radius: var(--app-modal-border-radius, 8px);
+  min-width: var(--min-width, auto);
   font-size: 12pt;
   display: flex;
   flex-direction: column;

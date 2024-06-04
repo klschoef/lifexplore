@@ -5,6 +5,9 @@
   padding: 8px;
   max-width: 300px;
   min-width: 300px;
+  border-radius: 8px;
+  box-shadow: 0 0 2px var(--exp-color-primary);
+  margin: 8px;
 
   .header-element {
     display: flex;
