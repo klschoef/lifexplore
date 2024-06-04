@@ -8,6 +8,7 @@ import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 export class SingleResultContainerComponent implements OnChanges {
   @Input() result: any;
   imageDate?: Date;
+  //this.selectedResult.originalFilepath
 
   ngOnChanges(changes:SimpleChanges) {
     console.log(this.result);

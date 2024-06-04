@@ -1,4 +1,5 @@
-<div style="gap: 8px;" class="container" help="Graphical Mode (Switch modes with m): Horizontal = Temporal queries, Vertical = Combine Queries">
+<div help="Graphical Mode (Switch modes with m): Horizontal = Temporal queries, Vertical = Combine Queries">
+<div style="gap: 8px;" class="container">
   <graphical-query-element
     *ngFor="let graphicalContentPart of graphicalContent; let i = index; let isFirst = first; let isLast = last"
     [graphicalContentPart]="graphicalContentPart"
@@ -11,4 +12,5 @@
   <div class="add-container">
     <mat-icon class="exp-clickable exp-hover-scale" (click)="addGraphicalContentPart()" aria-hidden="false" fontIcon="add"></mat-icon>
   </div>
+</div>
 </div>

@@ -8,6 +8,12 @@
     <ng-container *ngIf="result.gpt_description?.description as descr">
       <strong>GPT Description:</strong> {{descr}}<br>
     </ng-container>
+    <ng-container *ngIf="result.gpt_description?.reference_similarity as similarity">
+      <strong>GPT Similarity:</strong> {{similarity}}<br>
+    </ng-container>
+    <ng-container *ngIf="result.gpt_description?.referenced_by as referencedBy">
+      <strong>GPT Referenced By:</strong> {{referencedBy}}<br>
+    </ng-container>
     <strong>MSCaption:</strong> {{result.mscaption}}<br>
     <strong>Filepath:</strong> {{result.filepath}}<br>
     <strong>Coordinates:</strong> {{result.location?.coordinates}}<br>
