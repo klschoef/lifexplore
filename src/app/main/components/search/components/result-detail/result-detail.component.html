@@ -5,7 +5,10 @@
     <div class="preview-container">
       <div class="nav-bar">
         <div class="mode-container">
-          <div *ngFor="let mode of modes" class="exp-clickable exp-hover-scale" (click)="changeMode(mode)" [class.active-tab]="selectedMode == mode">
+          <div
+            *ngFor="let mode of modes"
+            [help]="mode | resultDetailHelp"
+            class="exp-clickable exp-hover-scale" (click)="changeMode(mode)" [class.active-tab]="selectedMode == mode">
             {{mode}}
           </div>
         </div>
@@ -15,8 +18,8 @@
           <div class="submission-text success animate__animated animate__tada" *ngIf="data.submissionEntry?.success">Success</div>
           <div class="submission-text pending animate__animated animate__rubberBand" *ngIf="data.submissionEntry?.indeterminate || data.submissionEntry?.undecidable">Pending</div>
           <div class="submission-text wrong animate__animated animate__headShake" *ngIf="data.submissionEntry && !data.submissionEntry?.indeterminate && !data.submissionEntry?.undecidable && !data.submissionEntry?.success && !data.submissionEntry?.requestError">Wrong</div>
-          <button *ngIf="!data.submissionEntry" (click)="submitImage()" class="secondary exp-clickable exp-hover-scale">Submit</button>
-          <button *ngIf="data.submissionEntry?.requestError" (click)="submitImage()" class="secondary exp-clickable exp-hover-scale">Retry</button>
+          <button help="Shift+s" *ngIf="!data.submissionEntry" (click)="submitImage()" class="secondary exp-clickable exp-hover-scale">Submit</button>
+          <button help="Shift+s" *ngIf="data.submissionEntry?.requestError" (click)="submitImage()" class="secondary exp-clickable exp-hover-scale">Retry</button>
         </ng-container>
       </div>
       <div class="content">

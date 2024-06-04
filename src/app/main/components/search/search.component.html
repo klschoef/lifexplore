@@ -4,7 +4,7 @@
   (onSearchObject)="onSearchObject($event)"
 />
 <div class="top-status-bar">
-  <div class="settings-container">
+  <div class="settings-container" help="Settings">
     <mat-icon fontIcon="settings" class="settings-icon exp-clickable exp-hover-scale" (click)="openSettings$.next(true);" />
     <exp-popup [open$]="openSettings$">
       <app-settings />

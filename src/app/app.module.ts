@@ -52,6 +52,9 @@ import { ExpStatusbarComponent } from './main/components/exp-statusbar/exp-statu
 import { SubmissionPendingPipe } from './main/pipes/submission-pending.pipe';
 import { SubmissionResultMarkerComponent } from './main/components/search/components/results-containers/shared/submission-result-marker/submission-result-marker.component';
 import { LazyImgDirective } from './main/directives/lazy-img.directive';
+import {HelpDirective} from './main/directives/help.directive';
+import { HelpOverlayComponent } from './main/components/utility-components/help-overlay/help-overlay.component';
+import { ResultDetailHelpPipe } from './main/components/search/components/result-detail/pipes/result-detail-help.pipe';
 
 
 @NgModule({
@@ -88,7 +91,10 @@ import { LazyImgDirective } from './main/directives/lazy-img.directive';
     ExpStatusbarComponent,
     SubmissionPendingPipe,
     SubmissionResultMarkerComponent,
-    LazyImgDirective
+    LazyImgDirective,
+    HelpDirective,
+    HelpOverlayComponent,
+    ResultDetailHelpPipe
   ],
   imports: [
     BrowserModule,

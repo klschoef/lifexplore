@@ -1,6 +1,7 @@
 <div class="lifelog-search-results-container">
   <ng-container *ngIf="{selectedResult: selectedResult$ | async} as data">
     <div class="lifelog-search-result exp-clickable exp-hover-scale animate__animated animate__fadeIn"
+         help="Space/Click = Detail View, Z/Shift+Hover = Zoom"
          [class.shift]="shortcutService.shiftKeyIsPressedSubject | async"
          [class.zoom]="data.selectedResult === result && (shortcutService.isZPressed | async)"
          [class.selected]="data.selectedResult === result"

@@ -1,6 +1,8 @@
 <div class="exp-search-area animate__animated animate__slideInDown animate__faster">
-  <div class="header-line">
-    <a (click)="navigateToSearch()" class="exp-clickable exp-hover-scale"><img class="logo" src="../../../../assets/lifeXplore_.png"></a>
+  <div class="header-line" help="Lifelog Query system">
+    <a (click)="navigateToSearch()" class="exp-clickable exp-hover-scale">
+      <img class="logo" src="../../../../assets/lifeXplore_.png">
+    </a>
     <ng-container *ngIf="searchAreaMode$ | async as mode">
       <div *ngIf="mode === ExpSearchAreaMode.TEXT" class="search-container animate__animated animate__fadeIn animate__delay-0.3s">
         <mat-icon aria-hidden="false" fontIcon="search"></mat-icon>
@@ -10,23 +12,23 @@
                                  [graphicalContent]="graphical_content" class="animate__animated animate__fadeIn animate__delay-0.3s"/>
       <div class="action-buttons animate__animated animate__fadeIn animate__delay-0.3s">
         <div class="buttons-first">
-          <button #searchButton class="secondary exp-hover-scale" (click)="onSearchChange()">Search</button>
+          <button #searchButton help="Enter" class="secondary exp-hover-scale" (click)="onSearchChange()">Search</button>
           <button class="delete exp-hover-scale" (click)="clickOnReset()">Reset</button>
         </div>
         <div class="history-mode-container">
-          <div>
+          <div help="h">
             <mat-icon class="exp-clickable exp-hover-scale"
                       aria-hidden="false"
                       (click)="openHistory()"
                       fontIcon="history"></mat-icon>
           </div>
-          <div>
+          <div help="t">
             <mat-icon class="exp-clickable exp-hover-scale"
                       aria-hidden="false"
                       (click)="openTuning()"
                       fontIcon="tune"></mat-icon>
           </div>
-          <div>
+          <div help="i">
             <mat-icon class="exp-clickable exp-hover-scale"
                       aria-hidden="false"
                       (click)="showHelp()"

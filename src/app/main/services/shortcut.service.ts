@@ -18,6 +18,7 @@ export class ShortcutService {
   public isSAndShiftIsPressed = new BehaviorSubject(false);
   public isZPressed = new BehaviorSubject(false);
   public isDPressed = new BehaviorSubject(false);
+  public isOPressed = new BehaviorSubject(false);
   public isArrowLeftPressed = new BehaviorSubject(false);
   public isArrowRightPressed = new BehaviorSubject(false);
   public isEscapePressed = new BehaviorSubject(false);
@@ -50,6 +51,11 @@ export class ShortcutService {
     } else if (event.key === 'd') { // submit
       if (!this.isInputFocusedSubject.value) {
         this.isDPressed.next(false);
+        event.preventDefault();
+      }
+    } else if (event.key === 'o') { // submit
+      if (!this.isInputFocusedSubject.value) {
+        this.isOPressed.next(false);
         event.preventDefault();
       }
     } else if(event.key === 'ArrowLeft' && !this.isInputFocusedSubject.value) {
@@ -131,6 +137,11 @@ export class ShortcutService {
     } else if (event.key === 'd') { // submit
       if (!this.isInputFocusedSubject.value) {
         this.isDPressed.next(true);
+        event.preventDefault();
+      }
+    } else if (event.key === 'o') { // submit
+      if (!this.isInputFocusedSubject.value) {
+        this.isOPressed.next(true);
         event.preventDefault();
       }
     } else if (event.key === 'e') { // focus
