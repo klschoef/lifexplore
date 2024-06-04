@@ -1,11 +1,11 @@
 <ng-container *ngIf="isOpen">
   <expl-dialog *ngIf="receivedMetadata$ | async as receivedMetadata"
                [title]=" receivedMetadata.filepath"
-               (clickOnClose)="isOpen = false">
+               (clickOnClose)="closeDialog()">
     <div class="preview-container">
       <div class="nav-bar">
         <div class="mode-container">
-          <div *ngFor="let mode of modes" class="exp-clickable exp-hover-scale" (click)="selectedMode = mode" [class.active-tab]="selectedMode == mode">
+          <div *ngFor="let mode of modes" class="exp-clickable exp-hover-scale" (click)="changeMode(mode)" [class.active-tab]="selectedMode == mode">
             {{mode}}
           </div>
         </div>
@@ -21,7 +21,7 @@
       </div>
       <div class="content">
         <app-single-result-container *ngIf="selectedMode === ResultDetailComponentMode.Single" [result]="receivedMetadata"></app-single-result-container>
-        <app-daily-summary-container *ngIf="selectedMode === ResultDetailComponentMode.Day" [result]="receivedMetadata"></app-daily-summary-container>
+        <app-daily-summary-container *ngIf="selectedMode === ResultDetailComponentMode.Day" [result]="receivedMetadata" [lockEscapeInParent$]="lockEscape$"></app-daily-summary-container>
       </div>
     </div>
   </expl-dialog>

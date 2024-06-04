@@ -1,18 +1,20 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import ObjectQuery from '../../../../../../models/object-query';
 import {WSServerStatus} from '../../../../../../../shared/config/global-constants';
 import URLUtil from '../../../../../../utils/url-util';
 import {PythonServerService} from '../../../../../../services/pythonserver.service';
-import {filter, tap} from 'rxjs';
+import {BehaviorSubject, filter, Subject, takeUntil, tap} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {ShortcutService} from '../../../../../../services/shortcut.service';
 
 @Component({
   selector: 'app-daily-summary-container',
   templateUrl: './daily-summary-container.component.html',
   styleUrls: ['./daily-summary-container.component.scss']
 })
-export class DailySummaryContainerComponent implements OnInit {
+export class DailySummaryContainerComponent implements OnInit, OnDestroy {
   @Input() result: any;
+  @Input() lockEscapeInParent$?: BehaviorSubject<boolean>;
   pageSize = 2000;
   currentPage = 1;
   totalResults = 0;
@@ -38,8 +40,11 @@ export class DailySummaryContainerComponent implements OnInit {
     map((msg) => msg.results.map((result: any) => ({...result, originalFilepath: result.filepath, filepath: URLUtil.getKeyframeBaseUrl()+result.filepath}))),
   );
 
+  destroy$ = new Subject<void>();
+
   constructor(
     private pythonServerService: PythonServerService,
+    private shortcutService: ShortcutService,
   ) {
   }
 
@@ -47,6 +52,18 @@ export class DailySummaryContainerComponent implements OnInit {
     console.log('result', this.result);
     this.navigated_date = new Date(this.result.year, this.result.month - 1, this.result.day);
     this.performDailyQuery();
+
+    this.shortcutService.isEscapePressed.pipe(
+      filter(isEscapePressed => isEscapePressed && (this.lockEscapeInParent$?.value ?? false)),
+      takeUntil(this.destroy$)
+    ).subscribe(isEscapePressed => {
+      // close detail view
+    });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next(undefined);
+    this.destroy$.complete();
   }
 
   changeSorting() {

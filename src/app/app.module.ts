@@ -51,6 +51,7 @@ import {HistoryEntryIsGraphicalPipe} from './main/dialogs/history-dialog/pipes/h
 import { ExpStatusbarComponent } from './main/components/exp-statusbar/exp-statusbar.component';
 import { SubmissionPendingPipe } from './main/pipes/submission-pending.pipe';
 import { SubmissionResultMarkerComponent } from './main/components/search/components/results-containers/shared/submission-result-marker/submission-result-marker.component';
+import { LazyImgDirective } from './main/directives/lazy-img.directive';
 
 
 @NgModule({
@@ -86,7 +87,8 @@ import { SubmissionResultMarkerComponent } from './main/components/search/compon
     TuningDialogComponent,
     ExpStatusbarComponent,
     SubmissionPendingPipe,
-    SubmissionResultMarkerComponent
+    SubmissionResultMarkerComponent,
+    LazyImgDirective
   ],
   imports: [
     BrowserModule,

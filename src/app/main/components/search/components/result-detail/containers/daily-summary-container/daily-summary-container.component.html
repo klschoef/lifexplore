@@ -31,5 +31,9 @@
       <mat-icon [class.active]="!ascending" aria-hidden="false" fontIcon="arrow_downward"></mat-icon>
     </div>
   </div>
-  <app-minimal-result-container [results]="results" [localMode]="true"/>
+  <app-minimal-result-container
+    [results]="results"
+    [localMode]="true"
+    [lockEscapeInParent$]="lockEscapeInParent$"
+    [initialSelectedResult]="result"/>
 </ng-container>

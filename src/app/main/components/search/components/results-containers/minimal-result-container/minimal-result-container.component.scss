@@ -19,8 +19,20 @@
       transform: scale(1.05);
     }
 
-    &.shift:hover {
+    &.shift:hover, &.zoom {
+      z-index: 5;
       transform: scale(4);
+    }
+
+    & .selected-cover {
+      width: calc(100% - 10px);
+      height: calc(100% - 10px);
+      z-index: 6;
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0.8;
+      border: 5px solid var(--exp-color-secondary);
     }
 
     .submitted-pending, .submitted-success, .submitted-failure {

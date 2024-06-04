@@ -1,15 +1,25 @@
 <div class="lifelog-search-results-container">
-  <div class="lifelog-search-result exp-clickable exp-hover-scale animate__animated animate__fadeIn"
-       [class.shift]="shortcutService.shiftKeyIsPressedSubject | async"
-       (click)="clickResult(result)"
-       *ngFor="let result of results; let i = index">
-    <img src="{{result.filepath}}">
-    <app-submission-result-marker [result]="result"></app-submission-result-marker>
-  </div>
+  <ng-container *ngIf="{selectedResult: selectedResult$ | async} as data">
+    <div class="lifelog-search-result exp-clickable exp-hover-scale animate__animated animate__fadeIn"
+         [class.shift]="shortcutService.shiftKeyIsPressedSubject | async"
+         [class.zoom]="data.selectedResult === result && (shortcutService.isZPressed | async)"
+         [class.selected]="data.selectedResult === result"
+         (click)="clickResult(result)"
+         *ngFor="let result of results; let i = index"
+         #resultElement
+    >
+      <img src="{{result.filepath}}">
+      <div *ngIf="data.selectedResult === result" class="selected-cover"></div>
+      <app-submission-result-marker [result]="result"></app-submission-result-marker>
+    </div>
+  </ng-container>
 </div>
-<ng-container *ngIf="localMode; else globalResultDetail">
-  <app-result-detail *ngIf="localResult" [selectedResult]="localResult"></app-result-detail>
+<ng-container *ngIf="selectedResult$ | async as selectedResult">
+  <app-result-detail
+    *ngIf="openSelectedResultInDetail$ | async"
+    [dialogState]="openSelectedResultInDetail$"
+    [selectedResult]="selectedResult"
+    [openTrigger]="openNewResultTrigger$"
+    [disableControlsInParent]="disableControls$"
+  ></app-result-detail>
 </ng-container>
-<ng-template #globalResultDetail>
-  <app-result-detail *ngIf="selectedResult$ | async as selectedResult" [selectedResult]="selectedResult" [openTrigger]="openNewResultTrigger$"></app-result-detail>
-</ng-template>

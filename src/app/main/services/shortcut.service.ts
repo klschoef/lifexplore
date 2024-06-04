@@ -15,6 +15,15 @@ export class ShortcutService {
   public isInputFocusedSubject = new BehaviorSubject<boolean>(false);
   public shiftKeyIsPressedSubject = new BehaviorSubject<boolean>(false);
   public isSPressed = new BehaviorSubject(false);
+  public isSAndShiftIsPressed = new BehaviorSubject(false);
+  public isZPressed = new BehaviorSubject(false);
+  public isDPressed = new BehaviorSubject(false);
+  public isArrowLeftPressed = new BehaviorSubject(false);
+  public isArrowRightPressed = new BehaviorSubject(false);
+  public isEscapePressed = new BehaviorSubject(false);
+  public isSpacePressed = new BehaviorSubject(false);
+  public isTabPressed = new BehaviorSubject(false);
+  public isTabShiftPressed = new BehaviorSubject(false);
 
   constructor(
     private resultPresenterService: ResultPresenterService,
@@ -22,13 +31,33 @@ export class ShortcutService {
   ) { }
 
   handleKeyboardEventUp(event: KeyboardEvent) {
+    console.log("event up", event);
     this.shiftKeyIsPressedSubject.next(event.shiftKey);
 
     if (event.key === 's') { // submit
       if (!this.isInputFocusedSubject.value) {
+        this.isSAndShiftIsPressed.next(false);
         this.isSPressed.next(false);
         event.preventDefault();
       }
+    } else if (event.key === 'z') { // submit
+      if (!this.isInputFocusedSubject.value) {
+        this.isZPressed.next(false);
+        event.preventDefault();
+      }
+    } else if (event.key === 'd') { // submit
+      if (!this.isInputFocusedSubject.value) {
+        this.isDPressed.next(false);
+        event.preventDefault();
+      }
+    } else if(event.key === 'ArrowLeft') {
+      this.isArrowLeftPressed.next(false);
+    } else if(event.key === 'ArrowRight') {
+      this.isArrowRightPressed.next(false);
+    } else if(event.key === 'Escape') {
+      this.isEscapePressed.next(false);
+    } else if(event.code === 'Space') {
+      this.isSpacePressed.next(false);
     }
   }
 
@@ -39,14 +68,16 @@ export class ShortcutService {
     if (event.key === 'ArrowLeft') {
       console.log("ArrowLeft");
       if (!this.isInputFocusedSubject.value) {
-        this.resultPresenterService.previousResult();
+        //this.resultPresenterService.previousResult();
+        this.isArrowLeftPressed.next(true);
       }
     } else if (event.key === 'ArrowRight') {
       console.log("ArrowRight");
       if (!this.isInputFocusedSubject.value) {
-        this.resultPresenterService.nextResult();
+        //this.resultPresenterService.nextResult();
+        this.isArrowRightPressed.next(true);
       }
-    } else if (event.key === 'Enter' && event.shiftKey) {
+    } else if (event.key === 'Enter' /*&& event.shiftKey*/) {
       this.resultPresenterService.triggerSearch$.next(true);
       console.log("Enter + shift");
       //this.resultPresenterService.search$.next(true);
@@ -60,15 +91,17 @@ export class ShortcutService {
         event.preventDefault(); // Prevent tabbing to next element
       }
     } else if (event.key === 'Escape') {
-      this.resultPresenterService.currentResultIndex$.next(undefined);
+      //this.resultPresenterService.currentResultIndex$.next(undefined);
+      this.isEscapePressed.next(true);
       event.preventDefault();
     } else if (event.code === 'Space') {
       if (!this.isInputFocusedSubject.value) {
-        if (this.resultPresenterService.currentResultIndex$.value === undefined) {
+        /*if (this.resultPresenterService.currentResultIndex$.value === undefined) {
           this.resultPresenterService.currentResultIndex$.next(0);
         } else {
           this.resultPresenterService.currentResultIndex$.next(undefined);
-        }
+        }*/
+        this.isSpacePressed.next(true);
         event.preventDefault();
       }
     } else if (event.key === 'q') { // select
@@ -79,6 +112,21 @@ export class ShortcutService {
     } else if (event.key === 's') { // submit
       if (!this.isInputFocusedSubject.value) {
         this.isSPressed.next(true);
+        event.preventDefault();
+      }
+    } else if (event.key === 'S') { // submit
+      if (!this.isInputFocusedSubject.value) {
+        this.isSAndShiftIsPressed.next(true);
+        event.preventDefault();
+      }
+    } else if (event.key === 'z') { // submit
+      if (!this.isInputFocusedSubject.value) {
+        this.isZPressed.next(true);
+        event.preventDefault();
+      }
+    } else if (event.key === 'd') { // submit
+      if (!this.isInputFocusedSubject.value) {
+        this.isDPressed.next(true);
         event.preventDefault();
       }
     } else if (event.key === 'e') { // focus

@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {Component, HostListener, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {NodeServerConnectionService} from '../../../../services/nodeserver-connection.service';
 import {PythonServerService} from '../../../../services/pythonserver.service';
 import {VBSServerConnectionService} from '../../../../services/vbsserver-connection.service';
@@ -22,11 +22,14 @@ export enum ResultDetailComponentMode {
 export class ResultDetailComponent implements OnChanges, OnInit, OnDestroy {
   @Input() selectedResult?: any;
   @Input() openTrigger?: BehaviorSubject<any> = new BehaviorSubject(undefined);
+  @Input() disableControlsInParent?: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  @Input() dialogState?: BehaviorSubject<boolean>;
   receivedMetadata$ = this.pythonService.receivedMetadata;
   isOpen = true;
 
   modes: string[] = Object.values(ResultDetailComponentMode);
   selectedMode: string = ResultDetailComponentMode.Single;
+  lockEscape$ = new BehaviorSubject(false);
   newSelectedResult$ = new BehaviorSubject(null);
   submissionEntry$ = combineLatest([this.submissionLogService.logOrModeChange$, this.newSelectedResult$]).pipe(
     switchMap(_ => this.submissionLogService.submissionLog$),
@@ -52,7 +55,28 @@ export class ResultDetailComponent implements OnChanges, OnInit, OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe(isSPressed => {
       if (isSPressed) {
+        if (this.selectedMode === ResultDetailComponentMode.Single) {
+          this.changeMode(ResultDetailComponentMode.Similar);
+        } else {
+          this.changeMode(ResultDetailComponentMode.Single);
+        }
+      }
+    });
+
+    this.shortcutService.isSAndShiftIsPressed.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(isSPressed => {
+      console.log("IS S AND SHIFT PRESSED", isSPressed);
+      if (isSPressed) {
         this.submitImage();
+      }
+    });
+
+    this.shortcutService.isDPressed.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(isDPressed => {
+      if (isDPressed) {
+        this.changeMode(ResultDetailComponentMode.Day);
       }
     });
 
@@ -61,11 +85,29 @@ export class ResultDetailComponent implements OnChanges, OnInit, OnDestroy {
     ).subscribe(() => {
       this.isOpen = true;
     });
+
+    this.shortcutService.isEscapePressed.pipe(
+      filter(isEscapePressed => isEscapePressed && !this.lockEscape$.value),
+      takeUntil(this.destroy$)
+    ).subscribe(isEscapePressed => {
+      this.disableControlsInParent?.next(false);
+      this.closeDialog();
+    });
   }
 
   ngOnDestroy() {
     this.destroy$.next(undefined);
     this.destroy$.complete();
+  }
+
+  changeMode(mode: string) {
+    this.selectedMode = mode;
+    console.log("CHANGE MODE", mode);
+    if (mode === ResultDetailComponentMode.Single) {
+      this.disableControlsInParent?.next(false);
+    } else if (mode === ResultDetailComponentMode.Day || mode === ResultDetailComponentMode.Similar) {
+      this.disableControlsInParent?.next(true);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -78,7 +120,8 @@ export class ResultDetailComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   closeDialog() {
-    this.resultPresenterService.currentResultIndex$.next(undefined);
+    this.isOpen = false;
+    this.dialogState?.next(false);
   }
 
   fetchDetails() {
