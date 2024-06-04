@@ -56,7 +56,6 @@ export class DailySummaryContainerComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    console.log('result', this.result);
     this.navigated_date = new Date(this.result.year, this.result.month - 1, this.result.day);
     this.performDailyQuery();
 

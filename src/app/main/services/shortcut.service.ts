@@ -32,7 +32,7 @@ export class ShortcutService {
   ) { }
 
   handleKeyboardEventUp(event: KeyboardEvent) {
-    console.log("event up", event);
+    //console.log("event up", event);
     this.shiftKeyIsPressedSubject.next(event.shiftKey);
     this.isNumberPressed.next(undefined);
 
@@ -68,27 +68,23 @@ export class ShortcutService {
   }
 
   handleKeyboardEvent(event: KeyboardEvent) {
-    console.log("event", event);
+    //console.log("event", event);
     this.shiftKeyIsPressedSubject.next(event.shiftKey);
 
     if (event.key === 'ArrowLeft') {
-      console.log("ArrowLeft");
       if (!this.isInputFocusedSubject.value) {
         //this.resultPresenterService.previousResult();
         this.isArrowLeftPressed.next(true);
       }
     } else if (event.key === 'ArrowRight') {
-      console.log("ArrowRight");
       if (!this.isInputFocusedSubject.value) {
         //this.resultPresenterService.nextResult();
         this.isArrowRightPressed.next(true);
       }
     } else if (event.key === 'Enter' /*&& event.shiftKey*/) {
       this.resultPresenterService.triggerSearch$.next(true);
-      console.log("Enter + shift");
       //this.resultPresenterService.search$.next(true);
     } else if (event.key === 'Tab' && event.shiftKey) {
-      console.log("Tab + shift");
       this.isTabShiftPressed.next(true);
       //this.resultPresenterService.previousPage();
       event.preventDefault(); // Prevent tabbing to previous element

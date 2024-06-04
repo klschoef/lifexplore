@@ -32,7 +32,6 @@ export class SubmissionLogService {
       responseObject: responseObject,
       image: image };
     log[evaluation].push(newEntry);
-    console.log("new log", log);
     this.submissionLog$.next(log);
     this.logOrModeChange$.next(null);
     this.saveLogToLocalStorage(log);

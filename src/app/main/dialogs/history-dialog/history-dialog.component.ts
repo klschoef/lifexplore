@@ -25,7 +25,6 @@ export class HistoryDialogComponent implements OnInit {
   }
 
   loadHistory() {
-    console.log('loadHistory');
     const historyObjectList: any[] = JSON.parse(this.historyService.fetch_raw_history_object() ?? '[]');
     // TODO: add support for query_dicts
     this.historyList$.next(

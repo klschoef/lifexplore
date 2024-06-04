@@ -26,7 +26,6 @@ export class InfoComponent {
   }
 
   ngOnInit() {
-    console.log('info component (qc) initated');
 
     //read parameters
     this.route.params.subscribe(params => {

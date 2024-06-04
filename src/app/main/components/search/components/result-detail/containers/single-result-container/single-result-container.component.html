@@ -2,6 +2,9 @@
   <div class="image"><img src="{{result.filepath | expImageUrl}}"></div>
   <div class="metadata">
     <h3>Metadata</h3>
+    <ng-container *ngIf="imageDate">
+      <strong>{{imageDate | date}} - {{imageDate | date: 'EEEE'}}</strong><br>
+    </ng-container>
     <ng-container *ngIf="result.gpt_description?.description as descr">
       <strong>GPT Description:</strong> {{descr}}<br>
     </ng-container>

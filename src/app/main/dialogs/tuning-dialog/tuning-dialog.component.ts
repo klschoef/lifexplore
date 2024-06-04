@@ -83,7 +83,7 @@ export class TuningDialogComponent {
   }
 
   onChangeL2(event: any) {
-    console.log("event", event, event.target.valueAsNumber);
+    //console.log("event", event, event.target.valueAsNumber);
     this.settingsService.saveQuerySettings({
       ...this.settingsService.getQuerySettings(),
       l2dist: event.target.valueAsNumber

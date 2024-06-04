@@ -28,7 +28,6 @@ export class SettingsComponent {
   }
 
   changeMapDefaultSize(event: any) {
-    console.log("changeMapDefaultSize", event, event.target.value);
     this.settingsService.setMapSettings({
       ...this.settingsService.getMapSettings(),
       defaultZoom: event.target.value

@@ -19,7 +19,6 @@ export class DefaultResultContainerComponent {
   }
 
   clickResult(result: any) {
-    console.log("result", result);
     this.resultPresenterService.currentResultIndex$.next(this.results.indexOf(result));
   }
 }

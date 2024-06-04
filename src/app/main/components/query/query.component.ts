@@ -232,7 +232,6 @@ export class QueryComponent implements AfterViewInit, OnInit {
         this.resetQuery();
       }
       else if (event.key === 'Space' || event.key === ' ') {
-          console.log('togglet fullimage ' + this.showFullImage);
           if (!(this.fullImageIndex >= 0 && this.resultURLs.length)) {
             this.fullImageIndex = 0;
           }

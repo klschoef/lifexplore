@@ -40,7 +40,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   results$ = this.pythonServerService.receivedMessages.pipe(
     tap(msg => {
-      console.log("message here", msg);
+      console.log("server message: ", msg);
       this.progress$.next((msg && msg.type && msg.type === 'progress') ? msg.message : undefined);
       this.error$.next((msg && msg.type && msg.type === 'error') ? msg.error : undefined);
     }),
@@ -61,7 +61,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     }),
     // add the base URL to the filepath, and return just the results
     map((msg) => msg.results.map((result: any) => ({...result, originalFilepath: result.filepath, filepath: URLUtil.getKeyframeBaseUrl()+result.filepath}))),
-    tap((msg) => console.log("Results from HERE: ", msg))
+    tap((msg) => console.log("New results: ", msg))
   );
 
   openSettings$ = new BehaviorSubject<boolean>(false);

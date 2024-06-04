@@ -20,6 +20,7 @@ export class PythonServerService {
   private socket: WebSocket | undefined;
   public receivedMessages: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   public receivedMetadata = this.receivedMessages.pipe(
+    tap((msg: any) => console.log('receivedMetadata', msg)),
     filter((msg: any) => msg && msg.type === "metadata" && msg.results),
     map((msg: any) => msg.results[0]),
   );

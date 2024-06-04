@@ -122,8 +122,6 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
   }
 
   clickOnHistoryItem(item: any): void {
-    console.log('clickOnHistoryItem', item);
-    console.log("searchvalue", this.searchValue);
     if (item.query_dicts && item.query_dicts.length > 0) {
       this.settingsService.setSettings({
         ...this.settingsService.settings$.getValue() ?? {},
@@ -135,7 +133,6 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
       })
       this.graphical_content = JsonToGraphicalQueryTransformer.transformJsonArrayToGraphical(item.query_dicts);
     } else {
-      console.log("no query dicts", item)
       this.settingsService.setSettings({
         ...this.settingsService.settings$.getValue() ?? {},
         searchAreaMode: ExpSearchAreaMode.TEXT
@@ -150,19 +147,16 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
   protected readonly ExpSearchAreaMode = ExpSearchAreaMode;
 
   focusOutTextInput(event: any) {
-    console.log("focusOutTextInput", event);
     this.resultPresenterService.focusQuery$.next(false);
   }
 
   focusInTextInput(event: any) {
-    console.log("focusInTextInput", event);
     if (!this.resultPresenterService.focusQuery$.value) {
       this.resultPresenterService.focusQuery$.next(true);
     }
   }
 
   navigateToSearch(): void {
-    console.log("navigateToSearch", this.router.url);
     if (this.router.url === '/search') {
       window.location.reload();
     } else {
