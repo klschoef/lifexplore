@@ -3,10 +3,10 @@ import {
   Component,
   ElementRef,
   HostListener,
-  Input,
+  Input, OnChanges,
   OnDestroy,
   OnInit,
-  QueryList,
+  QueryList, SimpleChanges,
   ViewChildren
 } from '@angular/core';
 import {ResultPresenterService} from '../../../../../services/result-presenter.service';
@@ -14,24 +14,28 @@ import {map, skip} from 'rxjs/operators';
 import {BehaviorSubject, filter, Subject, takeUntil, tap} from 'rxjs';
 import {ShortcutService} from '../../../../../services/shortcut.service';
 import {SubmissionLogService} from '../../../../../services/submission-log.service';
+import {ResultDetailComponentMode} from '../../result-detail/result-detail.component';
 
 @Component({
   selector: 'app-minimal-result-container',
   templateUrl: './minimal-result-container.component.html',
   styleUrls: ['./minimal-result-container.component.scss']
 })
-export class MinimalResultContainerComponent implements OnInit, OnDestroy, AfterViewInit {
+export class MinimalResultContainerComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
   @Input() results: any[] = [];
   @Input() localMode = false;
   @Input() previousPageTrigger$ = new BehaviorSubject(undefined);
   @Input() nextPageTrigger$ = new BehaviorSubject(undefined);
+  @Input() openPageTrigger$ = new BehaviorSubject<number | undefined>(undefined);
   @Input() lockEscapeInParent$?: BehaviorSubject<boolean>;
   @Input() initialSelectedResult?: any;
+  @Input() detailModes: string[] = Object.values(ResultDetailComponentMode);
   localResult?: any;
   openSelectedResultInDetail$ = new BehaviorSubject<boolean>(false);
   openNewResultTrigger$ = new BehaviorSubject(undefined);
   selectedResult$ = new BehaviorSubject<any>(undefined);
   disableControls$ = new BehaviorSubject<boolean>(false); //to disable navigation like when we have another result open
+  pageSwitchFlag = 0; // 0: no page switch, 1: next page, -1: previous page
 
   destroy$ = new Subject<void>();
 
@@ -63,8 +67,10 @@ export class MinimalResultContainerComponent implements OnInit, OnDestroy, After
       const currentResultId = this.results.findIndex(result => result === this.selectedResult$.value);
       console.log("right pressed: ", currentResultId);
       if (currentResultId < this.results.length - 1) { // if we can go to the next result
+        this.pageSwitchFlag = 0;
         this.selectedResult$.next(this.results[currentResultId + 1]);
       } else {
+        this.pageSwitchFlag = 1;
         this.nextPageTrigger$.next(undefined);
       }
     });
@@ -78,10 +84,42 @@ export class MinimalResultContainerComponent implements OnInit, OnDestroy, After
       const currentResultId = this.results.findIndex(result => result === this.selectedResult$.value);
       console.log("left pressed: ", currentResultId);
       if (currentResultId > 0) { // if we can go to the prev result
+        this.pageSwitchFlag = 0;
         this.selectedResult$.next(this.results[currentResultId - 1]);
       } else {
+        this.pageSwitchFlag = -1;
         this.previousPageTrigger$.next(undefined);
       }
+    });
+
+    this.shortcutService.isNumberPressed.pipe(
+      skip(1),
+      filter(val => val !== undefined && !this.disableControls$.value),
+      takeUntil(this.destroy$)
+    ).subscribe((value) => {
+      // get array id of current selected result in results array
+      this.pageSwitchFlag = 0;
+      this.openPageTrigger$.next(value);
+    });
+
+    this.shortcutService.isTabPressed.pipe(
+      skip(1),
+      filter(val => val),
+      takeUntil(this.destroy$)
+    ).subscribe((value) => {
+      // get array id of current selected result in results array
+      this.pageSwitchFlag = 0;
+      this.nextPageTrigger$.next(undefined);
+    });
+
+    this.shortcutService.isTabShiftPressed.pipe(
+      skip(1),
+      filter(val => val),
+      takeUntil(this.destroy$)
+    ).subscribe((value) => {
+      // get array id of current selected result in results array
+      this.pageSwitchFlag = 0;
+      this.previousPageTrigger$.next(undefined);
     });
 
     this.shortcutService.isEscapePressed.pipe(
@@ -122,6 +160,21 @@ export class MinimalResultContainerComponent implements OnInit, OnDestroy, After
       tap(selectedResult => this.scrollToSelected(selectedResult)),
       takeUntil(this.destroy$)
     ).subscribe();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['results']) {
+      if (this.pageSwitchFlag === 1) {
+        this.selectedResult$.next(this.results[0]);
+      } else if (this.pageSwitchFlag === -1) {
+        this.selectedResult$.next(this.results[this.results.length - 1]);
+      } else {
+        if (this.results.length > 0) {
+          this.selectedResult$.next(this.results[0]);
+        }
+      }
+      this.pageSwitchFlag = 0;
+    }
   }
 
   private scrollToSelected(selectedResult: any) {

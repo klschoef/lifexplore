@@ -4,8 +4,9 @@ import {WSServerStatus} from '../../../../../../../shared/config/global-constant
 import URLUtil from '../../../../../../utils/url-util';
 import {PythonServerService} from '../../../../../../services/pythonserver.service';
 import {BehaviorSubject, filter, Subject, takeUntil, tap} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {map, skip} from 'rxjs/operators';
 import {ShortcutService} from '../../../../../../services/shortcut.service';
+import {ResultDetailComponentMode} from '../../result-detail.component';
 
 @Component({
   selector: 'app-daily-summary-container',
@@ -15,7 +16,8 @@ import {ShortcutService} from '../../../../../../services/shortcut.service';
 export class DailySummaryContainerComponent implements OnInit, OnDestroy {
   @Input() result: any;
   @Input() lockEscapeInParent$?: BehaviorSubject<boolean>;
-  pageSize = 2000;
+  detailModes = [ResultDetailComponentMode.Single, ResultDetailComponentMode.Similar];
+  pageSize = 50;
   currentPage = 1;
   totalResults = 0;
   totalPages = 0;
@@ -40,6 +42,11 @@ export class DailySummaryContainerComponent implements OnInit, OnDestroy {
     map((msg) => msg.results.map((result: any) => ({...result, originalFilepath: result.filepath, filepath: URLUtil.getKeyframeBaseUrl()+result.filepath}))),
   );
 
+
+  previousPageTrigger$ = new BehaviorSubject(undefined);
+  nextPageTrigger$ = new BehaviorSubject(undefined);
+  openPageTrigger$ = new BehaviorSubject<number | undefined>(undefined);
+
   destroy$ = new Subject<void>();
 
   constructor(
@@ -58,6 +65,32 @@ export class DailySummaryContainerComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe(isEscapePressed => {
       // close detail view
+    });
+
+    this.previousPageTrigger$.pipe(
+      skip(1),
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      this.currentPage = Math.max(this.currentPage - 1, 1);
+      this.loadPage(this.currentPage);
+    });
+
+    this.nextPageTrigger$.pipe(
+      skip(1),
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      this.currentPage = Math.min(this.currentPage + 1, this.totalPages);
+      this.loadPage(this.currentPage);
+    });
+
+    this.openPageTrigger$.pipe(
+      filter(page => page !== undefined),
+      takeUntil(this.destroy$)
+    ).subscribe((page) => {
+      if (page) {
+        this.currentPage = page;
+        this.loadPage(this.currentPage);
+      }
     });
   }
 

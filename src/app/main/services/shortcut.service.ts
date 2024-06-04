@@ -24,6 +24,7 @@ export class ShortcutService {
   public isSpacePressed = new BehaviorSubject(false);
   public isTabPressed = new BehaviorSubject(false);
   public isTabShiftPressed = new BehaviorSubject(false);
+  public isNumberPressed = new BehaviorSubject<number | undefined>(undefined);
 
   constructor(
     private resultPresenterService: ResultPresenterService,
@@ -33,6 +34,7 @@ export class ShortcutService {
   handleKeyboardEventUp(event: KeyboardEvent) {
     console.log("event up", event);
     this.shiftKeyIsPressedSubject.next(event.shiftKey);
+    this.isNumberPressed.next(undefined);
 
     if (event.key === 's') { // submit
       if (!this.isInputFocusedSubject.value) {
@@ -50,14 +52,18 @@ export class ShortcutService {
         this.isDPressed.next(false);
         event.preventDefault();
       }
-    } else if(event.key === 'ArrowLeft') {
+    } else if(event.key === 'ArrowLeft' && !this.isInputFocusedSubject.value) {
       this.isArrowLeftPressed.next(false);
-    } else if(event.key === 'ArrowRight') {
+    } else if(event.key === 'ArrowRight' && !this.isInputFocusedSubject.value) {
       this.isArrowRightPressed.next(false);
-    } else if(event.key === 'Escape') {
+    } else if(event.key === 'Escape' && !this.isInputFocusedSubject.value) {
       this.isEscapePressed.next(false);
-    } else if(event.code === 'Space') {
+    } else if(event.code === 'Space' && !this.isInputFocusedSubject.value) {
       this.isSpacePressed.next(false);
+    } else if(event.code === 'Tab' && !this.isInputFocusedSubject.value) {
+      this.isTabPressed.next(false);
+    } else if (event.code === 'Tab' && event.shiftKey) {
+      this.isTabShiftPressed.next(false);
     }
   }
 
@@ -83,11 +89,13 @@ export class ShortcutService {
       //this.resultPresenterService.search$.next(true);
     } else if (event.key === 'Tab' && event.shiftKey) {
       console.log("Tab + shift");
-      this.resultPresenterService.previousPage();
+      this.isTabShiftPressed.next(true);
+      //this.resultPresenterService.previousPage();
       event.preventDefault(); // Prevent tabbing to previous element
     } else if (event.key === 'Tab' && !event.shiftKey) {
       if (!this.isInputFocusedSubject.value) {
-        this.resultPresenterService.nextPage();
+        //this.resultPresenterService.nextPage();
+        this.isTabPressed.next(true);
         event.preventDefault(); // Prevent tabbing to next element
       }
     } else if (event.key === 'Escape') {
@@ -176,12 +184,14 @@ export class ShortcutService {
       if (!this.isInputFocusedSubject.value) {
         switch (event.key) { // go to page from 1 to 10 (0 is 10)
           case '0':
+            this.isNumberPressed.next(10);
             this.resultPresenterService.currentPage$.next(10);
             break;
           default:
             const keyNumber = parseInt(event.key);
             if (!isNaN(keyNumber) && keyNumber >= 1 && keyNumber <= 9) {
-              this.resultPresenterService.currentPage$.next(keyNumber);
+              //this.resultPresenterService.currentPage$.next(keyNumber);
+              this.isNumberPressed.next(keyNumber);
             }
             break;
         }

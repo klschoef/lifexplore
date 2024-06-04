@@ -4,7 +4,7 @@ import {PythonServerService} from '../../../../services/pythonserver.service';
 import {VBSServerConnectionService} from '../../../../services/vbsserver-connection.service';
 import {SubmissionLogService} from '../../../../services/submission-log.service';
 import {BehaviorSubject, combineLatest, filter, Subject, switchMap, takeUntil, tap} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {map, skip} from 'rxjs/operators';
 import {ShortcutService} from '../../../../services/shortcut.service';
 import {ResultPresenterService} from '../../../../services/result-presenter.service';
 
@@ -27,7 +27,7 @@ export class ResultDetailComponent implements OnChanges, OnInit, OnDestroy {
   receivedMetadata$ = this.pythonService.receivedMetadata;
   isOpen = true;
 
-  modes: string[] = Object.values(ResultDetailComponentMode);
+  @Input() modes: string[] = Object.values(ResultDetailComponentMode);
   selectedMode: string = ResultDetailComponentMode.Single;
   lockEscape$ = new BehaviorSubject(false);
   newSelectedResult$ = new BehaviorSubject(null);
@@ -52,6 +52,8 @@ export class ResultDetailComponent implements OnChanges, OnInit, OnDestroy {
 
   ngOnInit() {
     this.shortcutService.isSPressed.pipe(
+      skip(1),
+      filter(isEscapePressed => !this.lockEscape$.value),
       takeUntil(this.destroy$)
     ).subscribe(isSPressed => {
       if (isSPressed) {
@@ -64,18 +66,21 @@ export class ResultDetailComponent implements OnChanges, OnInit, OnDestroy {
     });
 
     this.shortcutService.isSAndShiftIsPressed.pipe(
+      skip(1),
+      filter(isEscapePressed => !this.lockEscape$.value),
       takeUntil(this.destroy$)
     ).subscribe(isSPressed => {
-      console.log("IS S AND SHIFT PRESSED", isSPressed);
       if (isSPressed) {
         this.submitImage();
       }
     });
 
     this.shortcutService.isDPressed.pipe(
+      skip(1),
+      filter(isEscapePressed => !this.lockEscape$.value),
       takeUntil(this.destroy$)
     ).subscribe(isDPressed => {
-      if (isDPressed) {
+      if (isDPressed && this.modes.includes(ResultDetailComponentMode.Day)) {
         this.changeMode(ResultDetailComponentMode.Day);
       }
     });
@@ -87,6 +92,7 @@ export class ResultDetailComponent implements OnChanges, OnInit, OnDestroy {
     });
 
     this.shortcutService.isEscapePressed.pipe(
+      skip(1),
       filter(isEscapePressed => isEscapePressed && !this.lockEscape$.value),
       takeUntil(this.destroy$)
     ).subscribe(isEscapePressed => {

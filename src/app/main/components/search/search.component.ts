@@ -1,4 +1,4 @@
-import {Component, HostListener, OnInit} from '@angular/core';
+import {Component, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
 import {getTimestampInSeconds, WSServerStatus} from '../../../shared/config/global-constants';
 import URLUtil from '../../utils/url-util';
 import {ClipServerConnectionService} from '../../services/clipserver-connection.service';
@@ -8,8 +8,8 @@ import {QueryEventLogService} from '../../services/query-event-log.service';
 import {QueryResultLogService} from '../../services/query-result-log.service';
 import {HistoryService} from '../../services/history.service';
 import {ExpLogService} from '../../services/exp-log.service';
-import {BehaviorSubject, filter, tap} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {BehaviorSubject, filter, Subject, takeUntil, tap} from 'rxjs';
+import {map, skip} from 'rxjs/operators';
 import ObjectQuery from '../../models/object-query';
 import {SearchResultMode} from '../settings/components/settings-view-results-mode/settings-view-results-mode.component';
 import {SettingsService} from '../../services/settings.service';
@@ -23,7 +23,7 @@ import {ShortcutService} from '../../services/shortcut.service';
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss']
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, OnDestroy {
 
   totalResults = 0;
   currentPage = 1;
@@ -32,6 +32,11 @@ export class SearchComponent implements OnInit {
   progress$ = new BehaviorSubject<string | undefined>(undefined)
   error$ = new BehaviorSubject<string | undefined>(undefined)
   requestId?: string;
+
+  previousPageTrigger$ = new BehaviorSubject(undefined);
+  nextPageTrigger$ = new BehaviorSubject(undefined);
+  openPageTrigger$ = new BehaviorSubject<number | undefined>(undefined);
+  destroy$ = new Subject<void>();
 
   results$ = this.pythonServerService.receivedMessages.pipe(
     tap(msg => {
@@ -101,6 +106,37 @@ export class SearchComponent implements OnInit {
         this.loadPage(this.currentPage);
       }
     });
+
+    this.previousPageTrigger$.pipe(
+      skip(1),
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      this.currentPage = Math.max(this.currentPage - 1, 1);
+      this.loadPage(this.currentPage);
+    });
+
+    this.nextPageTrigger$.pipe(
+      skip(1),
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      this.currentPage = Math.min(this.currentPage + 1, this.totalPages);
+      this.loadPage(this.currentPage);
+    });
+
+    this.openPageTrigger$.pipe(
+      filter(page => page !== undefined),
+      takeUntil(this.destroy$)
+    ).subscribe((page) => {
+      if (page) {
+        this.currentPage = page;
+        this.loadPage(this.currentPage);
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -129,10 +165,10 @@ export class SearchComponent implements OnInit {
 
   loadPage(page: number) {
     this.currentPage = page;
-    this.performTextQuery(this.lastValue, this.lastObjectValue);
+    this.performTextQuery(this.lastValue, this.lastObjectValue, true);
   }
 
-  performTextQuery(value?: string, objectValues?: ObjectQuery[]): void {
+  performTextQuery(value?: string, objectValues?: ObjectQuery[], pageSwitch=false): void {
     if (this.pythonServerService.connectionState === WSServerStatus.CONNECTED) {
 
       this.requestId = Math.random().toString(36).substring(7);
@@ -157,7 +193,10 @@ export class SearchComponent implements OnInit {
       this.lastValue = value;
       this.lastObjectValue = objectValues;
 
-      this.historyService.saveToHistory(msg);
+      if (!pageSwitch) {
+        this.historyService.saveToHistory(msg);
+      }
+
       this.pythonServerService.sendMessage(msg);
 
       //this.historyService.saveToHistory(msg);
