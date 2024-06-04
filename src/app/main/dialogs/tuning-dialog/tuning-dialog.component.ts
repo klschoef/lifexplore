@@ -33,6 +33,22 @@ export class TuningDialogComponent {
     map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.firstPerDay),
     filter((l2dist) => l2dist !== undefined),
   );
+  pageSize$ = this.settingsService.settings$.pipe(
+    map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.resultsperpage ?? 50),
+    filter((res) => res !== undefined),
+  );
+  dailyPageSize$ = this.settingsService.settings$.pipe(
+    map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.dailyPageSize ?? 2000),
+    filter((res) => res !== undefined),
+  );
+  clipPageSize$ = this.settingsService.settings$.pipe(
+    map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.clipPageSize ?? 5000),
+    filter((res) => res !== undefined),
+  );
+  solrPageSize$ = this.settingsService.settings$.pipe(
+    map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.solrPageSize ?? 5000),
+    filter((res) => res !== undefined),
+  );
   currentL2Type$ = this.settingsService.settings$.pipe(
     map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.l2dist),
     map((l2dist) => {
@@ -95,6 +111,34 @@ export class TuningDialogComponent {
     this.settingsService.saveQuerySettings({
       ...this.settingsService.getQuerySettings(),
       firstPerDay: event.target.checked
+    })
+  }
+
+  onChangePageSize(event: any) {
+    this.settingsService.saveQuerySettings({
+      ...this.settingsService.getQuerySettings(),
+      resultsperpage: event.target.valueAsNumber
+    })
+  }
+
+  onChangeDailyPageSize(event: any) {
+    this.settingsService.saveQuerySettings({
+      ...this.settingsService.getQuerySettings(),
+      dailyPageSize: event.target.valueAsNumber
+    })
+  }
+
+  onChangeClipPageSize(event: any) {
+    this.settingsService.saveQuerySettings({
+      ...this.settingsService.getQuerySettings(),
+      clipPageSize: event.target.valueAsNumber
+    })
+  }
+
+  onChangeSolrPageSize(event: any) {
+    this.settingsService.saveQuerySettings({
+      ...this.settingsService.getQuerySettings(),
+      solrPageSize: event.target.valueAsNumber
     })
   }
 }

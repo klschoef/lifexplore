@@ -14,4 +14,9 @@
   </div>
   <h3>Group</h3>
   First per Day: <input type="checkbox" [ngModel]="firstPerDay$ | async" (change)="onChangeFirstPerDay($event)">
+  <h3>Page Sizes</h3>
+  Page Size: <input type="number" [ngModel]="pageSize$ | async" (change)="onChangePageSize($event)"><br>
+  Daily Page Size: <input type="number" [ngModel]="dailyPageSize$ | async" (change)="onChangeDailyPageSize($event)"><br>
+  CLIP Page Size: <input type="number" [ngModel]="clipPageSize$ | async" (change)="onChangeClipPageSize($event)"><br>
+  SOLR Page Size: <input type="number" [ngModel]="solrPageSize$ | async" (change)="onChangeSolrPageSize($event)"><br>
 </expl-dialog>

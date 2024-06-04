@@ -47,7 +47,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     filter((msg) => msg && msg.results && !msg.type && msg.requestId === this.requestId),
     tap((msg) => {
       this.totalResults = msg.totalresults ?? 0;
-      this.totalPages = Math.ceil(this.totalResults / this.pageSize);
+      this.totalPages = Math.ceil(this.totalResults / this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.resultsperpage ?? 2000);
 
       this.resultPresenterService.maxPages$.next(this.totalPages);
       this.resultPresenterService.maxResultsForCurrentPage$.next(msg.num ?? 0);
@@ -66,7 +66,6 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   openSettings$ = new BehaviorSubject<boolean>(false);
   HTMLSearchResultMode = SearchResultMode;
-  pageSize = this.settingsService.settings$.getValue().pageSize ?? 50
 
   // last values
   lastValue?: string;
@@ -183,7 +182,7 @@ export class SearchComponent implements OnInit, OnDestroy {
         query: value,
         query_dicts: objectValues,
         maxresults: 2000,
-        resultsperpage: this.pageSize,
+        resultsperpage: this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.resultsperpage ?? 2000,
         selectedpage: this.currentPage.toString(),
         queryMode: this.queryModes[0].name,
         requestId: this.requestId,
