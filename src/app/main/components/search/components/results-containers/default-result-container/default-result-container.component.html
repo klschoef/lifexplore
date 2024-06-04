@@ -1,20 +1,36 @@
 <div class="lifelog-search-results-container">
-  <div class="lifelog-search-result exp-clickable exp-hover-move-up animate__animated animate__fadeIn"
-       (click)="clickResult(result)"
-       *ngFor="let result of results; let i = index">
-    <div class="image-container">
-      <img src="{{result.filepath}}">
-      <app-submission-result-marker [result]="result"></app-submission-result-marker>
-    </div>
-    <div class="metadata">
-      <div class="line">
-        <div *ngIf="result.heart_rate" class="heart-rate-container">
-          <mat-icon fontIcon="favorite" style="color: red; animation: pulseAnimation {{60/result.heart_rate}}s infinite;"></mat-icon>
-          {{result.heart_rate}}
+  <ng-container *ngIf="{selectedResult: selectedResult$ | async} as data">
+    <div class="lifelog-search-result exp-clickable exp-hover-move-up animate__animated animate__fadeIn"
+         [class.shift]="shortcutService.shiftKeyIsPressedSubject | async"
+         [class.zoom]="data.selectedResult === result && (shortcutService.isZPressed | async)"
+         [class.selected]="data.selectedResult === result"
+         (click)="clickResult(result)"
+         *ngFor="let result of results; let i = index"
+         #resultElement
+    >
+      <div class="image-container">
+        <img src="{{result.filepath}}">
+        <div *ngIf="data.selectedResult === result" class="selected-cover"></div>
+        <app-submission-result-marker [result]="result"></app-submission-result-marker>
+      </div>
+      <div class="metadata">
+        <div class="line">
+          <div *ngIf="result.heart_rate" class="heart-rate-container">
+            <mat-icon fontIcon="favorite" style="color: red; animation: pulseAnimation {{60/result.heart_rate}}s infinite;"></mat-icon>
+            {{result.heart_rate}}
+          </div>
+          <div class="datetime">{{result.datetime}}</div>
         </div>
-        <div class="datetime">{{result.datetime}}</div>
       </div>
     </div>
-  </div>
+  </ng-container>
 </div>
-<app-result-detail *ngIf="selectedResult$ | async as selectedResult" [selectedResult]="selectedResult"></app-result-detail>
+<ng-container *ngIf="selectedResult$ | async as selectedResult">
+  <app-result-detail
+    *ngIf="openSelectedResultInDetail$ | async"
+    [dialogState]="openSelectedResultInDetail$"
+    [selectedResult]="selectedResult"
+    [openTrigger]="openNewResultTrigger$"
+    [disableControlsInParent]="disableControls$"
+  ></app-result-detail>
+</ng-container>

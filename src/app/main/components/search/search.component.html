@@ -35,7 +35,13 @@
 </div>
 <ng-container *ngIf="results$ | async as results;">
   <ng-container *ngIf="searchResultMode$ | async as searchResultMode">
-    <app-default-result-container *ngIf="searchResultMode === HTMLSearchResultMode.DEFAULT" [results]="results"/>
+    <app-default-result-container
+      *ngIf="searchResultMode === HTMLSearchResultMode.DEFAULT"
+      [results]="results"
+      [previousPageTrigger$]="previousPageTrigger$"
+      [nextPageTrigger$]="nextPageTrigger$"
+      [openPageTrigger$]="openPageTrigger$"
+    />
     <app-minimal-result-container
       *ngIf="searchResultMode === HTMLSearchResultMode.MINIMAL"
       [results]="results"

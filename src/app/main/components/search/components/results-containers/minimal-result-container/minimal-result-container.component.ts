@@ -30,7 +30,6 @@ export class MinimalResultContainerComponent implements OnInit, OnDestroy, After
   @Input() lockEscapeInParent$?: BehaviorSubject<boolean>;
   @Input() initialSelectedResult?: any;
   @Input() detailModes: string[] = Object.values(ResultDetailComponentMode);
-  localResult?: any;
   openSelectedResultInDetail$ = new BehaviorSubject<boolean>(false);
   openNewResultTrigger$ = new BehaviorSubject(undefined);
   selectedResult$ = new BehaviorSubject<any>(undefined);

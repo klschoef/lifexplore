@@ -17,6 +17,28 @@
     border-color: rgb(29, 30, 33);
     border-style: solid;
     flex: 1 1 250px;
+    position: relative;
+
+    &:hover {
+      z-index: 2;
+      transform: scale(1.05);
+    }
+
+    &.shift:hover, &.zoom {
+      z-index: 5;
+      transform: scale(2);
+    }
+
+    & .selected-cover {
+      width: calc(100% - 10px);
+      height: calc(100% - 10px);
+      z-index: 6;
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0.8;
+      border: 5px solid var(--exp-color-secondary);
+    }
 
     .image-container {
       position: relative;
