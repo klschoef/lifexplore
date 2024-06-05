@@ -56,6 +56,7 @@ import {HelpDirective} from './main/directives/help.directive';
 import { HelpOverlayComponent } from './main/components/utility-components/help-overlay/help-overlay.component';
 import { ResultDetailHelpPipe } from './main/components/search/components/result-detail/pipes/result-detail-help.pipe';
 import { TaskTimePipe } from './main/components/exp-statusbar/pipes/task-time.pipe';
+import { SimilarityResultContainerComponent } from './main/components/search/components/result-detail/containers/similarity-result-container/similarity-result-container.component';
 
 
 @NgModule({
@@ -96,7 +97,8 @@ import { TaskTimePipe } from './main/components/exp-statusbar/pipes/task-time.pi
     HelpDirective,
     HelpOverlayComponent,
     ResultDetailHelpPipe,
-    TaskTimePipe
+    TaskTimePipe,
+    SimilarityResultContainerComponent
   ],
   imports: [
     BrowserModule,
