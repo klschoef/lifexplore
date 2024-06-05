@@ -41,6 +41,10 @@ export class TuningDialogComponent {
     map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.dailyPageSize ?? 2000),
     filter((res) => res !== undefined),
   );
+  dailySummaryL2$ = this.settingsService.settings$.pipe(
+    map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.dailySummaryL2 ?? 20),
+    filter((res) => res !== undefined),
+  );
   similarityPageSize$ = this.settingsService.settings$.pipe(
     map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.similarityPageSize ?? 2000),
     filter((res) => res !== undefined),
@@ -129,6 +133,13 @@ export class TuningDialogComponent {
     this.settingsService.saveQuerySettings({
       ...this.settingsService.getQuerySettings(),
       dailyPageSize: event.target.valueAsNumber
+    })
+  }
+
+  onChangeDailySummaryL2(event: any) {
+    this.settingsService.saveQuerySettings({
+      ...this.settingsService.getQuerySettings(),
+      dailySummaryL2: event.target.valueAsNumber
     })
   }
 

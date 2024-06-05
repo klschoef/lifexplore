@@ -11,6 +11,7 @@ import {ResultPresenterService} from '../../../../services/result-presenter.serv
 export enum ResultDetailComponentMode {
   Single = 'Single',
   Day = 'Day',
+  DailySummary = 'Daily Summary',
   Similar = 'Similar'
 }
 
@@ -85,6 +86,16 @@ export class ResultDetailComponent implements OnChanges, OnInit, OnDestroy {
       }
     });
 
+    this.shortcutService.isDAndShiftPressed.pipe(
+      skip(1),
+      filter(isEscapePressed => !this.lockEscape$.value),
+      takeUntil(this.destroy$)
+    ).subscribe(isDPressed => {
+      if (isDPressed && this.modes.includes(ResultDetailComponentMode.DailySummary)) {
+        this.changeMode(ResultDetailComponentMode.DailySummary);
+      }
+    });
+
     this.openTrigger?.pipe(
       takeUntil(this.destroy$)
     ).subscribe(() => {
@@ -111,7 +122,9 @@ export class ResultDetailComponent implements OnChanges, OnInit, OnDestroy {
     console.log("CHANGE MODE", mode);
     if (mode === ResultDetailComponentMode.Single) {
       this.disableControlsInParent?.next(false);
-    } else if (mode === ResultDetailComponentMode.Day || mode === ResultDetailComponentMode.Similar) {
+    } else if (
+      mode === ResultDetailComponentMode.Day || mode === ResultDetailComponentMode.DailySummary
+      || mode === ResultDetailComponentMode.Similar) {
       this.disableControlsInParent?.next(true);
     }
   }

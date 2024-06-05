@@ -25,6 +25,7 @@
       <div class="content">
         <app-single-result-container *ngIf="selectedMode === ResultDetailComponentMode.Single" [result]="receivedMetadata"></app-single-result-container>
         <app-daily-summary-container *ngIf="selectedMode === ResultDetailComponentMode.Day" [result]="receivedMetadata" [lockEscapeInParent$]="lockEscape$"></app-daily-summary-container>
+        <app-daily-summary-l2-container *ngIf="selectedMode === ResultDetailComponentMode.DailySummary" [result]="receivedMetadata" [lockEscapeInParent$]="lockEscape$"></app-daily-summary-l2-container>
         <app-similarity-result-container *ngIf="selectedMode === ResultDetailComponentMode.Similar" [result]="receivedMetadata" [lockEscapeInParent$]="lockEscape$"></app-similarity-result-container>
       </div>
     </div>

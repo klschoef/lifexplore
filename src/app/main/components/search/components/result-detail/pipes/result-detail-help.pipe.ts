@@ -14,6 +14,8 @@ export class ResultDetailHelpPipe implements PipeTransform {
         return "s";
       case ResultDetailComponentMode.Day:
         return "d";
+      case ResultDetailComponentMode.DailySummary:
+        return "Shift+d";
     }
     return "";
   }

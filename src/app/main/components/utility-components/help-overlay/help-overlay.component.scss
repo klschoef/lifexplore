@@ -2,13 +2,14 @@
   position: absolute;
   z-index: 100;
   //max-width: 100%;
-  padding: 8px;
+  padding: 4px;
   border-radius: 8px;
   background: var(--exp-color-primary);
   opacity: 0.8;
   color: white;
   border: 1px solid;
   top: 0;
-  max-height: calc(100% - 16px);
+  max-height: calc(100% - 8px);
+  min-height: 18px;
   overflow: scroll;
 }
