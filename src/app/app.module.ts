@@ -57,6 +57,7 @@ import { HelpOverlayComponent } from './main/components/utility-components/help-
 import { ResultDetailHelpPipe } from './main/components/search/components/result-detail/pipes/result-detail-help.pipe';
 import { TaskTimePipe } from './main/components/exp-statusbar/pipes/task-time.pipe';
 import { SimilarityResultContainerComponent } from './main/components/search/components/result-detail/containers/similarity-result-container/similarity-result-container.component';
+import { QueryElementHelpTextPipe } from './main/components/exp-search-area/elements/graphical-query-element/pipes/query-element-help-text.pipe';
 
 
 @NgModule({
@@ -98,7 +99,8 @@ import { SimilarityResultContainerComponent } from './main/components/search/com
     HelpOverlayComponent,
     ResultDetailHelpPipe,
     TaskTimePipe,
-    SimilarityResultContainerComponent
+    SimilarityResultContainerComponent,
+    QueryElementHelpTextPipe
   ],
   imports: [
     BrowserModule,

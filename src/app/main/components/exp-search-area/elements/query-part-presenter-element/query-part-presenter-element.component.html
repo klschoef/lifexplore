@@ -9,7 +9,24 @@
         [selectedQueryType]="queryPart.query_type"
       />
     </exp-popup>
-    <div class="query-value"><input [(ngModel)]="queryPart.query" /></div>
+    <div *ngIf="inputProperties?.helpText" class="query-value" [help]="inputProperties.helpText!">
+      <input [(ngModel)]="queryPart.query"
+             [placeholder]="inputProperties.placeholder"
+             [type]="inputProperties.type ?? 'text'"
+             [min]="inputProperties.min"
+              [max]="inputProperties.max"
+              [step]="inputProperties.step"
+      />
+    </div>
+    <div *ngIf="!inputProperties?.helpText" class="query-value">
+      <input [(ngModel)]="queryPart.query"
+             [placeholder]="inputProperties.placeholder"
+             [type]="inputProperties.type ?? 'text'"
+             [min]="inputProperties.min"
+             [max]="inputProperties.max"
+             [step]="inputProperties.step"
+      />
+    </div>
     <div class="query-delete">
       <mat-icon fontIcon="edit_note" class="exp-clickable exp-hover-scale" (click)="openDetail()"/>
       <mat-icon fontIcon="delete" class="exp-clickable exp-hover-scale" (click)="clickDelete()"/>

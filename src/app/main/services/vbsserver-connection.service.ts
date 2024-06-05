@@ -161,7 +161,6 @@ export class VBSServerConnectionService {
 
               })
               .subscribe((taskState: ApiEvaluationState | null) => {
-              console.log("current task info", taskState);
               this.currentTaskState$.next(taskState);
             });
           }

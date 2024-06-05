@@ -2,6 +2,15 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {QueryPart, QueryPartType, Subquery} from '../../models/query-part';
 import {BehaviorSubject} from 'rxjs';
 
+export interface QueryPartInputProperties {
+  placeholder?: string;
+  type?: string;
+  helpText?: string;
+  min?: number;
+  max?: number;
+  step?: number;
+}
+
 @Component({
   selector: 'app-query-part-presenter-element',
   templateUrl: './query-part-presenter-element.component.html',
@@ -10,6 +19,7 @@ import {BehaviorSubject} from 'rxjs';
 export class QueryPartPresenterElementComponent {
   @Input() queryPart!: QueryPart;
   @Output() onDelete: EventEmitter<QueryPart> = new EventEmitter<QueryPart>();
+  @Input() inputProperties: QueryPartInputProperties = {};
 
   openDetailContainer$ = new BehaviorSubject<boolean>(false);
   openTypeSelection$ = new BehaviorSubject<boolean>(false);

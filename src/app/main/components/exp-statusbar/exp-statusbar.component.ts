@@ -39,7 +39,6 @@ export class ExpStatusbarComponent {
     );
 
   currentTaskState$ = this.vbsServerConnectionService.currentTaskState$.pipe(
-    tap(taskState => console.log('currentTaskState', taskState))
   );
 
   submissionLogRequestFailureCount$ = this.submissionLog$.pipe(

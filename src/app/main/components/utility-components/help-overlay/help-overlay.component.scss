@@ -9,4 +9,6 @@
   color: white;
   border: 1px solid;
   top: 0;
+  max-height: calc(100% - 16px);
+  overflow: scroll;
 }
