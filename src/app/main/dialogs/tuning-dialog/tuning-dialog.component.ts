@@ -41,6 +41,10 @@ export class TuningDialogComponent {
     map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.dailyPageSize ?? 2000),
     filter((res) => res !== undefined),
   );
+  similarityPageSize$ = this.settingsService.settings$.pipe(
+    map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.similarityPageSize ?? 2000),
+    filter((res) => res !== undefined),
+  );
   clipPageSize$ = this.settingsService.settings$.pipe(
     map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.clipPageSize ?? 5000),
     filter((res) => res !== undefined),
@@ -125,6 +129,13 @@ export class TuningDialogComponent {
     this.settingsService.saveQuerySettings({
       ...this.settingsService.getQuerySettings(),
       dailyPageSize: event.target.valueAsNumber
+    })
+  }
+
+  onChangeSimilarityPageSize(event: any) {
+    this.settingsService.saveQuerySettings({
+      ...this.settingsService.getQuerySettings(),
+      similarityPageSize: event.target.valueAsNumber
     })
   }
 

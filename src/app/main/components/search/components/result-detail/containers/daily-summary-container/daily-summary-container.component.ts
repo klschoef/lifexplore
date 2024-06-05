@@ -29,7 +29,7 @@ export class DailySummaryContainerComponent implements OnInit, OnDestroy {
     filter((msg) => msg && msg.results && msg.results.length > 0 && !msg.type && msg.requestId === this.requestId),
     tap((msg) => {
       this.totalResults = msg.totalresults ?? 0;
-      this.totalPages = Math.ceil(this.totalResults / this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.dailyPageSize ?? 2000);
+      this.totalPages = Math.ceil(this.totalResults / (this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.dailyPageSize ?? 2000));
 
       // Calculate start and end page numbers
       const startPage = Math.max(this.currentPage - 3, 1);

@@ -47,7 +47,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     filter((msg) => msg && msg.results && !msg.type && msg.requestId === this.requestId),
     tap((msg) => {
       this.totalResults = msg.totalresults ?? 0;
-      this.totalPages = Math.ceil(this.totalResults / this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.resultsperpage ?? 50);
+      this.totalPages = Math.ceil(this.totalResults / (this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.resultsperpage ?? 50));
 
       this.resultPresenterService.maxPages$.next(this.totalPages);
       this.resultPresenterService.maxResultsForCurrentPage$.next(msg.num ?? 0);
