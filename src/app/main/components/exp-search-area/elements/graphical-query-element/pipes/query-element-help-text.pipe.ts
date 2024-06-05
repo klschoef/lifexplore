@@ -43,6 +43,12 @@ export class QueryElementHelpTextPipe implements PipeTransform {
           placeholder: '60,60+,60+10,60+-5',
           type: 'text'
         };
+      case QueryPartType.hour:
+        return {
+          helpText: '9+ means 9-23, 9-5 means 9 to 4, 9+-5 means 4 to 14',
+          placeholder: '9,9+,9-5,9+-5',
+          type: 'text'
+        };
       case QueryPartType.texts:
         return {
           helpText: 'appearing texts in image',

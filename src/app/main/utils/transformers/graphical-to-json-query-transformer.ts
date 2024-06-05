@@ -92,6 +92,12 @@ export default class GraphicalToJsonQueryTransformer {
             queryObject.heart_rate = RangeValueUtil.parseRangeValues(queryPart.query)
           }
           break;
+        case QueryPartType.hour:
+          // TODO: add graphical interface for hour
+          if (queryPart.query) {
+            queryObject.hour = RangeValueUtil.parseRangeValues(queryPart.query)
+          }
+          break;
       }
     });
 

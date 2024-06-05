@@ -22,6 +22,7 @@ export enum QueryPartType {
   year = "Year",
   month = "Month",
   day = "Day",
+  hour = "Hour",
   weekday = "Weekday",
   heart_rate = "Heart Rate",
   city = "City",

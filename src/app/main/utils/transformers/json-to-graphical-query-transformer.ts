@@ -95,6 +95,14 @@ export default class JsonToGraphicalQueryTransformer {
           };
           graphicalContentPart.queryParts.push(heartRateQueryPart);
           break;
+        case 'hour':
+          const hourQueryPart: QueryPart = {
+            query_type: QueryPartType.hour,
+            query: RangeValueUtil.stringifyRangeValues(value),
+            subqueries: []
+          };
+          graphicalContentPart.queryParts.push(hourQueryPart);
+          break;
       }
     });
 

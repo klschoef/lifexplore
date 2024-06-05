@@ -25,6 +25,10 @@ export default interface ObjectQuery {
     min?: number,
     max?: number
   },
+  hour?: {
+    min?: number,
+    max?: number
+  },
   address?: string,
   country?: string,
   gptr?: string,

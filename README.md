@@ -142,3 +142,23 @@ This is needed to translate a stored json query to a graphical user interface ob
           result += ` -ntk ${dict.new_type_key}`;
         }
 ```
+
+6. Add a case to QueryElementHelpTextPipe in transform method of main/components/exp-search-area/elements/graphical-query-element/pipes/query-element-help-text.pipe.ts
+```
+      case QueryPartType.month:
+        return {
+          helpText: 'Month (1-12)',
+          placeholder: '1',
+          type: 'number',
+          min: 1,
+          max: 12,
+        };
+      case QueryPartType.new_type_key:
+        return {
+          helpText: 'Help Text (1-12)',
+          placeholder: '1',
+          type: 'number',
+          min: 1,
+          max: 12,
+        };
+```

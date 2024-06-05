@@ -47,6 +47,9 @@ export class HistoryEntryToText {
         if (dict.heart_rate && (dict.heart_rate.min || dict.heart_rate.max)) {
           result += ` -h ${dict.heart_rate.min || ""}:${dict.heart_rate.max || ""}`+HistoryEntryToText.transformSubqueries(dict.heart_rate);
         }
+        if (dict.hour && (dict.hour.min || dict.hour.max)) {
+          result += ` -hr ${dict.hour.min || ""}:${dict.hour.max || ""}`+HistoryEntryToText.transformSubqueries(dict.hour);
+        }
         if (dict.filename) {
           result += ` -fn ${dict.filename}`;
         }
