@@ -119,8 +119,8 @@ export class QueryElementHelpTextPipe implements PipeTransform {
         };
       case QueryPartType.gpt:
         return {
-          helpText: 'GPT Description',
-          placeholder: 'a yellow hat on a person ...',
+          helpText: 'GPT Search like "Car". Exclude: "!House", Weight: "Red:2" or Combine',
+          placeholder: 'yellow hat wearing person:2 !water',
           type: 'text'
         };
     }
