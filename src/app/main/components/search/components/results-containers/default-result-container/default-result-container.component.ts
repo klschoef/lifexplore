@@ -120,6 +120,10 @@ export class DefaultResultContainerComponent implements OnInit, OnDestroy, After
       filter(val => val === false && !this.disableControls$.value),
       takeUntil(this.destroy$)
     ).subscribe(() => {
+      if (this.openSelectedResultInDetail$.value) {
+        this.openSelectedResultInDetail$.next(false);
+        return;
+      }
       if (this.results.length > 0) {
         if (!this.selectedResult$.value) {
           this.selectedResult$.next(this.results[0]);
