@@ -34,6 +34,7 @@ import {BehaviorSubject, catchError, Observable, of, tap} from 'rxjs';
 import { AppComponent } from '../../app.component';
 import { GlobalConstantsService } from '../../shared/config/services/global-constants.service';
 import {SubmissionLogService} from './submission-log.service';
+import {SettingsService} from './settings.service';
 
 interface ExtendedQueryResultLog extends QueryResultLog {
   serverTime: number;
@@ -82,10 +83,12 @@ export class VBSServerConnectionService {
     private submissionService: SubmissionService,
     private logService: LogService,
     private statusService: StatusService,
-    private submissionLogService: SubmissionLogService
+    private submissionLogService: SubmissionLogService,
+    private settingsService: SettingsService
   ) {
     this.println(`VBSServerConnectionService created`);
     this.activeUsername = this.globalConstants.configUSER; //GlobalConstants.configUSER;
+    this.selectedEvaluation = this.settingsService.settings$.value[SettingsService.LOCAL_SELECTED_EVALUATION];
     this.connect();
   }
 
@@ -180,6 +183,16 @@ export class VBSServerConnectionService {
         console.log("cannot log in");
         this.vbsServerState = WSServerStatus.DISCONNECTED;
       });
+  }
+
+  changeAndSaveSelectedEvaluation(id: string) {
+    console.log("changeEvaluation:", id);
+    this.selectedEvaluation = id;
+    this.submissionLogService.logOrModeChange$.next(null);
+    this.settingsService.setSettings({
+      ...this.settingsService.settings$.value,
+      [SettingsService.LOCAL_SELECTED_EVALUATION]: id
+    });
   }
 
   getClientTaskInfo(runId: string, comm: VbsServiceCommunication) { // Only used from old query

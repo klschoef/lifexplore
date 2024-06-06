@@ -13,6 +13,7 @@ export class SettingsService {
   static LOCAL_STORAGE_SETTINGS = 'settings';
   static LOCAL_QUERY_SETTINGS = 'querySettings';
   static LOCAL_MAP_SETTINGS = 'mapSettings';
+  static LOCAL_SELECTED_EVALUATION = 'selectedEvaluation';
   settings$ = new BehaviorSubject<any>({});
 
   constructor() {

@@ -53,9 +53,7 @@ export class ExpStatusbarComponent {
     ) { }
 
   changeEvaluation(event: any) {
-      console.log("changeEvaluation:", event, event.target.selectedIndex, event.target.value);
-      this.vbsServerConnectionService.selectedEvaluation = event.target.value;
-    this.submissionLogService.logOrModeChange$.next(null);
+      this.vbsServerConnectionService.changeAndSaveSelectedEvaluation(event.target.value);
   }
 
   submitTopic(topicInput:any ) {
