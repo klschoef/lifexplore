@@ -71,8 +71,29 @@ export default class JsonToGraphicalQueryTransformer {
           graphicalContentPart.queryParts.push(filenameQueryPart);
           break;
         case 'year':
+          const yearQueryPart: QueryPart = {
+            query_type: QueryPartType.year,
+            query: RangeValueUtil.stringifyRangeValues(value),
+            subqueries: []
+          };
+          graphicalContentPart.queryParts.push(yearQueryPart);
+          break;
         case 'month':
+          const monthQueryPart: QueryPart = {
+            query_type: QueryPartType.month,
+            query: RangeValueUtil.stringifyRangeValues(value),
+            subqueries: []
+          };
+          graphicalContentPart.queryParts.push(monthQueryPart);
+          break;
         case 'day':
+          const dayQueryPart: QueryPart = {
+            query_type: QueryPartType.day,
+            query: RangeValueUtil.stringifyRangeValues(value),
+            subqueries: []
+          };
+          graphicalContentPart.queryParts.push(dayQueryPart);
+          break;
         case 'address':
         case 'city':
         case 'country':

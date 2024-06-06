@@ -54,13 +54,13 @@ export class HistoryEntryToText {
           result += ` -fn ${dict.filename}`;
         }
         if (dict.year) {
-          result += ` -y ${dict.year}`;
+          result += ` -y ${dict.year.min || ""}:${dict.year.max || ""}`+HistoryEntryToText.transformSubqueries(dict.year);
         }
         if (dict.month) {
-          result += ` -m ${dict.month}`;
+          result += ` -m ${dict.month.min || ""}:${dict.month.max || ""}`+HistoryEntryToText.transformSubqueries(dict.month);
         }
         if (dict.day) {
-          result += ` -d ${dict.day}`;
+          result += ` -d ${dict.day.min || ""}:${dict.day.max || ""}`+HistoryEntryToText.transformSubqueries(dict.day);
         }
         if (dict.weekday) {
           result += ` -wd ${dict.weekday}`;

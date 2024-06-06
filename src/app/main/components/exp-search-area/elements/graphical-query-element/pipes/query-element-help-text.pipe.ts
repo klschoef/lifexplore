@@ -17,19 +17,13 @@ export class QueryElementHelpTextPipe implements PipeTransform {
         };
       case QueryPartType.month:
         return {
-          helpText: 'Month (1-12)',
-          placeholder: '1',
-          type: 'number',
-          min: 1,
-          max: 12,
+          helpText: 'Month (1-12), 1+4 means 1-5',
+          placeholder: '1,1+,9-5,9+-2',
         };
       case QueryPartType.day:
         return {
-          helpText: 'Day (1-31)',
-          placeholder: '1',
-          type: 'number',
-          min: 1,
-          max: 31,
+          helpText: 'Day (1-31), 1+4 means 1-5',
+          placeholder: '1,1+,9-5,9+-5',
         };
       case QueryPartType.weekday:
         return {
@@ -81,11 +75,8 @@ export class QueryElementHelpTextPipe implements PipeTransform {
         };
       case QueryPartType.year:
         return {
-          helpText: 'Year (4 digits)',
-          placeholder: '2019',
-          type: 'number',
-          min: 0,
-          max: 9999,
+          helpText: 'Year (2024), 2019+1 = 2019-2020',
+          placeholder: '2019, 2019+1',
         };
       case QueryPartType.city:
         return {

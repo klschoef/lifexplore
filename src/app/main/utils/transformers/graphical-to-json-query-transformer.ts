@@ -60,13 +60,19 @@ export default class GraphicalToJsonQueryTransformer {
           queryObject.filename = queryPart.query ?? "";
           break;
         case QueryPartType.year:
-          queryObject.year = queryPart.query ?? "";
+          if (queryPart.query) {
+            queryObject.year = RangeValueUtil.parseRangeValues(queryPart.query)
+          }
           break;
         case QueryPartType.month:
-          queryObject.month = queryPart.query ?? "";
+          if (queryPart.query) {
+            queryObject.month = RangeValueUtil.parseRangeValues(queryPart.query)
+          }
           break;
         case QueryPartType.day:
-          queryObject.day = queryPart.query ?? "";
+          if (queryPart.query) {
+            queryObject.day = RangeValueUtil.parseRangeValues(queryPart.query)
+          }
           break;
         case QueryPartType.weekday:
           queryObject.weekday = queryPart.query ?? "";
