@@ -48,7 +48,7 @@ export class GraphicalQueryElementComponent {
 
   addQueryPart() {
     this.graphicalContentPart?.queryParts.push({
-      query_type: QueryPartType.clip,
+      query_type: QueryPartType.address,
       open_selection: true
     });
   }

@@ -21,6 +21,7 @@ export class GraphicalSearchAreaComponent {
         {
           query_type: this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.useGPTasDefault ? QueryPartType.gpt : QueryPartType.clip,
           query: "",
+          open_selection: true,
           subqueries: [
           ]
         }
