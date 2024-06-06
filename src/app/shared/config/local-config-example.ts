@@ -6,6 +6,7 @@ export class LocalConfig {
   public static config_NODE_SERVER_PORT = '8080';
 
   public static config_DATA_BASE_URL = 'http://extreme00.itec.aau.at/lifexplore/'; //'http://extreme00.itec.aau.at/lifexplore/';
+  public static config_DATA_BASE_URL_THUMBS = 'http://extreme00.itec.aau.at/lifexplore/thumbs/';
   public static config_USER = 'user';
   public static config_PASS = 'password';
 
