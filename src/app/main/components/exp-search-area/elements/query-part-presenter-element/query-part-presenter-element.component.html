@@ -10,7 +10,9 @@
       />
     </exp-popup>
     <div *ngIf="inputProperties?.helpText" class="query-value" [help]="inputProperties.helpText!">
-      <input [(ngModel)]="queryPart.query"
+      <input
+        #inputFieldWithHelp
+        [(ngModel)]="queryPart.query"
              [placeholder]="inputProperties.placeholder"
              [type]="inputProperties.type ?? 'text'"
              [min]="inputProperties.min"
@@ -20,7 +22,9 @@
       />
     </div>
     <div *ngIf="!inputProperties?.helpText" class="query-value">
-      <input [(ngModel)]="queryPart.query"
+      <input
+        #inputField
+        [(ngModel)]="queryPart.query"
              [placeholder]="inputProperties.placeholder"
              [type]="inputProperties.type ?? 'text'"
              [min]="inputProperties.min"

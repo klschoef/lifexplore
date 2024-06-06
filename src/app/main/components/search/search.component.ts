@@ -62,7 +62,10 @@ export class SearchComponent implements OnInit, OnDestroy {
       this.pages = Array.from({ length: (endPage - startPage) + 1 }, (_, i) => startPage + i);
     }),
     // add the base URL to the filepath, and return just the results
-    map((msg) => msg.results.map((result: any) => ({...result, originalFilepath: result.filepath, filepath: URLUtil.getKeyframeBaseUrl()+result.filepath}))),
+    map((msg) => msg.results.map((result: any) => ({...result, originalFilepath: result.filepath,
+      filepath: URLUtil.getKeyframeBaseUrl()+result.filepath,
+      thumbsFilepath: URLUtil.getKeyframeThumbsBaseUrl()+result.filepath
+    }))),
     tap((msg) => console.log("New results: ", msg))
   );
 

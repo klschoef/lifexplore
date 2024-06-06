@@ -13,7 +13,7 @@
          *ngFor="let result of results; let i = index"
          #resultElement
     >
-      <img src="{{result.filepath}}">
+      <img src="{{result.thumbsFilepath}}">
       <div *ngIf="data.selectedResult === result" class="selected-cover"></div>
       <div *ngIf="result.group !== undefined"
            class="group-tag"

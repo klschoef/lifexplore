@@ -42,7 +42,8 @@ export class DailySummaryL2ContainerComponent implements OnInit, OnDestroy {
     map((msg) => msg.results.map((result: any) => ({
       ...result,
       originalFilepath: result.filepath,
-      filepath: URLUtil.getKeyframeBaseUrl() + result.filepath
+      filepath: URLUtil.getKeyframeBaseUrl()+result.filepath,
+      thumbsFilepath: URLUtil.getKeyframeThumbsBaseUrl()+result.filepath
     }))),
   );
 

@@ -15,4 +15,8 @@ export default class URLUtil {
   static getKeyframeBaseUrl() {
     return GlobalConstants.keyframeBaseURL;
   }
+
+  static getKeyframeThumbsBaseUrl() {
+    return GlobalConstants.keyframeThumbsBaseURL;
+  }
 }

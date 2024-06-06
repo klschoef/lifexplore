@@ -64,6 +64,7 @@ export class GlobalConstants {
   public static dataHost = LocalConfig.config_DATA_BASE_URL;
 
   public static keyframeBaseURL: string = this.dataHost;
+  public static keyframeThumbsBaseURL: string = this.dataHost+'thumbs/';
 
   public static MAX_RESULTS_TO_DISPLAY = LocalConfig.config_MAX_RESULTS_TO_DISPLAY;
 }

@@ -3,6 +3,7 @@ expl-dialog {
   --padding: 16px;
   --app-modal-header-body-margin: 0 16px;
   --min-width: 50%;
+  --height: 100%;
 }
 
 .search-container {
@@ -40,7 +41,7 @@ expl-dialog {
   border-radius: 8px;
   //padding: 8px;
   margin-top: 16px;
-  max-height: 200px;
+  max-height: calc(100% - 60px);
   overflow: scroll;
 
   :nth-child(even) {
