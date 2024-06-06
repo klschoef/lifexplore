@@ -18,6 +18,7 @@ export class ShortcutService {
   public shiftKeyIsPressedSubject = new BehaviorSubject<boolean>(false);
   public isSPressed = new BehaviorSubject(false);
   public isFPressed = new BehaviorSubject(false);
+  public isGPressed = new BehaviorSubject(false);
   public isSAndShiftIsPressed = new BehaviorSubject(false);
   public isFAndShiftIsPressed = new BehaviorSubject(false);
   public isRAndShiftIsPressed = new BehaviorSubject(false);
@@ -36,7 +37,16 @@ export class ShortcutService {
   constructor(
     private resultPresenterService: ResultPresenterService,
     private settingsService: SettingsService
-  ) { }
+  ) {
+    this.isGPressed.subscribe((value) => {
+      if (value) {
+        this.settingsService.saveQuerySettings({
+          ...this.settingsService.getQuerySettings(),
+          useGPTasDefault: !(this.settingsService.getQuerySettings().useGPTasDefault ?? false)
+        })
+      }
+    });
+  }
 
   handleKeyboardEventUp(event: KeyboardEvent) {
     //console.log("event up", event);
@@ -57,6 +67,11 @@ export class ShortcutService {
     } else if (event.key === 'f') { // submit
       if (!this.isInputFocusedSubject.value) {
         this.isFPressed.next(false);
+        event.preventDefault();
+      }
+    } else if (event.key === 'g') { // submit
+      if (!this.isInputFocusedSubject.value) {
+        this.isGPressed.next(false);
         event.preventDefault();
       }
     } else if (event.key === 'd') { // submit
@@ -139,6 +154,11 @@ export class ShortcutService {
     } else if (event.key === 'f') { // submit
       if (!this.isInputFocusedSubject.value) {
         this.isFPressed.next(true);
+        event.preventDefault();
+      }
+    } else if (event.key === 'g') { // submit
+      if (!this.isInputFocusedSubject.value) {
+        this.isGPressed.next(true);
         event.preventDefault();
       }
     } else if (event.key === 's') { // submit
