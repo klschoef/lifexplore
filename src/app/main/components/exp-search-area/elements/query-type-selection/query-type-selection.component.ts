@@ -8,6 +8,7 @@ import {QueryPartType} from '../../models/query-part';
 })
 export class QueryTypeSelectionComponent {
   @Input() query_types: QueryPartType[] = Object.values(QueryPartType)
+    .sort((a, b) => a.localeCompare(b));
   @Input() selectedQueryType: QueryPartType = QueryPartType.objects;
 
   @Output() onSelectQueryType: EventEmitter<QueryPartType> = new EventEmitter<QueryPartType>();

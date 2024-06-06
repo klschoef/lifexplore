@@ -124,7 +124,7 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
   }
 
   clickOnReset(): void {
-    this.historyService.replaceHistory([]);
+    //this.historyService.replaceHistory([]);
     this.submissionLogService.clearSubmissionLog();
     window.location.reload();
   }

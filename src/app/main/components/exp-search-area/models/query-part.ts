@@ -45,4 +45,5 @@ export interface QueryPart {
   query_type: QueryPartType;
   query?: string;
   subqueries?: Subquery[];
+  open_selection?: boolean;
 }

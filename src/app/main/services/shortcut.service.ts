@@ -15,6 +15,7 @@ export class ShortcutService {
   public isInputFocusedSubject = new BehaviorSubject<boolean>(false);
   public lockEnter = new BehaviorSubject<boolean>(false);
   public isLockedEnterPressed = new BehaviorSubject<boolean>(false);
+  public isEnterPressed = new BehaviorSubject<boolean>(false);
   public shiftKeyIsPressedSubject = new BehaviorSubject<boolean>(false);
   public isSPressed = new BehaviorSubject(false);
   public isFPressed = new BehaviorSubject(false);
@@ -98,6 +99,7 @@ export class ShortcutService {
       this.isTabShiftPressed.next(false);
     } else if (event.code === 'Enter') {
       this.isLockedEnterPressed.next(false);
+      this.isEnterPressed.next(false);
     }
   }
 
@@ -118,6 +120,7 @@ export class ShortcutService {
     } else if (event.key === 'Enter' /*&& event.shiftKey*/) {
       if (!this.lockEnter.value) {
         this.resultPresenterService.triggerSearch$.next(true);
+        this.isEnterPressed.next(true);
       } else {
         this.isLockedEnterPressed.next(true);
       }
