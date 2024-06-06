@@ -38,6 +38,7 @@
     <app-default-result-container
       *ngIf="searchResultMode === HTMLSearchResultMode.DEFAULT"
       [results]="results"
+      [groupSize]="groupSize"
       [previousPageTrigger$]="previousPageTrigger$"
       [nextPageTrigger$]="nextPageTrigger$"
       [openPageTrigger$]="openPageTrigger$"

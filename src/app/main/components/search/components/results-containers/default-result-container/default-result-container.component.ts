@@ -26,6 +26,7 @@ export class DefaultResultContainerComponent implements OnInit, OnDestroy, After
   @Input() nextPageTrigger$ = new BehaviorSubject(undefined);
   @Input() openPageTrigger$ = new BehaviorSubject<number | undefined>(undefined);
   @Input() lockEscapeInParent$?: BehaviorSubject<boolean>;
+  @Input() groupSize?: number;
   openSelectedResultInDetail$ = new BehaviorSubject<boolean>(false);
   openNewResultTrigger$ = new BehaviorSubject(undefined);
   selectedResult$ = new BehaviorSubject<any>(undefined);
