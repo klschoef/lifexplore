@@ -24,6 +24,13 @@
     <li><b>-fn</b>&nbsp; <i>filename (or a part of it)</i></li>
   </ul>
 
+  <h4>Subfilters</h4>
+  Use subfilters to objects, concepts and places. Apply a subfilter with |subfilter-name:value You also can combine multiple subfilters, like -o person|score:0.9+|position:left,!right
+  <ul>
+    <li><b>score</b></li> Use it like -o person|score:0.9+ = score of at least 90%
+    <li><b>position</b></li> Use it like -p person|position:left,!right = person on the left but not on the right side (needs to be completely on the left side) (! is exclude)
+  </ul>
+
   <h4>Result Limits</h4>
   <ul>
     <li>Use <b>All Images</b> to display all available images for a query.</li>
