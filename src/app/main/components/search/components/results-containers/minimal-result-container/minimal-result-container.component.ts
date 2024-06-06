@@ -15,6 +15,7 @@ import {BehaviorSubject, filter, Subject, takeUntil, tap} from 'rxjs';
 import {ShortcutService} from '../../../../../services/shortcut.service';
 import {SubmissionLogService} from '../../../../../services/submission-log.service';
 import {ResultDetailComponentMode} from '../../result-detail/result-detail.component';
+import {VBSServerConnectionService} from '../../../../../services/vbsserver-connection.service';
 
 @Component({
   selector: 'app-minimal-result-container',
@@ -43,7 +44,8 @@ export class MinimalResultContainerComponent implements OnInit, OnDestroy, After
   constructor(
     private resultPresenterService: ResultPresenterService,
     public shortcutService: ShortcutService,
-    public submissionLogService: SubmissionLogService
+    public submissionLogService: SubmissionLogService,
+    public vbsServerConnectionService: VBSServerConnectionService
   ) {
   }
 
@@ -151,6 +153,16 @@ export class MinimalResultContainerComponent implements OnInit, OnDestroy, After
     ).subscribe((val) => {
       this.lockEscapeInParent$?.next(val);
     });
+
+    this.shortcutService.isFAndShiftIsPressed.pipe(
+      skip(1),
+      filter(isEscapePressed => !this.disableControls$.value && this.selectedResult$.value),
+      takeUntil(this.destroy$)
+    ).subscribe(isFPressed => {
+      if (isFPressed) {
+        this.submitImage(this.selectedResult$.value);
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -194,8 +206,20 @@ export class MinimalResultContainerComponent implements OnInit, OnDestroy, After
 
   clickResult(result: any) {
     console.log("result", result);
-    this.selectedResult$.next(result);
-    this.openCurrentDetail();
+    if (this.shortcutService.isFPressed.value && result.originalFilepath) {
+      this.submitImage(result);
+    } else {
+      this.selectedResult$.next(result);
+      this.openCurrentDetail();
+    }
+  }
+
+  submitImage(result: any) {
+    const filename = result.originalFilepath.split('/').pop()?.replace('.jpg', '');
+    if (filename) {
+      console.log("submit image", filename);
+      this.vbsServerConnectionService.submitImageID(filename);
+    }
   }
 
   openCurrentDetail() {

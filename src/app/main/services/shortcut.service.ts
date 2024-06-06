@@ -15,7 +15,9 @@ export class ShortcutService {
   public isInputFocusedSubject = new BehaviorSubject<boolean>(false);
   public shiftKeyIsPressedSubject = new BehaviorSubject<boolean>(false);
   public isSPressed = new BehaviorSubject(false);
+  public isFPressed = new BehaviorSubject(false);
   public isSAndShiftIsPressed = new BehaviorSubject(false);
+  public isFAndShiftIsPressed = new BehaviorSubject(false);
   public isZPressed = new BehaviorSubject(false);
   public isDPressed = new BehaviorSubject(false);
   public isDAndShiftPressed = new BehaviorSubject(false);
@@ -47,6 +49,11 @@ export class ShortcutService {
     } else if (event.key === 'z') { // submit
       if (!this.isInputFocusedSubject.value) {
         this.isZPressed.next(false);
+        event.preventDefault();
+      }
+    } else if (event.key === 'f') { // submit
+      if (!this.isInputFocusedSubject.value) {
+        this.isFPressed.next(false);
         event.preventDefault();
       }
     } else if (event.key === 'd') { // submit
@@ -120,6 +127,11 @@ export class ShortcutService {
         this.resultPresenterService.selectQuery$.next(true);
         event.preventDefault();
       }
+    } else if (event.key === 'f') { // submit
+      if (!this.isInputFocusedSubject.value) {
+        this.isFPressed.next(true);
+        event.preventDefault();
+      }
     } else if (event.key === 's') { // submit
       if (!this.isInputFocusedSubject.value) {
         this.isSPressed.next(true);
@@ -128,6 +140,11 @@ export class ShortcutService {
     } else if (event.key === 'S') { // submit
       if (!this.isInputFocusedSubject.value) {
         this.isSAndShiftIsPressed.next(true);
+        event.preventDefault();
+      }
+    } else if (event.key === 'F') { // submit
+      if (!this.isInputFocusedSubject.value) {
+        this.isFAndShiftIsPressed.next(true);
         event.preventDefault();
       }
     } else if (event.key === 'D') { // submit
@@ -188,11 +205,6 @@ export class ShortcutService {
         this.settingsService.setResultMode(this.settingsService.getResultMode() === SearchResultMode.DEFAULT ? SearchResultMode.MINIMAL : SearchResultMode.DEFAULT);
         event.preventDefault();
       }
-    } else if (event.key === 's') { // submit
-      if (!this.isInputFocusedSubject.value) {
-
-      }
-      // TODO: implement submit
     } else {
       if (!this.isInputFocusedSubject.value) {
         switch (event.key) { // go to page from 1 to 10 (0 is 10)

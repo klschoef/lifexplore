@@ -19,6 +19,21 @@
     flex: 1 1 250px;
     position: relative;
 
+    .fast-submit-mode {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: white;
+      padding: 4px;
+      margin: 8px;
+      opacity: 0.8;
+      font-weight: bolder;
+      font-size: 14px;
+      background-color: var(--exp-color-primary);
+    }
+
     &:hover {
       z-index: 2;
       transform: scale(1.05);
