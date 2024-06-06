@@ -73,6 +73,10 @@ export class SubmissionLogService {
     }
   }
 
+  public clearSubmissionLog() {
+    localStorage.setItem(this.localStorageKey, '{}');
+  }
+
   private saveTaskLogToLocalStorage(log: any) {
     try {
       const serializedLog = JSON.stringify(log);

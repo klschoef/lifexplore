@@ -9,6 +9,9 @@ import JsonToGraphicalQueryTransformer from '../../utils/transformers/json-to-gr
 import {filter, Subject, takeUntil} from 'rxjs';
 import {ResultPresenterService} from '../../services/result-presenter.service';
 import {Router} from '@angular/router';
+import {HistoryService} from '../../services/history.service';
+import {SubmissionLogService} from '../../services/submission-log.service';
+import {ShortcutService} from '../../services/shortcut.service';
 
 export enum ExpSearchAreaMode {
   TEXT = 'text',
@@ -49,7 +52,10 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
   constructor(
     private settingsService: SettingsService,
     public resultPresenterService: ResultPresenterService,
-    private router: Router
+    private router: Router,
+    private historyService: HistoryService,
+    private shortcutService: ShortcutService,
+    private submissionLogService: SubmissionLogService,
   ) {
   }
 
@@ -85,6 +91,15 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
         ).subscribe(() => {
           this.onSearchChange();
         });
+
+    this.shortcutService.isRAndShiftIsPressed.pipe(
+      skip(1),
+      takeUntil(this.destroy$)
+    ).subscribe(isRPressed => {
+      if (isRPressed) {
+        this.clickOnReset();
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -105,8 +120,9 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
   }
 
   clickOnReset(): void {
-    this.searchValue = "";
-    this.searchValueChange.emit(this.searchValue);
+    this.historyService.replaceHistory([]);
+    this.submissionLogService.clearSubmissionLog();
+    window.location.reload();
   }
 
   openHistory(): void {
