@@ -24,6 +24,7 @@ import {VBSServerConnectionService} from '../../../../../services/vbsserver-conn
 })
 export class MinimalResultContainerComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
   @Input() results: any[] = [];
+  @Input() groupSize?: number;
   @Input() localMode = false;
   @Input() previousPageTrigger$ = new BehaviorSubject(undefined);
   @Input() nextPageTrigger$ = new BehaviorSubject(undefined);

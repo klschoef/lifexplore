@@ -59,6 +59,7 @@ import { TaskTimePipe } from './main/components/exp-statusbar/pipes/task-time.pi
 import { SimilarityResultContainerComponent } from './main/components/search/components/result-detail/containers/similarity-result-container/similarity-result-container.component';
 import { QueryElementHelpTextPipe } from './main/components/exp-search-area/elements/graphical-query-element/pipes/query-element-help-text.pipe';
 import { DailySummaryL2ContainerComponent } from './main/components/search/components/result-detail/containers/daily-summary-l2-container/daily-summary-l2-container.component';
+import { IntToColorPipe } from './main/pipes/int-to-color.pipe';
 
 
 @NgModule({
@@ -102,7 +103,8 @@ import { DailySummaryL2ContainerComponent } from './main/components/search/compo
     TaskTimePipe,
     SimilarityResultContainerComponent,
     QueryElementHelpTextPipe,
-    DailySummaryL2ContainerComponent
+    DailySummaryL2ContainerComponent,
+    IntToColorPipe
   ],
   imports: [
     BrowserModule,

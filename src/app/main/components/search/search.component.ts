@@ -37,6 +37,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   nextPageTrigger$ = new BehaviorSubject(undefined);
   openPageTrigger$ = new BehaviorSubject<number | undefined>(undefined);
   destroy$ = new Subject<void>();
+  groupSize?: number;
 
   results$ = this.pythonServerService.receivedMessages.pipe(
     tap(msg => {
@@ -46,6 +47,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     }),
     filter((msg) => msg && msg.results && !msg.type && msg.requestId === this.requestId),
     tap((msg) => {
+      this.groupSize = msg.group_size;
       this.totalResults = msg.totalresults ?? 0;
       this.totalPages = Math.ceil(this.totalResults / (this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.resultsperpage ?? 50));
 

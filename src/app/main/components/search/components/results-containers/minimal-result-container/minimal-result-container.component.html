@@ -5,12 +5,20 @@
          [class.shift]="shortcutService.shiftKeyIsPressedSubject | async"
          [class.zoom]="data.selectedResult === result && (shortcutService.isZPressed | async)"
          [class.selected]="data.selectedResult === result"
+         [class.group-first]="result.group_first"
+         [class.group-last]="result.group_last"
+         [class.group-element]="result.group !== undefined"
+         [style.border-color]="result.group | intToColor"
          (click)="clickResult(result)"
          *ngFor="let result of results; let i = index"
          #resultElement
     >
       <img src="{{result.filepath}}">
       <div *ngIf="data.selectedResult === result" class="selected-cover"></div>
+      <div *ngIf="result.group !== undefined"
+           class="group-tag"
+           [style.background-color]="result.group | intToColor"
+      ></div>
       <div *ngIf="shortcutService.isFPressed | async" class="fast-submit-mode">Click to Submit</div>
       <app-submission-result-marker [result]="result"></app-submission-result-marker>
     </div>

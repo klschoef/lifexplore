@@ -45,6 +45,7 @@
     <app-minimal-result-container
       *ngIf="searchResultMode === HTMLSearchResultMode.MINIMAL"
       [results]="results"
+      [groupSize]="groupSize"
       [previousPageTrigger$]="previousPageTrigger$"
       [nextPageTrigger$]="nextPageTrigger$"
       [openPageTrigger$]="openPageTrigger$"

@@ -29,6 +29,40 @@
       background-color: var(--exp-color-primary);
     }
 
+    .group-tag {
+      position: absolute;
+      text-align: center;
+      color: var(--exp-color-primary);
+      padding: 4px;
+      font-weight: bolder;
+      border-radius: 50%;
+      top: 4px;
+      right: 4px;
+      opacity: 0.9;
+      width: 20px;
+      height: 20px;
+    }
+
+    &.group-element {
+      margin-top: 8px;
+      margin-bottom: 8px;
+      border: 4px solid var(--exp-color-primary);
+      border-left-style: none;
+      border-right-style: none;
+    }
+
+    &.group-first {
+      margin-left: 8px;
+      border-left-style: solid;
+      border-radius: 16px 0 0 16px;
+    }
+
+    &.group-last {
+      margin-right: 8px;
+      border-right-style: solid;
+      border-radius: 0 16px 16px 0;
+    }
+
     &:hover {
       z-index: 2;
       transform: scale(1.05);
