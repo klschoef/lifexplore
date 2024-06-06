@@ -16,6 +16,7 @@
              [min]="inputProperties.min"
               [max]="inputProperties.max"
               [step]="inputProperties.step"
+             style="{{(inputProperties.type === 'text' || inputProperties.type === undefined) ? 'width: 100%;': 'width: auto;'}}"
       />
     </div>
     <div *ngIf="!inputProperties?.helpText" class="query-value">
@@ -25,6 +26,7 @@
              [min]="inputProperties.min"
              [max]="inputProperties.max"
              [step]="inputProperties.step"
+             style="{{(inputProperties.type === 'text' || inputProperties.type === undefined) ? 'width: 100%': 'width; auto;'}}"
       />
     </div>
     <div class="query-delete">
