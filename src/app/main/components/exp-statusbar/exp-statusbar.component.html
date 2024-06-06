@@ -9,7 +9,7 @@
       <div class="success" *ngIf="{val: submissionLogSuccessCount$ | async } as data">{{ data.val ?? 0 }}</div>
       <div class="pending" *ngIf="{val: submissionLogPendingCount$ | async } as data">{{ data.val ?? 0 }}</div>
       <div class="wrong" *ngIf="{val: submissionLogWrongCount$ | async } as data">{{ data.val ?? 0 }}</div>
-      <div class="request-failure" *ngIf="{val: submissionLogRequestFailureCount$ | async } as data">{{ data.val ?? 0 }}</div>
+      <div class="request-failure animate__animated" *ngIf="{val: submissionLogRequestFailureCount$ | async } as data">{{ data.val ?? 0 }}</div>
     </div>
     <div *ngIf="currentTaskState$ | async as task" class="task-info">
       <div>{{ task.timeLeft | taskTime }}</div>
@@ -18,7 +18,10 @@
   </div>
   <div class="submit-container" help="QA-Answer">
     Topic Answer
-    <input #topicInput class="exp-textfield" type="text">
+    <input #topicInput class="exp-textfield" type="text"
+           placeholder="QA Answer"
+           (focusin)="focusTopicInput(true)"
+           (focusout)="focusTopicInput(false)" >
     <button class="green exp-hover-scale" (click)="submitTopic(topicInput)">Submit</button>
   </div>
 </div>

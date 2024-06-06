@@ -13,6 +13,8 @@ import {BehaviorSubject} from 'rxjs';
 export class ShortcutService {
 
   public isInputFocusedSubject = new BehaviorSubject<boolean>(false);
+  public lockEnter = new BehaviorSubject<boolean>(false);
+  public isLockedEnterPressed = new BehaviorSubject<boolean>(false);
   public shiftKeyIsPressedSubject = new BehaviorSubject<boolean>(false);
   public isSPressed = new BehaviorSubject(false);
   public isFPressed = new BehaviorSubject(false);
@@ -78,6 +80,8 @@ export class ShortcutService {
       this.isTabPressed.next(false);
     } else if (event.code === 'Tab' && event.shiftKey) {
       this.isTabShiftPressed.next(false);
+    } else if (event.code === 'Enter') {
+      this.isLockedEnterPressed.next(false);
     }
   }
 
@@ -96,7 +100,11 @@ export class ShortcutService {
         this.isArrowRightPressed.next(true);
       }
     } else if (event.key === 'Enter' /*&& event.shiftKey*/) {
-      this.resultPresenterService.triggerSearch$.next(true);
+      if (!this.lockEnter.value) {
+        this.resultPresenterService.triggerSearch$.next(true);
+      } else {
+        this.isLockedEnterPressed.next(true);
+      }
       //this.resultPresenterService.search$.next(true);
     } else if (event.key === 'Tab' && event.shiftKey) {
       this.isTabShiftPressed.next(true);

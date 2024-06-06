@@ -1,18 +1,19 @@
-import { Component } from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {WSServerStatus} from '../../../shared/config/global-constants';
 import {PythonServerService} from '../../services/pythonserver.service';
 import {VBSServerConnectionService} from '../../services/vbsserver-connection.service';
 import {SubmissionLogService} from '../../services/submission-log.service';
 import {map} from 'rxjs/operators';
-import {combineLatest, filter, switchMap, tap} from 'rxjs';
+import {combineLatest, filter, Subject, switchMap, takeUntil, tap} from 'rxjs';
 import {GlobalConstantsService} from '../../../shared/config/services/global-constants.service';
+import {ShortcutService} from '../../services/shortcut.service';
 
 @Component({
   selector: 'exp-statusbar',
   templateUrl: './exp-statusbar.component.html',
   styleUrls: ['./exp-statusbar.component.scss']
 })
-export class ExpStatusbarComponent {
+export class ExpStatusbarComponent implements OnInit, OnDestroy {
 
     protected readonly WSServerStatus = WSServerStatus;
     dresUser = this.globalConstants.configUSER;
@@ -45,20 +46,50 @@ export class ExpStatusbarComponent {
     map(log => log.filter((entry: any) => entry.requestError).length)
   );
 
+  destroy$ = new Subject<void>();
+  @ViewChild('topicInput') topicInput!: ElementRef;
+
     constructor(
       private globalConstants: GlobalConstantsService,
       public pythonServerService: PythonServerService,
       public vbsServerConnectionService: VBSServerConnectionService,
-      private submissionLogService: SubmissionLogService
+      private submissionLogService: SubmissionLogService,
+      private shortcutService: ShortcutService
     ) { }
+
+  ngOnInit() {
+      this.shortcutService.isLockedEnterPressed.pipe(
+          tap(value => {
+              if (value) {
+                this.submitTopic(this.topicInput.nativeElement);
+                this.focusTopicInput(false);
+              }
+          }),
+          takeUntil(this.destroy$)
+      ).subscribe();
+  }
+
+  ngOnDestroy() {
+      this.destroy$.next();
+      this.destroy$.complete();
+  }
 
   changeEvaluation(event: any) {
       this.vbsServerConnectionService.changeAndSaveSelectedEvaluation(event.target.value);
   }
 
+  focusTopicInput(value: boolean) {
+      console.log('focusTopicInput', value);
+      this.shortcutService.lockEnter.next(value);
+  }
+
   submitTopic(topicInput:any ) {
+      console.log("submitTopic", topicInput);
       const inputVal = topicInput.value;
+      console.log("submit value", inputVal);
       this.vbsServerConnectionService.submitText(inputVal);
-      // this.vbsServerConnectionService.submitTopic(topicInput);
+
+      this.topicInput.nativeElement.value = '';
+      this.topicInput.nativeElement.blur();
   }
 }
