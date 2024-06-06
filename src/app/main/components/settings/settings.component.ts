@@ -23,6 +23,14 @@ export class SettingsComponent {
     map((settings) => settings[SettingsService.LOCAL_MAP_SETTINGS]?.defaultZoom ?? 10),
   );
 
+  filterQueryWidth$ = this.settingsService.settings$.pipe(
+    map((settings) => settings[SettingsService.LOCAL_MISC_SETTINGS]?.filterQueryWidth ?? 300),
+  );
+
+  showTaskInfo$ = this.settingsService.settings$.pipe(
+    map((settings) => settings[SettingsService.LOCAL_MISC_SETTINGS]?.showTaskInfo ?? true),
+  );
+
   constructor(
     private settingsService: SettingsService) {
   }
@@ -32,5 +40,17 @@ export class SettingsComponent {
       ...this.settingsService.getMapSettings(),
       defaultZoom: event.target.value
     })
+  }
+
+  changeFilterQueryWidth(event: any) {
+    this.settingsService.addToSettingsEntry({
+      filterQueryWidth: event.target.value
+    }, SettingsService.LOCAL_MISC_SETTINGS);
+  }
+
+  changeShowTaskInfo(event: any) {
+    this.settingsService.addToSettingsEntry({
+      showTaskInfo: event.target.checked
+    }, SettingsService.LOCAL_MISC_SETTINGS);
   }
 }

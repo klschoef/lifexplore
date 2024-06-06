@@ -13,6 +13,7 @@ export class SettingsService {
   static LOCAL_STORAGE_SETTINGS = 'settings';
   static LOCAL_QUERY_SETTINGS = 'querySettings';
   static LOCAL_MAP_SETTINGS = 'mapSettings';
+  static LOCAL_MISC_SETTINGS = 'miscSettings';
   static LOCAL_SELECTED_EVALUATION = 'selectedEvaluation';
   settings$ = new BehaviorSubject<any>({});
 
@@ -79,6 +80,16 @@ export class SettingsService {
     this.setSettings({
       ...this.settings$.getValue() ?? {},
       mapSettings: mapSettings
+    })
+  }
+
+  addToSettingsEntry(addedParts: any, settingsEntryKey: string) {
+    this.setSettings({
+      ...this.settings$.getValue() ?? {},
+      [settingsEntryKey]: {
+        ...this.settings$.getValue()[settingsEntryKey] ?? {},
+        ...addedParts
+      }
     })
   }
 }

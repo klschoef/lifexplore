@@ -1,4 +1,6 @@
-<div class="graphical-query-element">
+<div *ngIf="{width: filterQueryWidth$ | async} as data"
+     class="graphical-query-element"
+     [style.max-width.px]="data.width" [style.min-width.px]="data.width">
   <div class="header-element">
     <div class="movement">
       <mat-icon [ngClass]="{'exp-clickable exp-hover-scale': canMoveBackward, 'disabled': !canMoveBackward}" (click)="clickMoveBackward()" aria-hidden="false" fontIcon="arrow_back"></mat-icon>

@@ -7,6 +7,7 @@ import {map} from 'rxjs/operators';
 import {combineLatest, filter, Subject, switchMap, takeUntil, tap} from 'rxjs';
 import {GlobalConstantsService} from '../../../shared/config/services/global-constants.service';
 import {ShortcutService} from '../../services/shortcut.service';
+import {SettingsService} from '../../services/settings.service';
 
 @Component({
   selector: 'exp-statusbar',
@@ -46,6 +47,10 @@ export class ExpStatusbarComponent implements OnInit, OnDestroy {
     map(log => log.filter((entry: any) => entry.requestError).length)
   );
 
+  showTaskInfo$ = this.settingsService.settings$.pipe(
+    map((settings) => settings[SettingsService.LOCAL_MISC_SETTINGS]?.showTaskInfo ?? true),
+  );
+
   destroy$ = new Subject<void>();
   @ViewChild('topicInput') topicInput!: ElementRef;
 
@@ -54,7 +59,8 @@ export class ExpStatusbarComponent implements OnInit, OnDestroy {
       public pythonServerService: PythonServerService,
       public vbsServerConnectionService: VBSServerConnectionService,
       private submissionLogService: SubmissionLogService,
-      private shortcutService: ShortcutService
+      private shortcutService: ShortcutService,
+      private settingsService: SettingsService
     ) { }
 
   ngOnInit() {
