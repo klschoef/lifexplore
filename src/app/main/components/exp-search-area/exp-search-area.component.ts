@@ -32,6 +32,10 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
   @ViewChild('textInput') textInput: any;
   @ViewChild('searchButton') searchButton: any;
 
+  useGPTasDefault$ = this.settingsService.settings$.pipe(
+    map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.useGPTasDefault ?? false)
+  );
+
   destroy$ = new Subject();
   searchAreaMode$ = this.settingsService.settings$.pipe(
     map((settings) => settings.searchAreaMode ?? ExpSearchAreaMode.GRAPHICAL),
@@ -40,7 +44,7 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
     {
       queryParts: [
         {
-          query_type: QueryPartType.clip,
+          query_type: this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.useGPTasDefault ? QueryPartType.gpt : QueryPartType.clip,
           query: "",
           subqueries: [
           ]

@@ -73,6 +73,9 @@ export class TuningDialogComponent {
       return newL2Type;
     })
   );
+  useGPTasDefault$ = this.settingsService.settings$.pipe(
+    map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.useGPTasDefault ?? false),
+  );
 
   constructor(
     private settingsService: SettingsService
@@ -161,6 +164,13 @@ export class TuningDialogComponent {
     this.settingsService.saveQuerySettings({
       ...this.settingsService.getQuerySettings(),
       solrPageSize: event.target.valueAsNumber
+    })
+  }
+
+  onChangeUseGPTasDefault(event: any) {
+    this.settingsService.saveQuerySettings({
+      ...this.settingsService.getQuerySettings(),
+      useGPTasDefault: event.target.checked
     })
   }
 }

@@ -1,6 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {GraphicalContentPart} from '../../../../models/graphical-content-part';
 import {QueryPartType} from '../../models/query-part';
+import {SettingsService} from '../../../../services/settings.service';
 
 @Component({
   selector: 'exp-graphical-search-area',
@@ -10,11 +11,15 @@ import {QueryPartType} from '../../models/query-part';
 export class GraphicalSearchAreaComponent {
   @Input() graphicalContent: GraphicalContentPart[] = [];
 
+  constructor(
+    private settingsService: SettingsService) {
+  }
+
   addGraphicalContentPart() {
     this.graphicalContent.push({
       queryParts: [
         {
-          query_type: QueryPartType.clip,
+          query_type: this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.useGPTasDefault ? QueryPartType.gpt : QueryPartType.clip,
           query: "",
           subqueries: [
           ]

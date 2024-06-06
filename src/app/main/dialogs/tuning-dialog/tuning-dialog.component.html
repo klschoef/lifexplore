@@ -22,4 +22,5 @@
   SOLR Page Size: <input type="number" [ngModel]="solrPageSize$ | async" (change)="onChangeSolrPageSize($event)"><br>
   <h3>Others</h3>
   Daily Summary L2Dist: <input type="number" [ngModel]="dailySummaryL2$ | async" (change)="onChangeDailySummaryL2($event)"><br>
+  Use GPT as Default: <input type="checkbox" [ngModel]="useGPTasDefault$ | async" (change)="onChangeUseGPTasDefault($event)">
 </expl-dialog>

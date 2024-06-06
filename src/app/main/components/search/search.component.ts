@@ -180,6 +180,7 @@ export class SearchComponent implements OnInit, OnDestroy {
         version: 2,
         clientId: "direct",
         query: value,
+        useGPTasDefault: this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.useGPTasDefault,
         query_dicts: objectValues,
         maxresults: 2000,
         resultsperpage: this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.resultsperpage ?? 50,

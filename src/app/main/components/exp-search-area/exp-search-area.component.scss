@@ -22,6 +22,30 @@
     color: rgba(29,30,33,1);
     padding: 0 8px;
     flex-grow: 1;
+    position: relative;
+
+    @keyframes pulse-animation {
+      0%, 100% {
+        transform: scale(1) rotate(-45deg);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.2) rotate(-45deg);
+        opacity: 0.9;
+      }
+    }
+
+    .gpt-or-clip-tag {
+      position: absolute;
+      top: -10px;
+      left: -15px;
+      padding: 4px;
+      border-radius: 8px;
+      background: var(--exp-color-secondary);
+      transform: rotate(-45deg);
+      font-size: 12px;
+      animation: pulse-animation 2s infinite;
+    }
 
     mat-icon {
       width: 30px;
