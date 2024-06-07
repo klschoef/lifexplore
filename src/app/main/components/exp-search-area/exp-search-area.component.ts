@@ -105,7 +105,6 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
         filter(val => val),
         takeUntil(this.destroy$)
         ).subscribe(() => {
-          console.log("SEARCH 1: trigger search")
           this.onSearchChange();
         });
 
@@ -139,7 +138,6 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
   onSearchChange(): void {
     switch (this.settingsService.settings$.getValue().searchAreaMode) {
       case ExpSearchAreaMode.TEXT:
-        console.log("SEARCH 1: onSearchChange Text")
         this.onSearch.emit(this.searchValue);
         this.resultPresenterService.focusQuery$.next(false);
         break;
