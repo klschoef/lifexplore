@@ -213,8 +213,10 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
     }
     this.resultPresenterService.showHistory$.next(!this.resultPresenterService.showHistory$.value);
     this.settingsService.saveQuerySettings({
+      ...this.settingsService.getQuerySettings(),
       useGPTasDefault: item.useGPTasDefault ?? false,
       firstPerDay: item.firstPerDay ?? false,
+      l2dist: item.l2dist,
     });
     this.onSearchChange();
   }
