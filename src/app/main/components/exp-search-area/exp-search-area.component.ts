@@ -123,6 +123,12 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
     }
   }
 
+  changeGPTAsDefault() {
+    this.settingsService.saveQuerySettings({
+      useGPTasDefault: !(this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.useGPTasDefault ?? false)
+    });
+  }
+
   clickOnReset(): void {
     //this.historyService.replaceHistory([]);
     this.submissionLogService.clearSubmissionLog();

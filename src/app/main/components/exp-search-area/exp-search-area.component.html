@@ -6,7 +6,7 @@
     <ng-container *ngIf="{useGPTasDefault: useGPTasDefault$ | async} as data">
       <ng-container *ngIf="searchAreaMode$ | async as mode">
       <div *ngIf="mode === ExpSearchAreaMode.TEXT" class="search-container animate__animated animate__fadeIn animate__delay-0.3s">
-        <div class="gpt-or-clip-tag" help="g">{{ data.useGPTasDefault ? 'GPT' : 'CLIP' }}</div>
+        <div class="exp-clickable gpt-or-clip-tag" help="g" (click)="changeGPTAsDefault()">{{ data.useGPTasDefault ? 'GPT' : 'CLIP' }}</div>
         <mat-icon aria-hidden="false" fontIcon="search"></mat-icon>
         <input #textInput
                [(ngModel)]="searchValue"
