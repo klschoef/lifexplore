@@ -24,7 +24,6 @@
                [(ngModel)]="searchValue"
                (focusout)="focusOutTextInput($event)"
                (focusin)="focusInTextInput($event)"
-               (keydown.enter)="onSearchChange()"
                type="text" class="exp-textfield"
                placeholder="{{ data.useGPTasDefault ? 'GPT' : 'CLIP' }} Search ... Example1: {{data.useGPTasDefault ? 'drinking coffee:3 sky!' : 'drinking coffee'}} {{textCommandPrefix.value}}y 2020 {{textCommandPrefix.value}}m 06 {{textCommandPrefix.value}}d 22+-2 {{textCommandPrefix.value}}t costa, Example2: drinking coffee < driving car"/>
       </div>

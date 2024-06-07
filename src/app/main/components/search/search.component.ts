@@ -158,23 +158,26 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   onSearch(value: string): void {
+    console.log("SEARCH 1: on search");
     this.currentPage = 1;
     this.performTextQuery(value, []);
   }
 
   onSearchObject(value: ObjectQuery[]): void {
     this.currentPage = 1;
+    console.log("SEARCH 1: on search object");
     this.performTextQuery("", value);
   }
 
   loadPage(page: number) {
     this.currentPage = page;
+    console.log("SEARCH 1: load page");
     this.performTextQuery(this.lastValue, this.lastObjectValue, true);
   }
 
   performTextQuery(value?: string, objectValues?: ObjectQuery[], pageSwitch=false): void {
     if (this.pythonServerService.connectionState === WSServerStatus.CONNECTED) {
-
+      console.log("SEARCH 1: ", value, objectValues);
       this.requestId = Math.random().toString(36).substring(7);
       const queryBaseURL = URLUtil.getBaseURL();
 
