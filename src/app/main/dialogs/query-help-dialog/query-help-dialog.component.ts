@@ -1,4 +1,7 @@
 import {Component, EventEmitter, Output} from '@angular/core';
+import {map} from 'rxjs/operators';
+import {SettingsService} from '../../services/settings.service';
+import {filter} from 'rxjs';
 
 @Component({
   selector: 'lx-query-help-dialog',
@@ -7,4 +10,11 @@ import {Component, EventEmitter, Output} from '@angular/core';
 })
 export class QueryHelpDialogComponent {
   @Output() clickOnClose: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+  textCommandPrefix$ = this.settingsService.settings$.pipe(
+    map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.textCommandPrefix ?? '-'),
+    filter((res) => res !== undefined),
+  );
+
+  constructor(private settingsService: SettingsService) {
+  }
 }

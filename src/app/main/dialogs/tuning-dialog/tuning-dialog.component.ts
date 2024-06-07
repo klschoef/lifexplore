@@ -2,6 +2,7 @@ import {Component, EventEmitter, Output} from '@angular/core';
 import {SettingsService} from '../../services/settings.service';
 import {map} from 'rxjs/operators';
 import {filter} from 'rxjs';
+import {ShortcutService} from '../../services/shortcut.service';
 
 enum TuningL2Type {
   NONE = 'None',
@@ -63,6 +64,10 @@ export class TuningDialogComponent {
     map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.solrPageSize ?? 5000),
     filter((res) => res !== undefined),
   );
+  textCommandPrefix$ = this.settingsService.settings$.pipe(
+    map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.textCommandPrefix ?? '-'),
+    filter((res) => res !== undefined),
+  );
   currentL2Type$ = this.settingsService.settings$.pipe(
     map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.l2dist),
     map((l2dist) => {
@@ -84,7 +89,8 @@ export class TuningDialogComponent {
   );
 
   constructor(
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    public shortcutService: ShortcutService,
   ) {
   }
 
@@ -191,6 +197,13 @@ export class TuningDialogComponent {
     this.settingsService.saveQuerySettings({
       ...this.settingsService.getQuerySettings(),
       temporalDBPrefetchPageSize: event.target.valueAsNumber
+    })
+  }
+
+  onChangeTextCommandPrefix(event: any) {
+    this.settingsService.saveQuerySettings({
+      ...this.settingsService.getQuerySettings(),
+      textCommandPrefix: event.target.value
     })
   }
 }

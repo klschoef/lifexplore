@@ -25,5 +25,9 @@
   Temporal Prefetch Page Size: <input type="number" [ngModel]="temporalDBPrefetchPageSize$ | async" (change)="onChangeTemporalDBPrefetchPageSize($event)">
   <h3>Others</h3>
   Daily Summary L2Dist: <input type="number" [ngModel]="dailySummaryL2$ | async" (change)="onChangeDailySummaryL2($event)"><br>
-  Use GPT as Default: <input type="checkbox" [ngModel]="useGPTasDefault$ | async" (change)="onChangeUseGPTasDefault($event)">
+  Use GPT as Default: <input type="checkbox" [ngModel]="useGPTasDefault$ | async" (change)="onChangeUseGPTasDefault($event)"><br>
+  <h3>Expert</h3>
+  <div help="Can be dangerous!: press and hold 'l' to edit">
+    Text Command Prefix: <input type="text" [maxlength]="1" [minlength]="0" [disabled]="!((shortcutService.isLPressed | async) ?? false)" [ngModel]="textCommandPrefix$ | async" (change)="onChangeTextCommandPrefix($event)">
+  </div>
 </expl-dialog>

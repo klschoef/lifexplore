@@ -184,6 +184,7 @@ export class SearchComponent implements OnInit, OnDestroy {
         type: "textquery",
         version: 2,
         clientId: "direct",
+        textCommandPrefix: this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.textCommandPrefix ?? '-',
         query: value,
         useGPTasDefault: this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.useGPTasDefault,
         temporalPrefetchMode: this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.temporalPrefetchMode ?? true,

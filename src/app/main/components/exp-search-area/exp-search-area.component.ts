@@ -58,6 +58,11 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
     filter((l2dist) => l2dist !== undefined),
   );
 
+  textCommandPrefix$ = this.settingsService.settings$.pipe(
+    map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.textCommandPrefix ?? '-'),
+    filter((res) => res !== undefined),
+  );
+
   constructor(
     private settingsService: SettingsService,
     public resultPresenterService: ResultPresenterService,
@@ -164,6 +169,10 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
     this.settingsService.saveQuerySettings({
       ...this.settingsService.getQuerySettings(),
       temporalDBPrefetchPageSize: 5000
+    })
+    this.settingsService.saveQuerySettings({
+      ...this.settingsService.getQuerySettings(),
+      textCommandPrefix: "-"
     })
     window.location.reload();
   }

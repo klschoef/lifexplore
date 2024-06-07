@@ -19,7 +19,7 @@ export class HistoryEntryToText {
     return value.query_dicts && value.query_dicts.length > 0;
   }
 
-  static transform(value: any): string {
+  static transform(value: any, textCommandPrefix: string): string {
     console.log("value", value);
     let query = value.query;
 
@@ -30,55 +30,55 @@ export class HistoryEntryToText {
           result += ` ${dict.clip.query+HistoryEntryToText.transformSubqueries(dict.clip)}`;
         }
         if (dict.objects && dict.objects.length > 0) {
-          result += ` /o ${dict.objects.map((obj: any) => obj.query+HistoryEntryToText.transformSubqueries(obj)).join(" ")}`;
+          result += ` ${textCommandPrefix}o ${dict.objects.map((obj: any) => obj.query+HistoryEntryToText.transformSubqueries(obj)).join(" ")}`;
         }
         if (dict.concepts && dict.concepts.length > 0) {
-          result += ` /c ${dict.concepts.map((obj: any) => obj.query+HistoryEntryToText.transformSubqueries(obj)).join(" ")}`;
+          result += ` ${textCommandPrefix}c ${dict.concepts.map((obj: any) => obj.query+HistoryEntryToText.transformSubqueries(obj)).join(" ")}`;
         }
         if (dict.locations && dict.locations.length > 0) {
-          result += ` /l ${dict.locations.map((obj: any) => obj.query+HistoryEntryToText.transformSubqueries(obj)).join(" ")}`;
+          result += ` ${textCommandPrefix}l ${dict.locations.map((obj: any) => obj.query+HistoryEntryToText.transformSubqueries(obj)).join(" ")}`;
         }
         if (dict.places && dict.places.length > 0) {
-          result += ` /p ${dict.places.map((obj: any) => obj.query+HistoryEntryToText.transformSubqueries(obj)).join(" ")}`;
+          result += ` ${textCommandPrefix}p ${dict.places.map((obj: any) => obj.query+HistoryEntryToText.transformSubqueries(obj)).join(" ")}`;
         }
         if (dict.texts && dict.texts.length > 0) {
-          result += ` /t ${dict.texts.map((obj: any) => obj.query+HistoryEntryToText.transformSubqueries(obj)).join(" ")}`;
+          result += ` ${textCommandPrefix}t ${dict.texts.map((obj: any) => obj.query+HistoryEntryToText.transformSubqueries(obj)).join(" ")}`;
         }
         if (dict.heart_rate && (dict.heart_rate.min || dict.heart_rate.max)) {
-          result += ` /h ${dict.heart_rate.min || ""}:${dict.heart_rate.max || ""}`+HistoryEntryToText.transformSubqueries(dict.heart_rate);
+          result += ` ${textCommandPrefix}h ${dict.heart_rate.min || ""}:${dict.heart_rate.max || ""}`+HistoryEntryToText.transformSubqueries(dict.heart_rate);
         }
         if (dict.hour && (dict.hour.min || dict.hour.max)) {
-          result += ` /hr ${dict.hour.min || ""}:${dict.hour.max || ""}`+HistoryEntryToText.transformSubqueries(dict.hour);
+          result += ` ${textCommandPrefix}hr ${dict.hour.min || ""}:${dict.hour.max || ""}`+HistoryEntryToText.transformSubqueries(dict.hour);
         }
         if (dict.filename) {
-          result += ` /fn ${dict.filename}`;
+          result += ` ${textCommandPrefix}fn ${dict.filename}`;
         }
         if (dict.year) {
-          result += ` /y ${dict.year.min || ""}:${dict.year.max || ""}`+HistoryEntryToText.transformSubqueries(dict.year);
+          result += ` ${textCommandPrefix}y ${dict.year.min || ""}:${dict.year.max || ""}`+HistoryEntryToText.transformSubqueries(dict.year);
         }
         if (dict.month) {
-          result += ` /m ${dict.month.min || ""}:${dict.month.max || ""}`+HistoryEntryToText.transformSubqueries(dict.month);
+          result += ` ${textCommandPrefix}m ${dict.month.min || ""}:${dict.month.max || ""}`+HistoryEntryToText.transformSubqueries(dict.month);
         }
         if (dict.day) {
-          result += ` /d ${dict.day.min || ""}:${dict.day.max || ""}`+HistoryEntryToText.transformSubqueries(dict.day);
+          result += ` ${textCommandPrefix}d ${dict.day.min || ""}:${dict.day.max || ""}`+HistoryEntryToText.transformSubqueries(dict.day);
         }
         if (dict.weekday) {
-          result += ` /wd ${dict.weekday}`;
+          result += ` ${textCommandPrefix}wd ${dict.weekday}`;
         }
         if (dict.address) {
-          result += ` /a ${dict.address}`;
+          result += ` ${textCommandPrefix}a ${dict.address}`;
         }
         if (dict.country) {
-          result += ` /co ${dict.country}`;
+          result += ` ${textCommandPrefix}co ${dict.country}`;
         }
         if (dict.gptr) {
-          result += ` /gptr ${dict.gptr}`;
+          result += ` ${textCommandPrefix}gptr ${dict.gptr}`;
         }
         if (dict.gptra) {
-          result += ` /gptra ${dict.gptra}`;
+          result += ` ${textCommandPrefix}gptra ${dict.gptra}`;
         }
         if (dict.gpt) {
-          result += ` /gpt ${dict.gpt}`;
+          result += ` ${textCommandPrefix}gpt ${dict.gpt}`;
         }
         return result;
       }).join(" < ");
