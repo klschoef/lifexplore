@@ -45,10 +45,10 @@ export class HistoryEntryToText {
           result += ` ${textCommandPrefix}t ${dict.texts.map((obj: any) => obj.query+HistoryEntryToText.transformSubqueries(obj)).join(" ")}`;
         }
         if (dict.heart_rate && (dict.heart_rate.min || dict.heart_rate.max)) {
-          result += ` ${textCommandPrefix}h ${dict.heart_rate.min || ""}:${dict.heart_rate.max || ""}`+HistoryEntryToText.transformSubqueries(dict.heart_rate);
+          result += ` ${textCommandPrefix}hr ${dict.heart_rate.min || ""}:${dict.heart_rate.max || ""}`+HistoryEntryToText.transformSubqueries(dict.heart_rate);
         }
         if (dict.hour && (dict.hour.min || dict.hour.max)) {
-          result += ` ${textCommandPrefix}hr ${dict.hour.min || ""}:${dict.hour.max || ""}`+HistoryEntryToText.transformSubqueries(dict.hour);
+          result += ` ${textCommandPrefix}h ${dict.hour.min || ""}:${dict.hour.max || ""}`+HistoryEntryToText.transformSubqueries(dict.hour);
         }
         if (dict.filename) {
           result += ` ${textCommandPrefix}fn ${dict.filename}`;

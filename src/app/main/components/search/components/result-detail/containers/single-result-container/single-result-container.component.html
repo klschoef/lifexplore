@@ -14,6 +14,10 @@
     <ng-container *ngIf="result.gpt_description?.referenced_by as referencedBy">
       <strong>GPT Referenced By:</strong> {{referencedBy}}<br>
     </ng-container>
+    <div *ngIf="result.heart_rate" class="heart-rate-container">
+      <mat-icon fontIcon="favorite" style="color: red; animation: pulseAnimation {{60/result.heart_rate}}s infinite;"></mat-icon>
+      {{result.heart_rate}}
+    </div>
     <strong>MSCaption:</strong> {{result.mscaption}}<br>
     <strong>Filepath:</strong> {{result.filepath}}<br>
     <strong>Coordinates:</strong> {{result.location?.coordinates}}<br>

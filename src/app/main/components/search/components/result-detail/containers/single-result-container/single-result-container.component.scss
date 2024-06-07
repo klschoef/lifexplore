@@ -16,4 +16,11 @@
     word-break: break-all;
     margin-right: 8px;
   }
+
+  .heart-rate-container {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    align-items: center;
+  }
 }

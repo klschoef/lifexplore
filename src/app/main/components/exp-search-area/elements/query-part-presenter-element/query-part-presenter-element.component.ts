@@ -59,6 +59,7 @@ export class QueryPartPresenterElementComponent implements OnChanges, OnInit, On
     if (changes['queryPart']) {
       if (this.queryPart.open_selection) {
         this.openTypeSelection$.next(true);
+        this.queryPart.open_selection = false;
       }
     }
   }

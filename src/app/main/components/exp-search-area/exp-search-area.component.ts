@@ -32,6 +32,8 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
   @ViewChild('textInput') textInput: any;
   @ViewChild('searchButton') searchButton: any;
 
+  HTMLSearchAreaMode = ExpSearchAreaMode;
+
   useGPTasDefault$ = this.settingsService.settings$.pipe(
     map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.useGPTasDefault ?? false)
   );
@@ -147,6 +149,7 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
 
   changeGPTAsDefault() {
     this.settingsService.saveQuerySettings({
+      ...this.settingsService.getQuerySettings(),
       useGPTasDefault: !(this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.useGPTasDefault ?? false)
     });
   }
@@ -209,6 +212,10 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
       this.searchValueChange.emit(this.searchValue);
     }
     this.resultPresenterService.showHistory$.next(!this.resultPresenterService.showHistory$.value);
+    this.settingsService.saveQuerySettings({
+      useGPTasDefault: item.useGPTasDefault ?? false,
+      firstPerDay: item.firstPerDay ?? false,
+    });
     this.onSearchChange();
   }
 
@@ -237,5 +244,9 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
       ...this.settingsService.getQuerySettings(),
       firstPerDay: event.target.checked
     })
+  }
+
+  changeResultMode(mode: ExpSearchAreaMode) {
+    this.settingsService.setSearchAreaMode(mode);
   }
 }

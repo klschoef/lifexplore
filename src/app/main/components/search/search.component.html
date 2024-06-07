@@ -5,7 +5,10 @@
 />
 <div class="top-status-bar">
   <div class="settings-container" help="Settings">
-    <mat-icon fontIcon="settings" class="settings-icon exp-clickable exp-hover-scale" (click)="openSettings$.next(true);" />
+    <div class="inner">
+      <mat-icon fontIcon="settings" class="settings-icon exp-clickable exp-hover-scale" (click)="openSettings$.next(true);" />
+      <app-settings-query-mode />
+    </div>
     <exp-popup [open$]="openSettings$">
       <app-settings />
     </exp-popup>

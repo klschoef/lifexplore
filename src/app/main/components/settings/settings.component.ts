@@ -17,7 +17,7 @@ enum SettingsType {
 export class SettingsComponent {
   HTMLSettingsType = SettingsType;
   currentSettingsType = this.HTMLSettingsType.General;
-  settingTypes = Object.values(SettingsType);
+  settingTypes = [SettingsType.General];
 
   mapDefaultSize$ = this.settingsService.settings$.pipe(
     map((settings) => settings[SettingsService.LOCAL_MAP_SETTINGS]?.defaultZoom ?? 10),

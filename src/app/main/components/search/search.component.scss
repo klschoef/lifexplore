@@ -12,6 +12,16 @@ exp-search-area {
   gap: 4px;
   z-index: 1;
 
+  .settings-container {
+    .inner {
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
   .settings-icon {
     margin-top: 4px;
   }

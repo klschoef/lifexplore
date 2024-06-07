@@ -1,8 +1,19 @@
 <div class="exp-search-area animate__animated animate__slideInDown animate__faster">
   <div class="header-line" help="Lifelog Query system">
-    <a (click)="navigateToSearch()" class="exp-clickable exp-hover-scale">
-      <img class="logo" src="../../../../assets/lifeXplore_.png">
+    <a (click)="navigateToSearch()" class="logo-container">
+      <img class="exp-clickable exp-hover-scale" src="../../../../assets/lifeXplore_.png">
+      <!--<div *ngIf="searchAreaMode$ | async as searchResultMode" class="view-mode-container">
+        <div class="icon-container active"
+             *ngIf="searchResultMode === HTMLSearchAreaMode.GRAPHICAL" >
+          <mat-icon fontIcon="mouse" class="exp-clickable exp-hover-scale" (click)="changeResultMode(HTMLSearchAreaMode.TEXT)"/>
+        </div>
+        <div class="icon-container active"
+             *ngIf="searchResultMode === HTMLSearchAreaMode.TEXT">
+          <mat-icon fontIcon="keyboard" class="exp-clickable exp-hover-scale" (click)="changeResultMode(HTMLSearchAreaMode.GRAPHICAL)"/>
+        </div>
+      </div>-->
     </a>
+
     <ng-container *ngIf="{useGPTasDefault: useGPTasDefault$ | async} as data">
       <ng-container *ngIf="searchAreaMode$ | async as mode">
       <div *ngIf="mode === ExpSearchAreaMode.TEXT" class="search-container animate__animated animate__fadeIn animate__delay-0.3s">
