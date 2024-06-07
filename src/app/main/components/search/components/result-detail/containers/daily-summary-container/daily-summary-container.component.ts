@@ -118,9 +118,18 @@ export class DailySummaryContainerComponent implements OnInit, OnDestroy {
         clientId: "direct",
         query_dicts: [
           {
-            day: this.navigated_date?.getDate() ?? this.result.day,
-            month: (this.navigated_date?.getMonth() ?? this.result.month-1)+1,
-            year: this.navigated_date?.getFullYear() ?? this.result.year,
+            day: {
+              min: this.navigated_date?.getDate() ?? this.result.day,
+              max: this.navigated_date?.getDate() ?? this.result.day
+            },
+            month: {
+              min: (this.navigated_date?.getMonth() ?? this.result.month-1)+1,
+              max: (this.navigated_date?.getMonth() ?? this.result.month-1)+1
+            },
+            year: {
+              min: this.navigated_date?.getFullYear() ?? this.result.year,
+              max: this.navigated_date?.getFullYear() ?? this.result.year
+            }
           }
         ],
         sorting: {

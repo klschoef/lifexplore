@@ -122,9 +122,18 @@ export class DailySummaryL2ContainerComponent implements OnInit, OnDestroy {
         l2dist: this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.dailySummaryL2 ?? 20,
         query_dicts: [
           {
-            day: this.navigated_date?.getDate() ?? this.result.day,
-            month: (this.navigated_date?.getMonth() ?? this.result.month - 1) + 1,
-            year: this.navigated_date?.getFullYear() ?? this.result.year,
+            day: {
+              min: this.navigated_date?.getDate() ?? this.result.day,
+              max: this.navigated_date?.getDate() ?? this.result.day
+            },
+            month: {
+              min: (this.navigated_date?.getMonth() ?? this.result.month-1)+1,
+              max: (this.navigated_date?.getMonth() ?? this.result.month-1)+1
+            },
+            year: {
+              min: this.navigated_date?.getFullYear() ?? this.result.year,
+              max: this.navigated_date?.getFullYear() ?? this.result.year
+            }
           }
         ],
         sorting: {
