@@ -24,6 +24,7 @@ export class ShortcutService {
   public isFAndShiftIsPressed = new BehaviorSubject(false);
   public isRAndShiftIsPressed = new BehaviorSubject(false);
   public isZPressed = new BehaviorSubject(false);
+  public isXPressed = new BehaviorSubject(false);
   public isDPressed = new BehaviorSubject(false);
   public isDAndShiftPressed = new BehaviorSubject(false);
   public isOPressed = new BehaviorSubject(false);
@@ -63,6 +64,11 @@ export class ShortcutService {
     } else if (event.key === 'z') { // submit
       if (!this.isInputFocusedSubject.value) {
         this.isZPressed.next(false);
+        event.preventDefault();
+      }
+    } else if (event.key === 'x') { // submit
+      if (!this.isInputFocusedSubject.value) {
+        this.isXPressed.next(false);
         event.preventDefault();
       }
     } else if (event.key === 'f') { // submit
@@ -192,6 +198,11 @@ export class ShortcutService {
     } else if (event.key === 'z') { // submit
       if (!this.isInputFocusedSubject.value) {
         this.isZPressed.next(true);
+        event.preventDefault();
+      }
+    } else if (event.key === 'x') { // submit
+      if (!this.isInputFocusedSubject.value) {
+        this.isXPressed.next(true);
         event.preventDefault();
       }
     } else if (event.key === 'd') { // submit

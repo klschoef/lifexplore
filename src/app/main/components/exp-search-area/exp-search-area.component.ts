@@ -53,6 +53,11 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
     }
   ]
 
+  firstPerDay$ = this.settingsService.settings$.pipe(
+    map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.firstPerDay),
+    filter((l2dist) => l2dist !== undefined),
+  );
+
   constructor(
     private settingsService: SettingsService,
     public resultPresenterService: ResultPresenterService,
@@ -102,6 +107,18 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
     ).subscribe(isRPressed => {
       if (isRPressed) {
         this.clickOnReset();
+      }
+    });
+
+    this.shortcutService.isXPressed.pipe(
+      skip(1),
+      takeUntil(this.destroy$)
+    ).subscribe(isXPressed => {
+      if (isXPressed) {
+        this.settingsService.saveQuerySettings({
+          ...this.settingsService.getQuerySettings(),
+          firstPerDay: !(this.settingsService.getQuerySettings().firstPerDay ?? false)
+        })
       }
     });
   }
@@ -204,5 +221,12 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
     } else {
       this.router.navigate(['/search']);
     }
+  }
+
+  onChangeFirstPerDay(event: any) {
+    this.settingsService.saveQuerySettings({
+      ...this.settingsService.getQuerySettings(),
+      firstPerDay: event.target.checked
+    })
   }
 }
