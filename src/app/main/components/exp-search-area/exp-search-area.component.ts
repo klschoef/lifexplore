@@ -140,6 +140,14 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
       ...this.settingsService.getQuerySettings(),
       firstPerDay: false
     })
+    this.settingsService.saveQuerySettings({
+      ...this.settingsService.getQuerySettings(),
+      temporalPrefetchMode: true
+    })
+    this.settingsService.saveQuerySettings({
+      ...this.settingsService.getQuerySettings(),
+      temporalDBPrefetchPageSize: 5000
+    })
     window.location.reload();
   }
 

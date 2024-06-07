@@ -33,6 +33,12 @@ export class TuningDialogComponent {
     map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.firstPerDay),
     filter((l2dist) => l2dist !== undefined),
   );
+  temporalPrefetchMode$= this.settingsService.settings$.pipe(
+    map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.temporalPrefetchMode ?? true),
+  );
+  temporalDBPrefetchPageSize$ = this.settingsService.settings$.pipe(
+    map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.temporalDBPrefetchPageSize ?? 5000)
+  );
   pageSize$ = this.settingsService.settings$.pipe(
     map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.resultsperpage ?? 50),
     filter((res) => res !== undefined),
@@ -171,6 +177,20 @@ export class TuningDialogComponent {
     this.settingsService.saveQuerySettings({
       ...this.settingsService.getQuerySettings(),
       useGPTasDefault: event.target.checked
+    })
+  }
+
+  onChangeTemporalPrefetchMode(event: any) {
+    this.settingsService.saveQuerySettings({
+      ...this.settingsService.getQuerySettings(),
+      temporalPrefetchMode: event.target.checked
+    })
+  }
+
+  onChangeTemporalDBPrefetchPageSize(event: any) {
+    this.settingsService.saveQuerySettings({
+      ...this.settingsService.getQuerySettings(),
+      temporalDBPrefetchPageSize: event.target.valueAsNumber
     })
   }
 }

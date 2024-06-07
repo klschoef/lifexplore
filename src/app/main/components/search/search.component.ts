@@ -186,6 +186,8 @@ export class SearchComponent implements OnInit, OnDestroy {
         clientId: "direct",
         query: value,
         useGPTasDefault: this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.useGPTasDefault,
+        temporalPrefetchMode: this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.temporalPrefetchMode ?? true,
+        temporalDBPrefetchPageSize: this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.temporalDBPrefetchPageSize ?? 5000,
         query_dicts: objectValues,
         maxresults: 2000,
         resultsperpage: this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.resultsperpage ?? 50,
