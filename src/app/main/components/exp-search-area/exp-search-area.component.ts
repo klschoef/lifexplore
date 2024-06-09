@@ -117,6 +117,16 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.shortcutService.isEscapePressed.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(isEscapePressed => {
+      if (isEscapePressed) {
+        this.resultPresenterService.showHelp$.next(false);
+        this.resultPresenterService.showHistory$.next(false);
+        this.resultPresenterService.showTuning$.next(false);
+      }
+    });
+
     this.shortcutService.isXPressed.pipe(
       skip(1),
       takeUntil(this.destroy$)
