@@ -32,9 +32,8 @@ export class SubmissionResultMarkerComponent implements OnInit, OnDestroy {
     ).subscribe(() => {
       const submissionLog = this.submissionLogService.submissionLog$.value;
       const taskId = this.vbsServerConnection.currentTaskState$.value?.taskId;
-      if (this.vbsServerConnection.selectedEvaluation && taskId) {
-
-        const log = (submissionLog[this.vbsServerConnection.selectedEvaluation] ?? {})[taskId];
+      if (this.vbsServerConnection.selectedEvaluation) {
+        const log = (submissionLog[this.vbsServerConnection.selectedEvaluation] ?? {})[taskId!];
         if (log && log.some) {
           let found = false;
           for (let i = 0; i < log.length; i++) {
