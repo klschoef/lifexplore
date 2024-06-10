@@ -24,7 +24,7 @@ export class ExpStatusbarComponent implements OnInit, OnDestroy {
       this.vbsServerConnectionService.currentTaskState$
     ]).pipe(
       switchMap(_ => this.submissionLogService.submissionLog$),
-      filter(log => !!this.vbsServerConnectionService.selectedEvaluation && !!this.vbsServerConnectionService.currentTaskState$.value?.taskId),
+      filter(log => !!this.vbsServerConnectionService.selectedEvaluation),
       map(log => (log[this.vbsServerConnectionService.selectedEvaluation!] ?? {})[this.vbsServerConnectionService.currentTaskState$.value?.taskId!] ?? []),
       filter(log => log));
 
