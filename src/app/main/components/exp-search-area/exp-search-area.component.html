@@ -25,7 +25,7 @@
                (focusout)="focusOutTextInput($event)"
                (focusin)="focusInTextInput($event)"
                type="text" class="exp-textfield"
-               placeholder="{{ data.useGPTasDefault ? 'GPT' : 'CLIP' }} Search ... Example1: {{data.useGPTasDefault ? 'drinking coffee:3 sky!' : 'drinking coffee'}} {{textCommandPrefix.value}}y 2020 {{textCommandPrefix.value}}m 06 {{textCommandPrefix.value}}d 22+-2 {{textCommandPrefix.value}}t costa, Example2: drinking coffee < driving car"/>
+               placeholder="{{ data.useGPTasDefault ? 'GPT' : 'CLIP' }} Search ... Example1: {{data.useGPTasDefault ? 'drinking coffee:3 !sky' : 'drinking coffee'}} {{textCommandPrefix.value}}y 2020 {{textCommandPrefix.value}}m 06 {{textCommandPrefix.value}}d 22+-2 {{textCommandPrefix.value}}t costa, Example2: drinking coffee < driving car"/>
       </div>
       <exp-graphical-search-area *ngIf="mode === ExpSearchAreaMode.GRAPHICAL"
                                  [graphicalContent]="graphical_content" class="animate__animated animate__fadeIn animate__delay-0.3s"/>
