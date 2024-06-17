@@ -17,6 +17,7 @@ import {PythonServerService} from '../../services/pythonserver.service';
 import {ResultPresenterService} from '../../services/result-presenter.service';
 import {ExpSearchAreaMode} from '../exp-search-area/exp-search-area.component';
 import {ShortcutService} from '../../services/shortcut.service';
+import {QueryEventCategory} from '../../../../../openapi/dres';
 
 @Component({
   selector: 'app-search',

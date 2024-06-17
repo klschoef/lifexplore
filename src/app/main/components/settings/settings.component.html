@@ -17,6 +17,8 @@
       <input type="number" min="20" max="2000" [ngModel]="filterQueryWidth$ | async" (change)="changeFilterQueryWidth($event)">
       <div class="header-label">Show Task info</div>
       <input type="checkbox" [ngModel]="showTaskInfo$ | async" (change)="changeShowTaskInfo($event)">
+      <div class="header-label">Log To DRES</div>
+      <input type="checkbox" [ngModel]="logToDRES$ | async" (change)="changeLogToDRES($event)">
     </ng-container>
   </div>
 </div>

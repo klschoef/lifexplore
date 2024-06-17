@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { WSServerStatus,GlobalConstants } from "../../shared/config/global-constants";
 import {BehaviorSubject, filter, tap} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {QueryEventCategory, RankedAnswer} from '../../../../openapi/dres';
+import {VBSServerConnectionService} from './vbsserver-connection.service';
 
 
 const URL = GlobalConstants.nodeServerURL;
@@ -27,7 +29,9 @@ export class PythonServerService {
 
   public connectionState: WSServerStatus = WSServerStatus.UNSET;
 
-  constructor() {
+  constructor(
+    private vbsServer: VBSServerConnectionService
+  ) {
     this.initializeWebSocket();
   }
 
@@ -47,6 +51,16 @@ export class PythonServerService {
     this.socket.onmessage = (event) => {
       const message = JSON.parse(event.data);
       this.receivedMessages.next(message);
+      if (message && message.results) {
+        this.vbsServer.submitQueryResultLogDirectly('response', message.results.map((result: any, index: number) => {
+          return {
+            answer: {
+              mediaItemName: result.filepath
+            },
+            rank: index + 1
+          };
+        }), []);
+      }
     };
 
     this.socket.onclose = () => {
@@ -59,11 +73,20 @@ export class PythonServerService {
     };
   }
 
-  sendMessage(message: any,  source: string = 'appcomponent'): void {
+  sendMessage(message: any,  source: string = 'appcomponent', logType: string = 'search'): void {
     let request = {
       source: source,
       content: message
     };
     this.socket?.send(JSON.stringify(request));
+
+    this.vbsServer.submitQueryResultLogDirectly('interaction', [], [
+      {
+        timestamp: Date.now(),
+        category: QueryEventCategory.BROWSING,
+        type: logType,
+        value: JSON.stringify(message)
+      }
+    ]);
   }
 }

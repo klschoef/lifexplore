@@ -51,6 +51,10 @@ export class ExpStatusbarComponent implements OnInit, OnDestroy {
     map((settings) => settings[SettingsService.LOCAL_MISC_SETTINGS]?.showTaskInfo ?? true),
   );
 
+  logToDRES$ = this.settingsService.settings$.pipe(
+    map((settings) => settings[SettingsService.LOCAL_MISC_SETTINGS]?.logToDRES?? true),
+  );
+
   destroy$ = new Subject<void>();
   @ViewChild('topicInput') topicInput!: ElementRef;
 

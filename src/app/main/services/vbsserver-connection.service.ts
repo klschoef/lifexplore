@@ -344,6 +344,14 @@ export class VBSServerConnectionService {
           errorObject: null,
           responseObject: status
         });
+        this.submitQueryResultLogDirectly('interaction', [], [
+          {
+            timestamp: Date.now(),
+            category: QueryEventCategory.IMAGE,
+            type: "submitImage",
+            value: imageID
+          }
+        ]);
       }),
       catchError(err => {
         this.submissionLogService.addEntryToLog({
@@ -395,6 +403,15 @@ export class VBSServerConnectionService {
             errorObject: null,
             responseObject: submissionResponse
           });
+
+        this.submitQueryResultLogDirectly('interaction', [], [
+          {
+            timestamp: Date.now(),
+            category: QueryEventCategory.TEXT,
+            type: "submitText",
+            value: text
+          }
+        ]);
       }
       , error => {
         this.handleSubmissionError(error);
@@ -412,7 +429,19 @@ export class VBSServerConnectionService {
       });
   }
 
+  submitQueryResultLogDirectly(sortTye: string, results: Array<RankedAnswer>, events: Array<QueryEvent>, page: string = '') {
+    this.queryResults = results;
+    this.queryEvents = events;
+
+    this.submitQueryResultLog(sortTye, page);
+  }
+
   submitQueryResultLog(sortType: string, page: string = '') {
+
+    if (!(this.settingsService.settings$.value[SettingsService.LOCAL_MISC_SETTINGS]?.logToDRES?? true)) {
+      return;
+    }
+
     let qrl = {
       timestamp: Date.now(),
       sortType: sortType,
@@ -421,7 +450,7 @@ export class VBSServerConnectionService {
       events: this.queryEvents
     } as QueryResultLog;
     if (page === '') {
-      qrl.resultSetAvailability = 'video';
+      qrl.resultSetAvailability = 'image';
     }
 
     this.saveLogLocally(qrl);

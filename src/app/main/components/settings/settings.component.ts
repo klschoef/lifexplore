@@ -31,6 +31,10 @@ export class SettingsComponent {
     map((settings) => settings[SettingsService.LOCAL_MISC_SETTINGS]?.showTaskInfo ?? true),
   );
 
+  logToDRES$ = this.settingsService.settings$.pipe(
+    map((settings) => settings[SettingsService.LOCAL_MISC_SETTINGS]?.logToDRES?? true),
+  );
+
   constructor(
     private settingsService: SettingsService) {
   }
@@ -51,6 +55,12 @@ export class SettingsComponent {
   changeShowTaskInfo(event: any) {
     this.settingsService.addToSettingsEntry({
       showTaskInfo: event.target.checked
+    }, SettingsService.LOCAL_MISC_SETTINGS);
+  }
+
+  changeLogToDRES(event: any) {
+    this.settingsService.addToSettingsEntry({
+      logToDRES: event.target.checked
     }, SettingsService.LOCAL_MISC_SETTINGS);
   }
 }
