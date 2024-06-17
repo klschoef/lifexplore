@@ -3,7 +3,7 @@
     <div class="connection-container" [class.connected]="pythonServerService.connectionState === WSServerStatus.CONNECTED">Backend</div>
     <div class="dres-user">
       DRESUser: {{ dresUser }}
-      <div *ngIf="logToDRES$ | async" class="no-log-info">No Log</div>
+      <div *ngIf="{val: logToDRES$ | async} as logToDRES" class="no-log-info exp-clickable" [class.active-log]="logToDRES.val" (click)="changeLogToDRES()">{{logToDRES.val ? '' : 'No '}}Log</div>
     </div>
     <select (change)="changeEvaluation($event)" [ngModel]="vbsServerConnectionService.selectedEvaluation">
       <option *ngFor="let v of vbsServerConnectionService.evaluations" [value]="v.id">{{ v.name }}</option>

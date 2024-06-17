@@ -102,4 +102,10 @@ export class ExpStatusbarComponent implements OnInit, OnDestroy {
       this.topicInput.nativeElement.value = '';
       this.topicInput.nativeElement.blur();
   }
+
+  changeLogToDRES() {
+    this.settingsService.addToSettingsEntry({
+      logToDRES: !(this.settingsService.settings$.value[SettingsService.LOCAL_MISC_SETTINGS]?.logToDRES?? true)
+    }, SettingsService.LOCAL_MISC_SETTINGS);
+  }
 }
