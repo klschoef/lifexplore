@@ -1,11 +1,12 @@
-# Lifexplore
+# LifeXplore
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.3.
+This is the official frontend for LifeXplore, a lifelog search system. LifeXplore provides an intuitive interface for exploring lifelog data and consumes the backend service ([LSC Query Server repository](https://github.com/klschoef/lscqueryserver/)) to deliver a seamless search experience. For more details, refer to the [paper](https://dl.acm.org/doi/abs/10.1145/3643489.3661123).
 
 ## Requirements
 - Node.js
 - npm
 - git
+- Running Image Server and Backend Server (query server). For further instructions, refer to the [LSC Query Server repository](https://github.com/klschoef/lscqueryserver/).
 
 ## Setup
 1. Clone the repository to your local machine
