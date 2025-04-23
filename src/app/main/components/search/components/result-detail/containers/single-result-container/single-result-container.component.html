@@ -8,6 +8,9 @@
     <ng-container *ngIf="result.gpt_description?.description as descr">
       <strong>GPT Description:</strong> {{descr}}<br>
     </ng-container>
+    <ng-container *ngIf="result.blip2caption as descr">
+      <strong>BLIP2 Description:</strong> {{descr}}<br>
+    </ng-container>
     <ng-container *ngIf="result.gpt_description?.reference_similarity as similarity">
       <strong>GPT Similarity:</strong> {{similarity}}<br>
     </ng-container>

@@ -71,6 +71,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   );
 
   openSettings$ = new BehaviorSubject<boolean>(false);
+  openUpload$ = new BehaviorSubject<boolean>(false);
   HTMLSearchResultMode = SearchResultMode;
 
   // last values

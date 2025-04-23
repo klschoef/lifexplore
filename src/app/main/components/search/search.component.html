@@ -8,9 +8,13 @@
     <div class="inner">
       <mat-icon fontIcon="settings" class="settings-icon exp-clickable exp-hover-scale" (click)="openSettings$.next(true);" />
       <app-settings-query-mode />
+      <mat-icon fontIcon="library_add" class="exp-clickable exp-hover-scale" (click)="openUpload$.next(true);" />
     </div>
     <exp-popup [open$]="openSettings$">
       <app-settings />
+    </exp-popup>
+    <exp-popup [open$]="openUpload$">
+      <app-upload />
     </exp-popup>
   </div>
   <div class="pages-container" *ngIf="pages">

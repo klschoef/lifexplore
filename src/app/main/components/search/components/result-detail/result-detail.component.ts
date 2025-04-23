@@ -7,6 +7,8 @@ import {BehaviorSubject, combineLatest, filter, Subject, switchMap, takeUntil, t
 import {map, skip} from 'rxjs/operators';
 import {ShortcutService} from '../../../../services/shortcut.service';
 import {ResultPresenterService} from '../../../../services/result-presenter.service';
+import {SettingsService} from '../../../../services/settings.service';
+import URLUtil from '../../../../utils/url-util';
 
 export enum ResultDetailComponentMode {
   Single = 'Single',
@@ -41,6 +43,18 @@ export class ResultDetailComponent implements OnChanges, OnInit, OnDestroy {
     map(log => log.find((entry: any) => entry.image === this.selectedResult.filename))
   );
   destroy$ = new Subject<void>();
+
+  removeSuccess$ = this.pythonService.receivedMessages.pipe(
+    tap(msg => {
+      console.log("server message: ", msg);
+    }),
+    filter((msg) => msg && msg.type == 'remove_image'),
+    map(msg => msg.success),
+    tap(success => {
+      if (success) {
+        this.closeDialog();
+      }
+    }));
 
   constructor(
     private pythonService: PythonServerService,
@@ -158,6 +172,18 @@ export class ResultDetailComponent implements OnChanges, OnInit, OnDestroy {
   submitImage() {
     console.log("SUBMIT IMAGE", this.selectedResult);
     this.vbsServerConnectionService.submitImageID(this.selectedResult.filename);
+  }
+
+  deleteImage(filepath: string) {
+    console.log("DELETE IMAGE", filepath);
+    let msg = {
+      type: "remove_image",
+      version: 2,
+      filepath: filepath,
+      clientId: "direct"
+    };
+
+    this.pythonService.sendMessage(msg);
   }
 
   protected readonly ResultDetailComponentMode = ResultDetailComponentMode;

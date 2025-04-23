@@ -61,6 +61,7 @@ import { QueryElementHelpTextPipe } from './main/components/exp-search-area/elem
 import { DailySummaryL2ContainerComponent } from './main/components/search/components/result-detail/containers/daily-summary-l2-container/daily-summary-l2-container.component';
 import { IntToColorPipe } from './main/pipes/int-to-color.pipe';
 import { BlurOnEscapeAndEnterDirective } from './main/directives/blur-on-escape-and-enter.directive';
+import { UploadComponent } from './main/components/upload/upload.component';
 
 
 @NgModule({
@@ -106,7 +107,8 @@ import { BlurOnEscapeAndEnterDirective } from './main/directives/blur-on-escape-
     QueryElementHelpTextPipe,
     DailySummaryL2ContainerComponent,
     IntToColorPipe,
-    BlurOnEscapeAndEnterDirective
+    BlurOnEscapeAndEnterDirective,
+    UploadComponent
   ],
   imports: [
     BrowserModule,

@@ -62,6 +62,7 @@ export class GlobalConstants {
   public static clipServerURL: string = 'ws://' + LocalConfig.config_CLIP_SERVER_HOST + ':' + LocalConfig.config_CLIP_SERVER_PORT;
   public static nodeServerURL: string = 'ws://' + LocalConfig.config_NODE_SERVER_HOST + ':' + LocalConfig.config_NODE_SERVER_PORT;
   public static dataHost = LocalConfig.config_DATA_BASE_URL;
+  public static uploadServerURL = LocalConfig.config_UPLOAD_URL;
 
   public static keyframeBaseURL: string = this.dataHost;
   public static keyframeThumbsBaseURL: string = LocalConfig.config_DATA_BASE_URL_THUMBS;

@@ -1,0 +1,13 @@
+<div class="settings-container exp-popup-content">
+  <div class="exp-small-nav-bar">
+    <div class="active">
+      Upload
+    </div>
+  </div>
+  <div class="content">
+    <input #fileInput type="file" (change)="onFileSelected($event)" multiple>
+    <button class="green exp-hover-scale" (click)="upload()">Upload</button>
+    <div *ngFor="let error of errors" class="error">{{error}}</div>
+    <div *ngIf="success" class="success">{{success}}</div>
+  </div>
+</div>
