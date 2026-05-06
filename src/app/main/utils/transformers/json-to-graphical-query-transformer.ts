@@ -62,6 +62,14 @@ export default class JsonToGraphicalQueryTransformer {
           };
           graphicalContentPart.queryParts.push(clipQueryPart);
           break;
+        case 'siglip2':
+          const siglip2QueryPart: QueryPart = {
+            query_type: QueryPartType.siglip2,
+            query: value?.query,
+            subqueries: JsonToGraphicalQueryTransformer.getSubqueries(value)
+          };
+          graphicalContentPart.queryParts.push(siglip2QueryPart);
+          break;
         case 'filename':
           const filenameQueryPart: QueryPart = {
             query_type: QueryPartType.filename,

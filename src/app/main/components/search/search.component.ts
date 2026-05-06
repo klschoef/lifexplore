@@ -180,6 +180,7 @@ export class SearchComponent implements OnInit, OnDestroy {
       const queryBaseURL = URLUtil.getBaseURL();
 
       const querySettings = this.settingsService.getQuerySettings();
+      const queryDefaultModel = this.settingsService.getQueryDefaultModel(querySettings);
 
       let msg = {
         type: "textquery",
@@ -187,7 +188,8 @@ export class SearchComponent implements OnInit, OnDestroy {
         clientId: "direct",
         textCommandPrefix: this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.textCommandPrefix ?? '-',
         query: value,
-        useGPTasDefault: this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.useGPTasDefault,
+        queryDefaultModel,
+        useGPTasDefault: queryDefaultModel === 'gpt',
         temporalPrefetchMode: this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.temporalPrefetchMode ?? true,
         temporalDBPrefetchPageSize: this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.temporalDBPrefetchPageSize ?? 5000,
         query_dicts: objectValues,

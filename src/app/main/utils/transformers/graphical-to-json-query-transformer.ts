@@ -56,6 +56,9 @@ export default class GraphicalToJsonQueryTransformer {
         case QueryPartType.clip:
           queryObject.clip = GraphicalToJsonQueryTransformer.queryPartToObjectQueryPart(queryPart, false);
           break;
+        case QueryPartType.siglip2:
+          queryObject.siglip2 = GraphicalToJsonQueryTransformer.queryPartToObjectQueryPart(queryPart, false);
+          break;
         case QueryPartType.filename:
           queryObject.filename = queryPart.query ?? "";
           break;

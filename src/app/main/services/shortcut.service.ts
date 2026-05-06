@@ -43,10 +43,7 @@ export class ShortcutService {
   ) {
     this.isGPressed.subscribe((value) => {
       if (value) {
-        this.settingsService.saveQuerySettings({
-          ...this.settingsService.getQuerySettings(),
-          useGPTasDefault: !(this.settingsService.getQuerySettings().useGPTasDefault ?? false)
-        })
+        this.settingsService.cycleQueryDefaultModel();
       }
     });
   }

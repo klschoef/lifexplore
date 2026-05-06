@@ -18,6 +18,7 @@ export enum QueryPartType {
   places = "Places",
   location = "Locations",
   clip = "CLIP",
+  siglip2 = "SigLIP2",
   filename = "Filename",
   year = "Year",
   month = "Month",

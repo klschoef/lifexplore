@@ -15,6 +15,11 @@ export class QueryElementHelpTextPipe implements PipeTransform {
           helpText: 'Text Search',
           placeholder: 'I saw a golden buddha ...'
         };
+      case QueryPartType.siglip2:
+        return {
+          helpText: 'SigLIP2 Text Search',
+          placeholder: 'I saw a golden buddha ...'
+        };
       case QueryPartType.month:
         return {
           helpText: 'Month (1-12), 1+4 means 1-5',

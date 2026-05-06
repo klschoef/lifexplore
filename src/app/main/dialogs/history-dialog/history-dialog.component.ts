@@ -5,6 +5,7 @@ import {HistoryEntryPipe} from './pipes/history-entry.pipe';
 import {HistoryEntryToText} from '../../utils/transformers/history-entry-to-text';
 import {SettingsService} from '../../services/settings.service';
 import {map} from 'rxjs/operators';
+import {QueryDefaultModel} from '../../models/query-default-model';
 
 @Component({
   selector: 'lx-history-dialog',
@@ -36,5 +37,18 @@ export class HistoryDialogComponent implements OnInit {
         HistoryEntryToText.transform(item, textCommandPrefix).toLowerCase().includes(this.searchValue.toLowerCase())
       )
     );
+  }
+
+  getHistoryQueryModelLabel(historyEntry: any): string {
+    const queryDefaultModel = historyEntry.queryDefaultModel
+      ?? (historyEntry.useGPTasDefault ? QueryDefaultModel.gpt : QueryDefaultModel.clip);
+
+    if (queryDefaultModel === QueryDefaultModel.gpt) {
+      return 'GPT';
+    }
+    if (queryDefaultModel === QueryDefaultModel.siglip2) {
+      return 'SigLIP2';
+    }
+    return 'CLIP';
   }
 }

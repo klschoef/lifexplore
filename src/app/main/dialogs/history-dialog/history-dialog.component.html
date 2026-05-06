@@ -21,9 +21,8 @@
         <div class="exp-tag-container" style="background: red; color: white" *ngIf="historyEntry.firstPerDay">
           <div class="name">FirstPerDay</div>
         </div>
-        <div class="exp-tag-container" style="background: {{ historyEntry.useGPTasDefault ? 'var(--exp-color-secondary)' : 'var(--exp-color-secondary)' }}; color: {{ historyEntry.useGPTasDefault ? 'black' : 'black' }}">
-
-          <div class="name">{{ historyEntry.useGPTasDefault ? 'GPT' : 'CLIP' }}</div>
+        <div class="exp-tag-container" style="background: var(--exp-color-secondary); color: black">
+          <div class="name">{{ getHistoryQueryModelLabel(historyEntry) }}</div>
         </div>
       </div>
     </div>

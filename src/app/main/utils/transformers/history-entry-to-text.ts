@@ -29,6 +29,9 @@ export class HistoryEntryToText {
         if (dict.clip && dict.clip.query) {
           result += ` ${dict.clip.query+HistoryEntryToText.transformSubqueries(dict.clip)}`;
         }
+        if (dict.siglip2 && dict.siglip2.query) {
+          result += ` ${textCommandPrefix}siglip2 ${dict.siglip2.query+HistoryEntryToText.transformSubqueries(dict.siglip2)}`;
+        }
         if (dict.objects && dict.objects.length > 0) {
           result += ` ${textCommandPrefix}o ${dict.objects.map((obj: any) => obj.query+HistoryEntryToText.transformSubqueries(obj)).join(" ")}`;
         }

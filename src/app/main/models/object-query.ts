@@ -16,6 +16,7 @@ export default interface ObjectQuery {
   places: ObjectQueryPart[],
   locations: ObjectQueryPart[],
   clip?: ObjectQueryPart,
+  siglip2?: ObjectQueryPart,
   filename?: string,
   year?: {
     min?: number,

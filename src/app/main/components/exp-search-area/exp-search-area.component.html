@@ -14,10 +14,10 @@
       </div>-->
     </a>
 
-    <ng-container *ngIf="{useGPTasDefault: useGPTasDefault$ | async} as data">
+    <ng-container *ngIf="{queryDefaultModel: queryDefaultModel$ | async} as data">
       <ng-container *ngIf="searchAreaMode$ | async as mode">
       <div *ngIf="mode === ExpSearchAreaMode.TEXT" class="search-container animate__animated animate__fadeIn animate__delay-0.3s">
-        <div class="exp-clickable gpt-or-clip-tag" help="g" (click)="changeGPTAsDefault()">{{ data.useGPTasDefault ? 'GPT' : 'CLIP' }}</div>
+        <div class="exp-clickable gpt-or-clip-tag" help="g" (click)="cycleQueryDefaultModel()">{{ getQueryDefaultModelLabel(data.queryDefaultModel) }}</div>
         <mat-icon aria-hidden="false" fontIcon="search"></mat-icon>
         <input #textInput
                *ngIf="{value: textCommandPrefix$ | async} as textCommandPrefix"
@@ -25,7 +25,7 @@
                (focusout)="focusOutTextInput($event)"
                (focusin)="focusInTextInput($event)"
                type="text" class="exp-textfield"
-               placeholder="{{ data.useGPTasDefault ? 'GPT' : 'CLIP' }} Search ... Example1: {{data.useGPTasDefault ? 'drinking coffee:3 !sky' : 'drinking coffee'}} {{textCommandPrefix.value}}y 2020 {{textCommandPrefix.value}}m 06 {{textCommandPrefix.value}}d 22+-2 {{textCommandPrefix.value}}t costa, Example2: drinking coffee < driving car"/>
+               placeholder="{{ getQueryDefaultModelLabel(data.queryDefaultModel) }} Search ... Example1: {{getTextSearchExample(data.queryDefaultModel)}} {{textCommandPrefix.value}}y 2020 {{textCommandPrefix.value}}m 06 {{textCommandPrefix.value}}d 22+-2 {{textCommandPrefix.value}}t costa, Example2: drinking coffee < driving car"/>
       </div>
       <exp-graphical-search-area *ngIf="mode === ExpSearchAreaMode.GRAPHICAL"
                                  [graphicalContent]="graphical_content" class="animate__animated animate__fadeIn animate__delay-0.3s"/>

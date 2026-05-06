@@ -12,6 +12,7 @@ import {Router} from '@angular/router';
 import {HistoryService} from '../../services/history.service';
 import {SubmissionLogService} from '../../services/submission-log.service';
 import {ShortcutService} from '../../services/shortcut.service';
+import {QueryDefaultModel} from '../../models/query-default-model';
 
 export enum ExpSearchAreaMode {
   TEXT = 'text',
@@ -34,8 +35,8 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
 
   HTMLSearchAreaMode = ExpSearchAreaMode;
 
-  useGPTasDefault$ = this.settingsService.settings$.pipe(
-    map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.useGPTasDefault ?? false)
+  queryDefaultModel$ = this.settingsService.settings$.pipe(
+    map(() => this.settingsService.getQueryDefaultModel())
   );
 
   destroy$ = new Subject();
@@ -46,7 +47,7 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
     {
       queryParts: [
         {
-          query_type: this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.useGPTasDefault ? QueryPartType.gpt : QueryPartType.clip,
+          query_type: this.getDefaultQueryPartType(),
           query: "",
           subqueries: [
           ]
@@ -157,11 +158,8 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
     }
   }
 
-  changeGPTAsDefault() {
-    this.settingsService.saveQuerySettings({
-      ...this.settingsService.getQuerySettings(),
-      useGPTasDefault: !(this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.useGPTasDefault ?? false)
-    });
+  cycleQueryDefaultModel() {
+    this.settingsService.cycleQueryDefaultModel();
   }
 
   clickOnReset(): void {
@@ -224,6 +222,7 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
     this.resultPresenterService.showHistory$.next(!this.resultPresenterService.showHistory$.value);
     this.settingsService.saveQuerySettings({
       ...this.settingsService.getQuerySettings(),
+      queryDefaultModel: item.queryDefaultModel ?? (item.useGPTasDefault ? QueryDefaultModel.gpt : QueryDefaultModel.clip),
       useGPTasDefault: item.useGPTasDefault ?? false,
       firstPerDay: item.firstPerDay ?? false,
       l2dist: item.l2dist,
@@ -260,5 +259,33 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
 
   changeResultMode(mode: ExpSearchAreaMode) {
     this.settingsService.setSearchAreaMode(mode);
+  }
+
+  getQueryDefaultModelLabel(model?: QueryDefaultModel | null): string {
+    if (model === QueryDefaultModel.gpt) {
+      return 'GPT';
+    }
+    if (model === QueryDefaultModel.siglip2) {
+      return 'SigLIP2';
+    }
+    return 'CLIP';
+  }
+
+  getTextSearchExample(model?: QueryDefaultModel | null): string {
+    if (model === QueryDefaultModel.gpt) {
+      return 'drinking coffee:3 !sky';
+    }
+    return 'drinking coffee';
+  }
+
+  private getDefaultQueryPartType(): QueryPartType {
+    const queryDefaultModel = this.settingsService.getQueryDefaultModel();
+    if (queryDefaultModel === QueryDefaultModel.gpt) {
+      return QueryPartType.gpt;
+    }
+    if (queryDefaultModel === QueryDefaultModel.siglip2) {
+      return QueryPartType.siglip2;
+    }
+    return QueryPartType.clip;
   }
 }

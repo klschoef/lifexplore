@@ -4,6 +4,7 @@ import {ExpSearchAreaMode} from '../components/exp-search-area/exp-search-area.c
 import {
   SearchResultMode
 } from '../components/settings/components/settings-view-results-mode/settings-view-results-mode.component';
+import {QueryDefaultModel} from '../models/query-default-model';
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +42,40 @@ export class SettingsService {
 
   getQuerySettings() {
     return this.settings$.getValue()[SettingsService.LOCAL_QUERY_SETTINGS];
+  }
+
+  getQueryDefaultModel(querySettings?: any): QueryDefaultModel {
+    const settings = querySettings ?? this.getQuerySettings() ?? {};
+    const configuredModel = settings.queryDefaultModel;
+
+    if (configuredModel === QueryDefaultModel.clip
+      || configuredModel === QueryDefaultModel.gpt
+      || configuredModel === QueryDefaultModel.siglip2) {
+      return configuredModel;
+    }
+
+    return settings.useGPTasDefault ? QueryDefaultModel.gpt : QueryDefaultModel.clip;
+  }
+
+  saveQueryDefaultModel(model: QueryDefaultModel) {
+    this.saveQuerySettings({
+      ...this.getQuerySettings(),
+      queryDefaultModel: model,
+      useGPTasDefault: model === QueryDefaultModel.gpt
+    });
+  }
+
+  cycleQueryDefaultModel() {
+    const currentModel = this.getQueryDefaultModel();
+    let nextModel = QueryDefaultModel.clip;
+
+    if (currentModel === QueryDefaultModel.clip) {
+      nextModel = QueryDefaultModel.gpt;
+    } else if (currentModel === QueryDefaultModel.gpt) {
+      nextModel = QueryDefaultModel.siglip2;
+    }
+
+    this.saveQueryDefaultModel(nextModel);
   }
 
   saveQuerySettings(querySettings: any) {

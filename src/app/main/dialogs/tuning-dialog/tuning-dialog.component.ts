@@ -3,6 +3,7 @@ import {SettingsService} from '../../services/settings.service';
 import {map} from 'rxjs/operators';
 import {filter} from 'rxjs';
 import {ShortcutService} from '../../services/shortcut.service';
+import {QueryDefaultModel} from '../../models/query-default-model';
 
 enum TuningL2Type {
   NONE = 'None',
@@ -84,8 +85,13 @@ export class TuningDialogComponent {
       return newL2Type;
     })
   );
-  useGPTasDefault$ = this.settingsService.settings$.pipe(
-    map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.useGPTasDefault ?? false),
+  queryDefaultModelOptions = [
+    QueryDefaultModel.clip,
+    QueryDefaultModel.gpt,
+    QueryDefaultModel.siglip2
+  ];
+  queryDefaultModel$ = this.settingsService.settings$.pipe(
+    map(() => this.settingsService.getQueryDefaultModel()),
   );
 
   constructor(
@@ -179,11 +185,8 @@ export class TuningDialogComponent {
     })
   }
 
-  onChangeUseGPTasDefault(event: any) {
-    this.settingsService.saveQuerySettings({
-      ...this.settingsService.getQuerySettings(),
-      useGPTasDefault: event.target.checked
-    })
+  onChangeQueryDefaultModel(event: any) {
+    this.settingsService.saveQueryDefaultModel(event.target.value);
   }
 
   onChangeTemporalPrefetchMode(event: any) {

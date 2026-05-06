@@ -2,6 +2,7 @@ import {Component, Input} from '@angular/core';
 import {GraphicalContentPart} from '../../../../models/graphical-content-part';
 import {QueryPartType} from '../../models/query-part';
 import {SettingsService} from '../../../../services/settings.service';
+import {QueryDefaultModel} from '../../../../models/query-default-model';
 
 @Component({
   selector: 'exp-graphical-search-area',
@@ -19,7 +20,7 @@ export class GraphicalSearchAreaComponent {
     this.graphicalContent.push({
       queryParts: [
         {
-          query_type: this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.useGPTasDefault ? QueryPartType.gpt : QueryPartType.clip,
+          query_type: this.getDefaultQueryPartType(),
           query: "",
           open_selection: true,
           subqueries: [
@@ -52,5 +53,16 @@ export class GraphicalSearchAreaComponent {
       this.graphicalContent[index] = this.graphicalContent[index - 1];
       this.graphicalContent[index - 1] = temp;
     }
+  }
+
+  private getDefaultQueryPartType(): QueryPartType {
+    const defaultModel = this.settingsService.getQueryDefaultModel();
+    if (defaultModel === QueryDefaultModel.gpt) {
+      return QueryPartType.gpt;
+    }
+    if (defaultModel === QueryDefaultModel.siglip2) {
+      return QueryPartType.siglip2;
+    }
+    return QueryPartType.clip;
   }
 }
