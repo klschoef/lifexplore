@@ -13,6 +13,8 @@ import {HistoryService} from '../../services/history.service';
 import {SubmissionLogService} from '../../services/submission-log.service';
 import {ShortcutService} from '../../services/shortcut.service';
 import {QueryDefaultModel} from '../../models/query-default-model';
+import {QueryType} from '../../../shared/config/global-constants';
+import {HistoryEntryToText} from '../../utils/transformers/history-entry-to-text';
 
 export enum ExpSearchAreaMode {
   TEXT = 'text',
@@ -65,6 +67,9 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
     map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.textCommandPrefix ?? '-'),
     filter((res) => res !== undefined),
   );
+
+  private historyIndex = -1;
+  private historySeedValue = '';
 
   constructor(
     private settingsService: SettingsService,
@@ -147,6 +152,7 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
   }
 
   onSearchChange(): void {
+    this.historyIndex = -1;
     switch (this.settingsService.settings$.getValue().searchAreaMode) {
       case ExpSearchAreaMode.TEXT:
         this.onSearch.emit(this.searchValue);
@@ -239,6 +245,52 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
   focusInTextInput(event: any) {
     if (!this.resultPresenterService.focusQuery$.value) {
       this.resultPresenterService.focusQuery$.next(true);
+    }
+  }
+
+  onHistoryKeydown(event: KeyboardEvent, textCommandPrefix: string) {
+    if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') {
+      this.historyIndex = -1;
+      this.historySeedValue = this.searchValue ?? '';
+      return;
+    }
+
+    const history = this.getHistorySnapshot();
+    if (!history.length) {
+      return;
+    }
+
+    event.preventDefault();
+
+    if (this.historyIndex === -1) {
+      this.historySeedValue = this.searchValue ?? '';
+    }
+
+    if (event.key === 'ArrowUp') {
+      this.historyIndex = Math.min(this.historyIndex + 1, history.length - 1);
+    } else {
+      this.historyIndex = this.historyIndex <= 0 ? -1 : this.historyIndex - 1;
+    }
+
+    if (this.historyIndex === -1) {
+      this.searchValue = this.historySeedValue;
+    } else {
+      this.searchValue = HistoryEntryToText.transform(history[this.historyIndex], textCommandPrefix);
+    }
+    this.searchValueChange.emit(this.searchValue);
+  }
+
+  private getHistorySnapshot(): QueryType[] {
+    const raw = this.historyService.fetch_raw_history_object();
+    if (!raw) {
+      return [];
+    }
+
+    try {
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
     }
   }
 

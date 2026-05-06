@@ -24,6 +24,7 @@
                [(ngModel)]="searchValue"
                (focusout)="focusOutTextInput($event)"
                (focusin)="focusInTextInput($event)"
+           (keydown)="onHistoryKeydown($event, textCommandPrefix.value)"
                type="text" class="exp-textfield"
                placeholder="{{ getQueryDefaultModelLabel(data.queryDefaultModel) }} Search ... Example1: {{getTextSearchExample(data.queryDefaultModel)}} {{textCommandPrefix.value}}y 2020 {{textCommandPrefix.value}}m 06 {{textCommandPrefix.value}}d 22+-2 {{textCommandPrefix.value}}t costa, Example2: drinking coffee < driving car"/>
       </div>
