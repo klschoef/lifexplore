@@ -15,14 +15,18 @@
   padding: var(--padding, 40px);
   background-color: var(--app-modal-background, white);
   border-radius: var(--app-modal-border-radius, 8px);
-  min-width: var(--min-width, auto);
+  width: var(--width, var(--app-modal-width, 720px));
+  max-width: calc(100% - 64px);
+  min-width: 280px;
   font-size: 12pt;
   display: flex;
   flex-direction: column;
   height: var(--height, auto);
   max-height: var(--max-height, calc(100% - 80px - 64px));
   margin: 32px 0;
-  box-shadow: 0 0 20px 10px white;
+  color: var(--app-modal-text, inherit);
+  border: 1px solid var(--app-modal-border, rgba(0, 0, 0, 0.08));
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
 
   .header, .body {
     margin: var(--app-modal-header-body-margin, 0 32px);

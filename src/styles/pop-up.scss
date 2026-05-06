@@ -1,15 +1,17 @@
 .exp-popup-content {
-  background: white;
+  background: var(--app-modal-background, white);
+  color: var(--app-modal-text, inherit);
   padding: 8px;
-  border: 1px solid;
-  border-radius: 8px;
-  width: 150px;
+  border: 1px solid var(--app-modal-border, rgba(0, 0, 0, 0.12));
+  border-radius: var(--app-modal-border-radius, 8px);
+  width: var(--app-popup-width, 320px);
+  max-width: calc(100vw - 32px);
   display: flex;
   flex-direction: column;
   gap: 8px;
-  box-shadow: 0 1px 5px rgba(29,30,33,1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   max-height: 400px;
-  overflow: scroll;
+  overflow: auto;
 
   .error {
     color: red;

@@ -3,67 +3,67 @@
 }
 
 .exp-hover-scale {
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease-out;
 
   &:hover {
-    transform: scale(1.1);
+    transform: scale(1.04);
   }
 }
 
 .exp-hover-scale-left-center {
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease-out;
   transform-origin: left center;
 
   &:hover {
-    transform: scale(1.1);
+    transform: scale(1.04);
   }
 }
 
 .exp-hover-scale-small {
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease-out;
 
   &:hover {
-    transform: scale(0.9);
+    transform: scale(0.97);
   }
 }
 
 .exp-hover-scale-rotate {
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease-out;
 
   &:hover {
-    transform: scale(1.1) rotate(5deg);
+    transform: scale(1.03) rotate(2deg);
   }
 }
 
 .exp-hover-scale-rotate-small {
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease-out;
 
   &:hover {
-    transform: scale(0.9) rotate(-5deg);
+    transform: scale(0.97) rotate(-2deg);
   }
 }
 
 .exp-hover-move-up {
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease-out;
 
   &:hover {
-    transform: translateY(-5px); /* Adjust the value as needed for the desired movement */
+    transform: translateY(-2px);
   }
 }
 
 .exp-hover-move-left {
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.2s ease-out;
 
   &:hover {
-    transform: translateX(-10px);
+    transform: translateX(-4px);
   }
 }
 
 .exp-hover-move-right {
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.2s ease-out;
 
   &:hover {
-    transform: translateX(10px);
+    transform: translateX(4px);
   }
 }
 

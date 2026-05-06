@@ -1,9 +1,6 @@
 expl-dialog {
-  --app-modal-background: white;
   --padding: 16px;
   --app-modal-header-body-margin: 0 16px;
-  --min-width: 50%;
-  --height: 100%;
 }
 
 .search-container {
@@ -42,7 +39,7 @@ expl-dialog {
   //padding: 8px;
   margin-top: 16px;
   max-height: calc(100% - 60px);
-  overflow: scroll;
+  overflow: auto;
 
   :nth-child(even) {
     background-color: var(--exp-color-primary);

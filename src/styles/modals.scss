@@ -1,5 +1,9 @@
 :root {
-  --app-modal-background: #ffffe0;
-  --app-modal-border-radius: 8px;
-  --app-modal-container-background: #000000aa;
+  --app-modal-background: #f7fbff;
+  --app-modal-border-radius: 12px;
+  --app-modal-border: #d5e2f2;
+  --app-modal-text: #0f172a;
+  --app-modal-container-background: rgba(15, 23, 42, 0.45);
+  --app-modal-width: 640px;
+  --app-popup-width: var(--app-modal-width);
 }
