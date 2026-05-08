@@ -23,8 +23,8 @@ export class ConfigService {
 
   private getDefaultConfig() {
     return {
-      config_CLIP_SERVER_HOST: LocalConfig.config_CLIP_SERVER_HOST,
-      config_CLIP_SERVER_PORT: LocalConfig.config_CLIP_SERVER_PORT,
+      /*config_CLIP_SERVER_HOST: LocalConfig.config_CLIP_SERVER_HOST,
+      config_CLIP_SERVER_PORT: LocalConfig.config_CLIP_SERVER_PORT,*/
       config_NODE_SERVER_HOST: LocalConfig.config_NODE_SERVER_HOST,
       config_NODE_SERVER_PORT: LocalConfig.config_NODE_SERVER_PORT,
       config_DATA_BASE_URL: LocalConfig.config_DATA_BASE_URL,
