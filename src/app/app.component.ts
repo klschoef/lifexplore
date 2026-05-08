@@ -3,7 +3,7 @@ import { HostListener } from '@angular/core';
 import { GlobalConstants, WSServerStatus, WebSocketEvent } from './shared/config/global-constants';
 import { VBSServerConnectionService } from './main/services/vbsserver-connection.service';
 import { NodeServerConnectionService } from './main/services/nodeserver-connection.service';
-import { ClipServerConnectionService } from './main/services/clipserver-connection.service';
+//import { ClipServerConnectionService } from './main/services/clipserver-connection.service';
 import { Router } from '@angular/router';
 import {filter, tap} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -24,7 +24,7 @@ export class AppComponent implements AfterViewInit {
   constructor(
     public vbsService: VBSServerConnectionService,
     public nodeService: NodeServerConnectionService,
-    public clipService: ClipServerConnectionService,
+    /*public clipService: ClipServerConnectionService,*/
     private shortcutService: ShortcutService,
     private router: Router) {
       this.nodeService.messages.subscribe(msg => {
@@ -81,9 +81,9 @@ export class AppComponent implements AfterViewInit {
   }
 
   checkCLIPConnection() {
-    if (this.clipService.connectionState !== WSServerStatus.CONNECTED) {
+    /*if (this.clipService.connectionState !== WSServerStatus.CONNECTED) {
       this.clipService.connectToServer();
-    }
+    }*/
   }
 
   checkVBSServerConnection() {

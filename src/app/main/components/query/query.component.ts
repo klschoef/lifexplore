@@ -3,7 +3,7 @@ import { HostListener } from '@angular/core';
 import { GlobalConstants, WSServerStatus, QueryType, getTimestampInSeconds } from '../../../shared/config/global-constants';
 import { VBSServerConnectionService } from '../../services/vbsserver-connection.service';
 import { NodeServerConnectionService } from '../../services/nodeserver-connection.service';
-import { ClipServerConnectionService } from '../../services/clipserver-connection.service';
+//import { ClipServerConnectionService } from '../../services/clipserver-connection.service';
 import { Router,ActivatedRoute } from '@angular/router';
 //import { QueryResult} from 'openapi/dres'; // OLD VERSION OF DRES
 import { LocalConfig } from '../../../shared/config/local-config';
@@ -91,7 +91,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
   constructor(
     public vbsService: VBSServerConnectionService,
     public nodeService: NodeServerConnectionService,
-    public clipService: ClipServerConnectionService,
+    /*public clipService: ClipServerConnectionService,*/
     private route: ActivatedRoute,
     private router: Router,
     private interactionLogService: InteractionLogService,
@@ -128,7 +128,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
     } else {
       console.log('qc: node-service not connected yet');
     }
-    if (this.clipService.connectionState == WSServerStatus.CONNECTED) {
+    /*if (this.clipService.connectionState == WSServerStatus.CONNECTED) {
       console.log('qc: CLIP-service already connected');
       if (this.file_sim_keyframe && this.file_sim_pathPrefix) {
         this.performFileSimilarityQuery(this.file_sim_keyframe, this.file_sim_pathPrefix);
@@ -137,7 +137,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
       }
     } else {
       console.log('qc: CLIP-service not connected yet');
-    }
+    }*/
 
     this.nodeService.messages.subscribe(msg => {
       this.nodeServerInfo = undefined;
@@ -171,7 +171,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
       }
     });
 
-    this.clipService.messages.subscribe(msg => {
+    /*this.clipService.messages.subscribe(msg => {
       if ('wsstatus' in msg) {
         console.log('qc: CLIP-notification: connected');
         if (this.file_sim_keyframe && this.file_sim_pathPrefix) {
@@ -181,7 +181,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
         console.log("qc: response from clip-server: " + msg);
         this.handleQueryResponseMessage(msg);
       }
-    });
+    });*/
 
     //repeatedly retrieve task info
     setInterval(() => {
@@ -363,7 +363,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
   }
 
   performTextQuery() {
-    if (this.clipService.connectionState === WSServerStatus.CONNECTED ||
+    if (/*this.clipService.connectionState === WSServerStatus.CONNECTED ||*/
         this.nodeService.connectionState === WSServerStatus.CONNECTED) {
       if (this.previousQuery !== undefined && this.previousQuery.type === 'textquery' && this.previousQuery.query !== this.queryinput) {
         this.selectedPage = '1';
@@ -387,10 +387,10 @@ export class QueryComponent implements AfterViewInit, OnInit {
       if (this.nodeService.connectionState === WSServerStatus.CONNECTED) {
         this.queryType = 'database/joint';
         this.nodeService.sendToNodeServer(msg);
-      } else {
+      } /*else {
         this.queryType = 'CLIP';
         this.clipService.sendToCLIPServer(msg);
-      }
+      }*/
       this.historyService.saveToHistory(msg);
 
       //query logging
@@ -400,12 +400,12 @@ export class QueryComponent implements AfterViewInit, OnInit {
       this.interactionLogService.logTextQuery(this.queryinput, this.selectedPage);
 
     } else {
-      console.log(`CLIP or NODE connection down: ${this.clipService.connectionState} ${this.nodeService.connectionState}.`);
+      console.log(`NODE connection down: ${this.nodeService.connectionState}.`);
     }
   }
 
   performSimilarityQuery(serveridx:number) {
-    if (this.clipService.connectionState === WSServerStatus.CONNECTED) {
+    /*if (this.clipService.connectionState === WSServerStatus.CONNECTED) {
       //alert(`search for ${i} ==> ${idx}`);
       console.log('similarity-query for ', serveridx);
       this.queryBaseURL = URLUtil.getBaseURL();
@@ -431,11 +431,11 @@ export class QueryComponent implements AfterViewInit, OnInit {
 
       //interaction logging
       this.interactionLogService.logSimilarityQuery(serveridx, this.selectedPage);
-    }
+    }*/
   }
 
   performFileSimilarityQuery(keyframe:string, pathprefix:string) {
-    if (this.clipService.connectionState === WSServerStatus.CONNECTED) {
+    /*if (this.clipService.connectionState === WSServerStatus.CONNECTED) {
 
       console.log('file-similarity-query for ', keyframe);
       let msg = {
@@ -462,7 +462,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
 
       //interaction logging
       this.interactionLogService.logFileSimilarityQuery(keyframe, this.selectedPage);
-    }
+    }*/
   }
 
   selectRun() {
@@ -524,7 +524,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
       this.queryTimestamp = getTimestampInSeconds();
       this.queryType = 'history last';
 
-      this.clipService.sendToCLIPServer(msg);
+      //this.clipService.sendToCLIPServer(msg);
     }
   }
 

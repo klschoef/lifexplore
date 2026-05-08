@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+/*import { Injectable } from '@angular/core';
 import { WSServerStatus,GlobalConstants } from "../../shared/config/global-constants";
 import { Observable, Observer } from 'rxjs';
 import { AnonymousSubject } from 'rxjs/internal/Subject';
@@ -99,4 +99,4 @@ export class ClipServerConnectionService {
       };
       return new AnonymousSubject<MessageEvent>(observer, observable);
   }
-}
+}*/

@@ -1,7 +1,7 @@
 import {Component, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
 import {getTimestampInSeconds, WSServerStatus} from '../../../shared/config/global-constants';
 import URLUtil from '../../utils/url-util';
-import {ClipServerConnectionService} from '../../services/clipserver-connection.service';
+//import {ClipServerConnectionService} from '../../services/clipserver-connection.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {InteractionLogService} from '../../services/interaction-log.service';
 import {QueryEventLogService} from '../../services/query-event-log.service';
@@ -91,7 +91,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   constructor(
     public pythonServerService: PythonServerService,
-    public clipService: ClipServerConnectionService,
+    /*public clipService: ClipServerConnectionService,*/
     private route: ActivatedRoute,
     private router: Router,
     private interactionLogService: InteractionLogService,
@@ -219,7 +219,7 @@ export class SearchComponent implements OnInit, OnDestroy {
       // this.interactionLogService.logTextQuery(this.queryinput, this.selectedPage);
 
     } else {
-      console.log(`CLIP or NODE connection down: ${this.clipService.connectionState} ${this.pythonServerService.connectionState}.`);
+      console.log(`NODE connection down: ${this.pythonServerService.connectionState}.`);
     }
   }
 

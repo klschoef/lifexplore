@@ -2,7 +2,7 @@
 
 import { WebSocketEvent,GlobalConstants } from "../../shared/config/global-constants";
 
-var clipSocket: WebSocket = new WebSocket(GlobalConstants.clipServerURL);
+/*var clipSocket: WebSocket = new WebSocket(GlobalConstants.clipServerURL);
 
 addEventListener('message', ({ data }) => {
   console.log('clip worker received message');
@@ -39,4 +39,4 @@ function connectWebSocket() {
     postMessage({ event: WebSocketEvent.ERROR });
   }
 
-}
+}*/
