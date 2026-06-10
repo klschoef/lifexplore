@@ -4,12 +4,19 @@ import {map} from 'rxjs/operators';
 import {filter} from 'rxjs';
 import {ShortcutService} from '../../services/shortcut.service';
 import {QueryDefaultModel} from '../../models/query-default-model';
+import {ConfigService} from '../../../shared/config/services/config.service';
 
 enum TuningL2Type {
   NONE = 'None',
   LESS = 'Less Duplicates',
   DISTINCTIVE = 'Distinctive Images',
   CUSTOM = 'Custom',
+}
+
+interface ConfigField {
+  key: string;
+  label: string;
+  type: 'text' | 'number' | 'password' | 'url';
 }
 
 @Component({
@@ -93,11 +100,36 @@ export class TuningDialogComponent {
   queryDefaultModel$ = this.settingsService.settings$.pipe(
     map(() => this.settingsService.getQueryDefaultModel()),
   );
+  configDraft: any = {};
+  configSaved = false;
+  connectionConfigFields: ConfigField[] = [
+    {key: 'config_NODE_SERVER_HOST', label: 'Node Server Host', type: 'text'},
+    {key: 'config_NODE_SERVER_PORT', label: 'Node Server Port', type: 'number'},
+    {key: 'config_CLIP_SERVER_HOST', label: 'CLIP Server Host', type: 'text'},
+    {key: 'config_CLIP_SERVER_PORT', label: 'CLIP Server Port', type: 'number'},
+    {key: 'config_DATA_BASE_URL', label: 'Data Base URL', type: 'url'},
+    {key: 'config_DATA_BASE_URL_THUMBS', label: 'Thumbnail Base URL', type: 'url'},
+    {key: 'config_UPLOAD_URL', label: 'Upload URL', type: 'url'},
+  ];
+  displayConfigFields: ConfigField[] = [
+    {key: 'config_THUMB_WIDTH', label: 'Thumbnail Width', type: 'number'},
+    {key: 'config_THUMB_HEIGHT', label: 'Thumbnail Height', type: 'number'},
+    {key: 'config_MAX_RESULTS_TO_RETURN', label: 'Max Results To Return', type: 'number'},
+    {key: 'config_RESULTS_PER_PAGE', label: 'Results Per Page', type: 'number'},
+    {key: 'config_IMAGES_PER_ROW', label: 'Images Per Row', type: 'number'},
+    {key: 'config_MAX_RESULTS_TO_DISPLAY', label: 'Max Results To Display', type: 'number'},
+  ];
+  credentialConfigFields: ConfigField[] = [
+    {key: 'config_USER', label: 'User', type: 'text'},
+    {key: 'config_PASS', label: 'Password', type: 'password'},
+  ];
 
   constructor(
     private settingsService: SettingsService,
+    private configService: ConfigService,
     public shortcutService: ShortcutService,
   ) {
+    this.configDraft = {...this.configService.getConfiguration()};
   }
 
   clickOnDistinctiveType(l2Type: TuningL2Type) {
@@ -208,5 +240,24 @@ export class TuningDialogComponent {
       ...this.settingsService.getQuerySettings(),
       textCommandPrefix: event.target.value
     })
+  }
+
+  saveLocalConfig() {
+    const normalizedConfig = {...this.configDraft};
+
+    [...this.connectionConfigFields, ...this.displayConfigFields, ...this.credentialConfigFields]
+      .filter((field) => field.type === 'number')
+      .forEach((field) => {
+        normalizedConfig[field.key] = Number(normalizedConfig[field.key]);
+      });
+
+    this.configService.updateConfiguration(normalizedConfig);
+    this.settingsService.addToSettingsEntry(normalizedConfig, SettingsService.LOCAL_CONFIG_SETTINGS);
+    this.settingsService.saveQuerySettings({
+      ...this.settingsService.getQuerySettings(),
+      resultsperpage: normalizedConfig.config_RESULTS_PER_PAGE
+    });
+    this.configDraft = {...this.configService.getConfiguration()};
+    this.configSaved = true;
   }
 }

@@ -1,4 +1,4 @@
-<div class="lifelog-search-results-container">
+<div class="lifelog-search-results-container" [ngStyle]="gridSettings$ | async">
   <ng-container *ngIf="{selectedResult: selectedResult$ | async} as data">
     <div class="lifelog-search-result exp-clickable exp-hover-scale animate__animated animate__fadeIn"
          help="Space/Click = Detail View, Z/Shift+Hover = Zoom, f+Click/f+Shift = Submit"

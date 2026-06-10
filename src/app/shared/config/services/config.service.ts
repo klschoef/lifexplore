@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 import { LocalConfig } from '../local-config';
+import { GlobalConstants } from '../global-constants';
+import {BehaviorSubject} from 'rxjs';
 
-const LOCALSTORAGE_FIELDNAME = 'lifeXploreConfig';
+export const LOCALSTORAGE_FIELDNAME = 'lifeXploreConfig';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConfigService {
   private config: any;
+  config$ = new BehaviorSubject<any>({});
 
 
   constructor() {
@@ -16,27 +19,33 @@ export class ConfigService {
 
   private loadConfig() { //Check all fields
     const localConfig = localStorage.getItem(LOCALSTORAGE_FIELDNAME);
-    this.config = localConfig ? JSON.parse(localConfig) : this.getDefaultConfig();
+    this.config = {
+      ...this.getDefaultConfig(),
+      ...(localConfig ? JSON.parse(localConfig) : {})
+    };
+    this.applyConfig(this.config);
+    this.config$.next(this.config);
     console.log('Loaded config:', this.config); // Debugging statement
   }
 
 
-  private getDefaultConfig() {
+  getDefaultConfig() {
     return {
-      /*config_CLIP_SERVER_HOST: LocalConfig.config_CLIP_SERVER_HOST,
-      config_CLIP_SERVER_PORT: LocalConfig.config_CLIP_SERVER_PORT,*/
+      config_CLIP_SERVER_HOST: LocalConfig.config_CLIP_SERVER_HOST,
+      config_CLIP_SERVER_PORT: LocalConfig.config_CLIP_SERVER_PORT,
       config_NODE_SERVER_HOST: LocalConfig.config_NODE_SERVER_HOST,
       config_NODE_SERVER_PORT: LocalConfig.config_NODE_SERVER_PORT,
       config_DATA_BASE_URL: LocalConfig.config_DATA_BASE_URL,
+      config_DATA_BASE_URL_THUMBS: LocalConfig.config_DATA_BASE_URL_THUMBS,
       config_USER: LocalConfig.config_USER,
       config_PASS: LocalConfig.config_PASS,
-      config_RESULTS_PER_PAGE: 35,
-      config_MAX_RESULTS_TO_RETURN: 35 * 40,
-      config_IMAGE_WIDTH: 236,
-      config_SHOW_SUBMITTED_FRAMES: true,
-      config_EXPLORE_RESULTS_PER_LOAD: 15,
-      config_SHOTS_RESULTS_PER_LOAD: 40
-      // ... add other default values
+      config_UPLOAD_URL: LocalConfig.config_UPLOAD_URL,
+      config_THUMB_WIDTH: LocalConfig.config_THUMB_WIDTH,
+      config_THUMB_HEIGHT: LocalConfig.config_THUMB_HEIGHT,
+      config_MAX_RESULTS_TO_RETURN: LocalConfig.config_MAX_RESULTS_TO_RETURN,
+      config_RESULTS_PER_PAGE: LocalConfig.config_RESULTS_PER_PAGE,
+      config_IMAGES_PER_ROW: LocalConfig.config_IMAGES_PER_ROW,
+      config_MAX_RESULTS_TO_DISPLAY: LocalConfig.config_MAX_RESULTS_TO_DISPLAY,
     };
   }
 
@@ -46,6 +55,33 @@ export class ConfigService {
 
   updateConfiguration(newConfig: any) {
     this.config = { ...this.config, ...newConfig };
+    this.applyConfig(this.config);
+    this.config$.next(this.config);
     localStorage.setItem(LOCALSTORAGE_FIELDNAME, JSON.stringify(this.config));
+  }
+
+  getNodeServerURL() {
+    return `ws://${this.config.config_NODE_SERVER_HOST}:${this.config.config_NODE_SERVER_PORT}`;
+  }
+
+  getKeyframeBaseUrl() {
+    return this.config.config_DATA_BASE_URL;
+  }
+
+  getKeyframeThumbsBaseUrl() {
+    return this.config.config_DATA_BASE_URL_THUMBS;
+  }
+
+  getMaxResultsToDisplay() {
+    return this.config.config_MAX_RESULTS_TO_DISPLAY;
+  }
+
+  private applyConfig(config: any) {
+    GlobalConstants.nodeServerURL = `ws://${config.config_NODE_SERVER_HOST}:${config.config_NODE_SERVER_PORT}`;
+    GlobalConstants.dataHost = config.config_DATA_BASE_URL;
+    GlobalConstants.uploadServerURL = config.config_UPLOAD_URL;
+    GlobalConstants.keyframeBaseURL = config.config_DATA_BASE_URL;
+    GlobalConstants.keyframeThumbsBaseURL = config.config_DATA_BASE_URL_THUMBS;
+    GlobalConstants.MAX_RESULTS_TO_DISPLAY = config.config_MAX_RESULTS_TO_DISPLAY;
   }
 }

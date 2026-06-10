@@ -16,6 +16,7 @@ import {ShortcutService} from '../../../../../services/shortcut.service';
 import {SubmissionLogService} from '../../../../../services/submission-log.service';
 import {ResultDetailComponentMode} from '../../result-detail/result-detail.component';
 import {VBSServerConnectionService} from '../../../../../services/vbsserver-connection.service';
+import {SettingsService} from '../../../../../services/settings.service';
 
 @Component({
   selector: 'app-minimal-result-container',
@@ -39,6 +40,21 @@ export class MinimalResultContainerComponent implements OnInit, OnDestroy, After
   pageSwitchFlag = 0; // 0: no page switch, 1: next page, -1: previous page
 
   destroy$ = new Subject<void>();
+  gridSettings$ = this.settingsService.settings$.pipe(
+    map((settings) => {
+      const config = settings[SettingsService.LOCAL_CONFIG_SETTINGS] ?? {};
+      const imagesPerRow = Number(config.config_IMAGES_PER_ROW ?? 8);
+      const thumbWidth = Number(config.config_THUMB_WIDTH ?? 180);
+      const thumbHeight = Number(config.config_THUMB_HEIGHT ?? 102);
+      const resultWidth = Math.max(thumbWidth, 80);
+
+      return {
+        '--result-width': `${resultWidth}px`,
+        '--img-height': `${Math.max(thumbHeight, 40)}px`,
+        '--container-max-width': `${resultWidth * Math.max(imagesPerRow, 1)}px`,
+      };
+    })
+  );
 
   @ViewChildren('resultElement') resultElements!: QueryList<ElementRef>;
 
@@ -46,7 +62,8 @@ export class MinimalResultContainerComponent implements OnInit, OnDestroy, After
     private resultPresenterService: ResultPresenterService,
     public shortcutService: ShortcutService,
     public submissionLogService: SubmissionLogService,
-    public vbsServerConnectionService: VBSServerConnectionService
+    public vbsServerConnectionService: VBSServerConnectionService,
+    private settingsService: SettingsService
   ) {
   }
 

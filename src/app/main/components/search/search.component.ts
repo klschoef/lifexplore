@@ -50,7 +50,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     tap((msg) => {
       this.groupSize = msg.group_size;
       this.totalResults = msg.totalresults ?? 0;
-      this.totalPages = Math.ceil(this.totalResults / (this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.resultsperpage ?? 50));
+      this.totalPages = Math.ceil(this.totalResults / this.getResultsPerPage());
 
       this.resultPresenterService.maxPages$.next(this.totalPages);
       this.resultPresenterService.maxResultsForCurrentPage$.next(msg.num ?? 0);
@@ -194,7 +194,7 @@ export class SearchComponent implements OnInit, OnDestroy {
         temporalDBPrefetchPageSize: this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.temporalDBPrefetchPageSize ?? 5000,
         query_dicts: objectValues,
         maxresults: 2000,
-        resultsperpage: this.settingsService.settings$.value[SettingsService.LOCAL_QUERY_SETTINGS]?.resultsperpage ?? 50,
+        resultsperpage: this.getResultsPerPage(),
         selectedpage: this.currentPage.toString(),
         queryMode: this.queryModes[0].name,
         requestId: this.requestId,
@@ -224,4 +224,11 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   protected readonly WSServerStatus = WSServerStatus;
+
+  private getResultsPerPage() {
+    const settings = this.settingsService.settings$.value;
+    return settings[SettingsService.LOCAL_QUERY_SETTINGS]?.resultsperpage
+      ?? settings[SettingsService.LOCAL_CONFIG_SETTINGS]?.config_RESULTS_PER_PAGE
+      ?? 50;
+  }
 }

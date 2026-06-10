@@ -49,7 +49,7 @@
 <!-- Result Images -->
 <div (mouseover)="showButtons = i" (mouseleave)="showButtons = -1" class="queryresult" *ngFor="let item of resultURLs | slice:0:MAX_RESULTS_TO_DISPLAY; let i = index">
   <!--<img src="{{item}}" width="320" height="180" (click)="displayFullImage(item, i)" [ngClass]="{'blueborder': this.showFullImage && this.fullImageIndex == i}">-->
-  <img src="{{item}}" width="{{localConfig.config_THUMB_WIDTH}}" height="{{localConfig.config_THUMB_HEIGHT}}" style="cursor:pointer" (click)="displayFullImage(item, i)" [ngClass]="{'blueborder': this.showFullImage && this.fullImageIndex == i}">
+  <img *ngIf="config$ | async as localConfig" src="{{item}}" width="{{localConfig.config_THUMB_WIDTH}}" height="{{localConfig.config_THUMB_HEIGHT}}" style="cursor:pointer" (click)="displayFullImage(item, i)" [ngClass]="{'blueborder': this.showFullImage && this.fullImageIndex == i}">
   <div class="lefttopcorner">
     <span *ngIf="showButtons === i && this.queryresult_frame[i] !== 'summary'" class="resultnum">{{this.queryresult_frame[i]}}</span>
   </div>

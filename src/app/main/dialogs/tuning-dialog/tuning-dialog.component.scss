@@ -3,19 +3,151 @@ expl-dialog {
   --app-modal-header-body-margin: 0 16px;
 }
 
+.tuning-content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 560px;
+  max-width: 760px;
+}
+
+.settings-section {
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.62);
+  padding: 14px;
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+
+  h3 {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.2;
+  }
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  gap: 10px 16px;
+}
+
+.field-row {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 500;
+
+  input,
+  select {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    height: 34px;
+    border: 1px solid rgba(15, 23, 42, 0.28);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.92);
+    font-size: 15px;
+    padding: 5px 8px;
+  }
+
+  input[type='checkbox'] {
+    width: 18px;
+    height: 18px;
+    padding: 0;
+  }
+
+  input:disabled {
+    color: rgba(15, 23, 42, 0.5);
+    background: rgba(15, 23, 42, 0.06);
+  }
+
+  &.compact {
+    padding: 0 10px 10px;
+  }
+}
+
+.checkbox-row {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 34px;
+}
+
 .distinctive-container {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  border: solid 1px;
+  border: 1px solid rgba(15, 23, 42, 0.28);
   border-radius: 8px;
   overflow: hidden;
+  background: rgba(255, 255, 255, 0.5);
 
   .custom {
     background-color: var(--exp-color-mid);
   }
+}
 
-  .l2input {
-    padding: 0 8px 8px 8px;
+.local-config-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.config-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  h4 {
+    margin: 2px 0 0;
+    font-size: 14px;
+    color: rgba(15, 23, 42, 0.72);
+  }
+}
+
+.settings-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 6px;
+}
+
+.save-button {
+  min-width: 170px;
+  height: 36px;
+  border: 1px solid var(--exp-color-primary);
+  border-radius: 6px;
+  background: var(--exp-color-primary);
+  color: var(--exp-color-light);
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.save-state {
+  border: 1px solid rgba(0, 128, 0, 0.28);
+  border-radius: 999px;
+  background: rgba(0, 128, 0, 0.1);
+  color: var(--exp-color-success);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 3px 10px;
+}
+
+@media (max-width: 680px) {
+  .tuning-content {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .settings-grid {
+    grid-template-columns: 1fr;
   }
 }

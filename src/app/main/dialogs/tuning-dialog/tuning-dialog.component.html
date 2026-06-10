@@ -1,36 +1,147 @@
 <expl-dialog title="Tuning" (clickOnClose)="clickOnClose.emit($event)" *ngIf="currentL2Type$ | async as currentL2Type">
-  <h3>Distinctive</h3>
-  <div class="distinctive-container">
-    <div class="exp-small-nav-bar">
-      <div class="exp-clickable"
-           (click)="clickOnDistinctiveType(l2Type)"
-           [class.active]="currentL2Type === l2Type"
-           [class.custom]="l2Type === L2Type.CUSTOM && currentL2Type !== L2Type.CUSTOM"
-           *ngFor="let l2Type of l2Types">{{ l2Type }}</div>
-    </div>
-    <div *ngIf="currentL2Type !== L2Type.NONE" class="l2input">
-      L2Dist: <input type="number" [ngModel]="l2Dist$ | async" (change)="onChangeL2($event)">
-    </div>
-  </div>
-  <h3>Group</h3>
-  First per Day: <input type="checkbox" [ngModel]="firstPerDay$ | async" (change)="onChangeFirstPerDay($event)">
-  <h3>Page Sizes</h3>
-  Page Size: <input type="number" [ngModel]="pageSize$ | async" (change)="onChangePageSize($event)"><br>
-  Daily Page Size: <input type="number" [ngModel]="dailyPageSize$ | async" (change)="onChangeDailyPageSize($event)"><br>
-  Similarity Page Size: <input type="number" [ngModel]="similarityPageSize$ | async" (change)="onChangeSimilarityPageSize($event)"><br>
-  CLIP Page Size: <input type="number" [ngModel]="clipPageSize$ | async" (change)="onChangeClipPageSize($event)"><br>
-  SOLR Page Size: <input type="number" [ngModel]="solrPageSize$ | async" (change)="onChangeSolrPageSize($event)"><br>
-  <h3>Temporal Prefetch Mode</h3>
-  Temporal Prefetch Mode: <input type="checkbox" [ngModel]="temporalPrefetchMode$ | async" (change)="onChangeTemporalPrefetchMode($event)"><br>
-  Temporal Prefetch Page Size: <input type="number" [ngModel]="temporalDBPrefetchPageSize$ | async" (change)="onChangeTemporalDBPrefetchPageSize($event)">
-  <h3>Others</h3>
-  Daily Summary L2Dist: <input type="number" [ngModel]="dailySummaryL2$ | async" (change)="onChangeDailySummaryL2($event)"><br>
-  Query Model:
-  <select [ngModel]="queryDefaultModel$ | async" (change)="onChangeQueryDefaultModel($event)">
-    <option *ngFor="let model of queryDefaultModelOptions" [ngValue]="model">{{model}}</option>
-  </select><br>
-  <h3>Expert</h3>
-  <div help="Can be dangerous!: press and hold 'l' to edit">
-    Text Command Prefix: <input type="text" [maxlength]="1" [minlength]="0" [disabled]="!((shortcutService.isLPressed | async) ?? false)" [ngModel]="textCommandPrefix$ | async" (change)="onChangeTextCommandPrefix($event)">
+  <div class="tuning-content">
+    <section class="settings-section">
+      <div class="section-heading">
+        <h3>Distinctive</h3>
+      </div>
+      <div class="distinctive-container">
+        <div class="exp-small-nav-bar">
+          <div class="exp-clickable"
+               (click)="clickOnDistinctiveType(l2Type)"
+               [class.active]="currentL2Type === l2Type"
+               [class.custom]="l2Type === L2Type.CUSTOM && currentL2Type !== L2Type.CUSTOM"
+               *ngFor="let l2Type of l2Types">{{ l2Type }}</div>
+        </div>
+        <label *ngIf="currentL2Type !== L2Type.NONE" class="field-row compact">
+          <span>L2 distance</span>
+          <input type="number" [ngModel]="l2Dist$ | async" (change)="onChangeL2($event)">
+        </label>
+      </div>
+    </section>
+
+    <section class="settings-section">
+      <div class="section-heading">
+        <h3>Query</h3>
+      </div>
+      <div class="settings-grid">
+        <label class="field-row checkbox-row">
+          <span>First per day</span>
+          <input type="checkbox" [ngModel]="firstPerDay$ | async" (change)="onChangeFirstPerDay($event)">
+        </label>
+
+        <label class="field-row">
+          <span>Query model</span>
+          <select [ngModel]="queryDefaultModel$ | async" (change)="onChangeQueryDefaultModel($event)">
+            <option *ngFor="let model of queryDefaultModelOptions" [ngValue]="model">{{model}}</option>
+          </select>
+        </label>
+      </div>
+    </section>
+
+    <section class="settings-section">
+      <div class="section-heading">
+        <h3>Page Sizes</h3>
+      </div>
+      <div class="settings-grid">
+        <label class="field-row">
+          <span>Page size</span>
+          <input type="number" [ngModel]="pageSize$ | async" (change)="onChangePageSize($event)">
+        </label>
+        <label class="field-row">
+          <span>Daily page size</span>
+          <input type="number" [ngModel]="dailyPageSize$ | async" (change)="onChangeDailyPageSize($event)">
+        </label>
+        <label class="field-row">
+          <span>Similarity page size</span>
+          <input type="number" [ngModel]="similarityPageSize$ | async" (change)="onChangeSimilarityPageSize($event)">
+        </label>
+        <label class="field-row">
+          <span>CLIP page size</span>
+          <input type="number" [ngModel]="clipPageSize$ | async" (change)="onChangeClipPageSize($event)">
+        </label>
+        <label class="field-row">
+          <span>SOLR page size</span>
+          <input type="number" [ngModel]="solrPageSize$ | async" (change)="onChangeSolrPageSize($event)">
+        </label>
+      </div>
+    </section>
+
+    <section class="settings-section">
+      <div class="section-heading">
+        <h3>Temporal Prefetch</h3>
+      </div>
+      <div class="settings-grid">
+        <label class="field-row checkbox-row">
+          <span>Enabled</span>
+          <input type="checkbox" [ngModel]="temporalPrefetchMode$ | async" (change)="onChangeTemporalPrefetchMode($event)">
+        </label>
+        <label class="field-row">
+          <span>Prefetch page size</span>
+          <input type="number" [ngModel]="temporalDBPrefetchPageSize$ | async" (change)="onChangeTemporalDBPrefetchPageSize($event)">
+        </label>
+      </div>
+    </section>
+
+    <section class="settings-section">
+      <div class="section-heading">
+        <h3>Other Query Settings</h3>
+      </div>
+      <div class="settings-grid">
+        <label class="field-row">
+          <span>Daily summary L2 distance</span>
+          <input type="number" [ngModel]="dailySummaryL2$ | async" (change)="onChangeDailySummaryL2($event)">
+        </label>
+        <label class="field-row" help="Can be dangerous!: press and hold 'l' to edit">
+          <span>Text command prefix</span>
+          <input type="text"
+                 [maxlength]="1"
+                 [minlength]="0"
+                 [disabled]="!((shortcutService.isLPressed | async) ?? false)"
+                 [ngModel]="textCommandPrefix$ | async"
+                 (change)="onChangeTextCommandPrefix($event)">
+        </label>
+      </div>
+    </section>
+
+    <section class="settings-section local-config-section">
+      <div class="section-heading with-action">
+        <h3>Local Configuration</h3>
+        <div class="save-state" *ngIf="configSaved">Saved</div>
+      </div>
+
+      <div class="config-group">
+        <h4>Connections</h4>
+        <div class="settings-grid">
+          <label class="field-row" *ngFor="let field of connectionConfigFields">
+            <span>{{ field.label }}</span>
+            <input [type]="field.type" [(ngModel)]="configDraft[field.key]" (ngModelChange)="configSaved = false">
+          </label>
+        </div>
+      </div>
+
+      <div class="config-group">
+        <h4>Display And Results</h4>
+        <div class="settings-grid">
+          <label class="field-row" *ngFor="let field of displayConfigFields">
+            <span>{{ field.label }}</span>
+            <input [type]="field.type" [(ngModel)]="configDraft[field.key]" (ngModelChange)="configSaved = false">
+          </label>
+        </div>
+      </div>
+
+      <div class="config-group">
+        <h4>Credentials</h4>
+        <div class="settings-grid">
+          <label class="field-row" *ngFor="let field of credentialConfigFields">
+            <span>{{ field.label }}</span>
+            <input [type]="field.type" [(ngModel)]="configDraft[field.key]" (ngModelChange)="configSaved = false">
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-actions">
+        <button type="button" class="save-button" (click)="saveLocalConfig()">Save Configuration</button>
+      </div>
+    </section>
   </div>
 </expl-dialog>
