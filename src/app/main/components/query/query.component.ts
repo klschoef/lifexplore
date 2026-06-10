@@ -6,7 +6,6 @@ import { NodeServerConnectionService } from '../../services/nodeserver-connectio
 //import { ClipServerConnectionService } from '../../services/clipserver-connection.service';
 import { Router,ActivatedRoute } from '@angular/router';
 //import { QueryResult} from 'openapi/dres'; // OLD VERSION OF DRES
-import { LocalConfig } from '../../../shared/config/local-config';
 import {ExpLogService} from '../../services/exp-log.service';
 import {InteractionLogService} from '../../services/interaction-log.service';
 import {QueryEventLogService} from '../../services/query-event-log.service';
@@ -15,6 +14,7 @@ import {HistoryService} from '../../services/history.service';
 import QueryUtil from '../../utils/query-util';
 import URLUtil from '../../utils/url-util';
 import DateUtil from '../../utils/date-util';
+import {ConfigService} from '../../../shared/config/services/config.service';
 
 @Component({
   selector: 'app-query',
@@ -27,7 +27,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
   @ViewChild('historyDiv') historyDiv!: ElementRef<HTMLDivElement>;
   @ViewChild('videopreview') videopreview!: ElementRef<HTMLDivElement>;
 
-  localConfig = LocalConfig;
+  config$;
 
   // File similarity params
   file_sim_keyframe: string | undefined
@@ -67,10 +67,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
   querydataset: string = '';
   queryBaseURL = URLUtil.getBaseURL();
 
-  maxresults = LocalConfig.config_MAX_RESULTS_TO_RETURN;
   totalReturnedResults = 0; //how many results did our query return in total?
-  resultsPerPage = LocalConfig.config_RESULTS_PER_PAGE;
-  MAX_RESULTS_TO_DISPLAY = GlobalConstants.MAX_RESULTS_TO_DISPLAY;
   selectedPage = '1'; //user-selected page
   pages = ['1']
 
@@ -98,7 +95,9 @@ export class QueryComponent implements AfterViewInit, OnInit {
     private queryEventLogService: QueryEventLogService,
     private queryResultLogService: QueryResultLogService,
     private historyService: HistoryService,
-    private expLogService: ExpLogService) {
+    private expLogService: ExpLogService,
+    private configService: ConfigService) {
+    this.config$ = this.configService.config$;
   }
 
   ngOnInit() {
@@ -256,8 +255,8 @@ export class QueryComponent implements AfterViewInit, OnInit {
     if (!this.queryFieldHasFocus && !this.answerFieldHasFocus) {
       if (event.key == 'ArrowDown') {
         if (this.showFullImage) {
-          if (this.fullImageIndex < this.resultURLs.length - LocalConfig.config_IMAGES_PER_ROW) {
-            this.fullImageIndex += LocalConfig.config_IMAGES_PER_ROW;
+          if (this.fullImageIndex < this.resultURLs.length - this.imagesPerRow) {
+            this.fullImageIndex += this.imagesPerRow;
             this.fullImage = this.resultURLs[this.fullImageIndex];
             this.performMetaDataQuery();
             this.interactionLogService.logFullImageDisplay(this.fullImageIndex, this.fullImage);
@@ -267,8 +266,8 @@ export class QueryComponent implements AfterViewInit, OnInit {
       }
       else if (event.key == 'ArrowUp') {
         if (this.showFullImage) {
-          if (this.fullImageIndex > LocalConfig.config_IMAGES_PER_ROW) {
-            this.fullImageIndex -= LocalConfig.config_IMAGES_PER_ROW;
+          if (this.fullImageIndex > this.imagesPerRow) {
+            this.fullImageIndex -= this.imagesPerRow;
             this.fullImage = this.resultURLs[this.fullImageIndex];
             this.performMetaDataQuery();
             this.interactionLogService.logFullImageDisplay(this.fullImageIndex, this.fullImage);
@@ -794,5 +793,21 @@ export class QueryComponent implements AfterViewInit, OnInit {
     const filenameWithExtension: string = filepath.split('/').pop() || '';
     const filename: string = filenameWithExtension.slice(0, -4);
     return filename
+  }
+
+  get maxresults() {
+    return this.configService.getConfiguration().config_MAX_RESULTS_TO_RETURN;
+  }
+
+  get resultsPerPage() {
+    return this.configService.getConfiguration().config_RESULTS_PER_PAGE;
+  }
+
+  get MAX_RESULTS_TO_DISPLAY() {
+    return this.configService.getMaxResultsToDisplay();
+  }
+
+  get imagesPerRow() {
+    return this.configService.getConfiguration().config_IMAGES_PER_ROW;
   }
 }

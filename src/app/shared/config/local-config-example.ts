@@ -11,8 +11,8 @@ export class LocalConfig {
   public static config_PASS = 'password';
   public static config_UPLOAD_URL = 'http://127.0.0.1:5000/upload';
 
-  public static config_THUMB_WIDTH = 180; //238;
-  public static config_THUMB_HEIGHT = 102; //134;
+  public static config_THUMB_WIDTH = 250; //238;
+  public static config_THUMB_HEIGHT = 180; //134;
   public static config_MAX_RESULTS_TO_RETURN = 2000; //10000;
   public static config_RESULTS_PER_PAGE = 56;
   public static config_IMAGES_PER_ROW = 8;

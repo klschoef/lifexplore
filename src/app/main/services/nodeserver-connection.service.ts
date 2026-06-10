@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
-import { WSServerStatus,GlobalConstants } from "../../shared/config/global-constants";
-import {filter, Observable, Observer, tap} from 'rxjs';
+import { WSServerStatus } from "../../shared/config/global-constants";
+import {Observable, Observer} from 'rxjs';
 import { AnonymousSubject } from 'rxjs/internal/Subject';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import URLUtil from '../utils/url-util';
+import {ConfigService} from '../../shared/config/services/config.service';
 
 
-const URL = GlobalConstants.nodeServerURL;
 let statusConnected = {'wsstatus':'connected'};
 
 export interface Message {
@@ -26,7 +25,9 @@ export class NodeServerConnectionService {
 
   public connectionState: WSServerStatus = WSServerStatus.UNSET;
 
-  constructor() {
+  constructor(
+    private configService: ConfigService
+  ) {
     console.log('NodeServerConnectionService created');
     this.messages = this.connectToServer();
   }
@@ -46,8 +47,9 @@ export class NodeServerConnectionService {
   }
 
   public connectToServer() {
-    console.log(`will connect to node server: ${URL}`)
-    this.messages = <Subject<Message>>this.connectToWebsocket(URL).pipe(
+    const url = this.configService.getNodeServerURL();
+    console.log(`will connect to node server: ${url}`)
+    this.messages = <Subject<Message>>this.connectToWebsocket(url).pipe(
     map(
           (response: MessageEvent): Message => {
               //console.log(`node-server: ${response.data}`);

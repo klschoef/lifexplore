@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { WSServerStatus,GlobalConstants } from "../../shared/config/global-constants";
+import { WSServerStatus } from "../../shared/config/global-constants";
 import {BehaviorSubject, filter, tap} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {QueryEventCategory, RankedAnswer} from '../../../../openapi/dres';
+import {QueryEventCategory} from '../../../../openapi/dres';
 import {VBSServerConnectionService} from './vbsserver-connection.service';
+import {ConfigService} from '../../shared/config/services/config.service';
 
 
-const URL = GlobalConstants.nodeServerURL;
 let statusConnected = {'wsstatus':'connected'};
 
 export interface Message {
@@ -30,13 +30,14 @@ export class PythonServerService {
   public connectionState: WSServerStatus = WSServerStatus.UNSET;
 
   constructor(
-    private vbsServer: VBSServerConnectionService
+    private vbsServer: VBSServerConnectionService,
+    private configService: ConfigService
   ) {
     this.initializeWebSocket();
   }
 
   private initializeWebSocket(): void {
-    const socketUrl = GlobalConstants.nodeServerURL;
+    const socketUrl = this.configService.getNodeServerURL();
     console.log(`will connect to python server: ${socketUrl}`)
 
     this.socket = new WebSocket(socketUrl);

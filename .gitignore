@@ -45,3 +45,5 @@ local-config.ts
 openapi/
 openapi_old/
 package-lock.json
+
+**/.venv/

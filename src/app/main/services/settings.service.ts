@@ -15,6 +15,7 @@ export class SettingsService {
   static LOCAL_QUERY_SETTINGS = 'querySettings';
   static LOCAL_MAP_SETTINGS = 'mapSettings';
   static LOCAL_MISC_SETTINGS = 'miscSettings';
+  static LOCAL_CONFIG_SETTINGS = 'configSettings';
   static LOCAL_SELECTED_EVALUATION = 'selectedEvaluation';
   settings$ = new BehaviorSubject<any>({});
 
@@ -37,7 +38,15 @@ export class SettingsService {
   }
 
   loadSettings() {
-    this.settings$.next(JSON.parse(localStorage.getItem(SettingsService.LOCAL_STORAGE_SETTINGS) ?? "{}"))
+    const settings = JSON.parse(localStorage.getItem(SettingsService.LOCAL_STORAGE_SETTINGS) ?? "{}");
+    const configSettings = JSON.parse(localStorage.getItem('lifeXploreConfig') ?? "{}");
+    this.settings$.next({
+      ...settings,
+      [SettingsService.LOCAL_CONFIG_SETTINGS]: {
+        ...(settings[SettingsService.LOCAL_CONFIG_SETTINGS] ?? {}),
+        ...configSettings
+      }
+    })
   }
 
   getQuerySettings() {

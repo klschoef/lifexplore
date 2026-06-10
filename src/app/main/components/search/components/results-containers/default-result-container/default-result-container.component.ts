@@ -14,6 +14,7 @@ import {BehaviorSubject, filter, Subject, takeUntil, tap} from 'rxjs';
 import {ResultDetailComponentMode} from '../../result-detail/result-detail.component';
 import {ShortcutService} from '../../../../../services/shortcut.service';
 import {VBSServerConnectionService} from '../../../../../services/vbsserver-connection.service';
+import {SettingsService} from '../../../../../services/settings.service';
 
 @Component({
   selector: 'app-default-result-container',
@@ -33,6 +34,23 @@ export class DefaultResultContainerComponent implements OnInit, OnDestroy, After
   disableControls$ = new BehaviorSubject<boolean>(false); //to disable navigation like when we have another result open
   pageSwitchFlag = 0; // 0: no page switch, 1: next page, -1: previous page
   destroy$ = new Subject<void>();
+  gridSettings$ = this.settingsService.settings$.pipe(
+    map((settings) => {
+      const config = settings[SettingsService.LOCAL_CONFIG_SETTINGS] ?? {};
+      const imagesPerRow = Number(config.config_IMAGES_PER_ROW ?? 4);
+      const thumbWidth = Number(config.config_THUMB_WIDTH ?? 250);
+      const thumbHeight = Number(config.config_THUMB_HEIGHT ?? 200);
+      const resultWidth = Math.max(thumbWidth, 120);
+      const rowGap = this.groupSize ? 0 : 32;
+      const safeImagesPerRow = Math.max(imagesPerRow, 1);
+
+      return {
+        '--result-width': `${resultWidth}px`,
+        '--img-height': `${Math.max(thumbHeight, 60)}px`,
+        '--container-max-width': `${(resultWidth * safeImagesPerRow) + (rowGap * (safeImagesPerRow - 1))}px`,
+      };
+    })
+  );
 
   @ViewChildren('resultElement') resultElements!: QueryList<ElementRef>;
 
@@ -40,7 +58,8 @@ export class DefaultResultContainerComponent implements OnInit, OnDestroy, After
   constructor(
     private resultPresenterService: ResultPresenterService,
     public shortcutService: ShortcutService,
-    private vbsServerConnectionService: VBSServerConnectionService
+    private vbsServerConnectionService: VBSServerConnectionService,
+    private settingsService: SettingsService
   ) {
 
   }
