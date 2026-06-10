@@ -359,7 +359,8 @@ export class QueryComponent implements AfterViewInit, OnInit {
     this.file_sim_keyframe = undefined;
     this.file_sim_pathPrefix = undefined;
     this.nodeServerInfo = "processing query, please wait...";
-    this.performQuery();
+    //this.performQuery();
+    this.performTextQuery();
   }
 
   performTextQuery() {
