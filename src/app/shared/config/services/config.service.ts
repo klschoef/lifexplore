@@ -61,7 +61,8 @@ export class ConfigService {
   }
 
   getNodeServerURL() {
-    return `ws://${this.config.config_NODE_SERVER_HOST}:${this.config.config_NODE_SERVER_PORT}`;
+    return `wss://${this.config.config_NODE_SERVER_HOST}:${this.config.config_NODE_SERVER_PORT}/ws`;
+    //return GlobalConstants.nodeServerURL;
   }
 
   getKeyframeBaseUrl() {

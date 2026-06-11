@@ -48,7 +48,7 @@ export class NodeServerConnectionService {
 
   public connectToServer() {
     const url = this.configService.getNodeServerURL();
-    console.log(`will connect to node server: ${url}`)
+    console.log(`will connect to node (backend) server: ${url}`)
     this.messages = <Subject<Message>>this.connectToWebsocket(url).pipe(
     map(
           (response: MessageEvent): Message => {
