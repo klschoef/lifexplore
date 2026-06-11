@@ -61,6 +61,8 @@ export class ConfigService {
   }
 
   getNodeServerURL() {
+    //use the first line below for the original FAISS and the second for the new answer.py
+    //return `ws://${this.config.config_NODE_SERVER_HOST}:${this.config.config_NODE_SERVER_PORT}`;
     return `wss://${this.config.config_NODE_SERVER_HOST}:${this.config.config_NODE_SERVER_PORT}/ws`;
     //return GlobalConstants.nodeServerURL;
   }
