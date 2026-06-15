@@ -188,6 +188,10 @@ export class MinimalResultContainerComponent implements OnInit, OnDestroy, After
     this.destroy$.complete();
   }
 
+  isGroupedResult(result: any): boolean {
+    return (this.groupSize ?? 1) > 1 && result?.group !== undefined;
+  }
+
   ngAfterViewInit() {
     this.selectedResult$.pipe(
       tap(selectedResult => this.scrollToSelected(selectedResult)),

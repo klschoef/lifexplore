@@ -245,6 +245,10 @@ export class DefaultResultContainerComponent implements OnInit, OnDestroy, After
     return date ? this.dateFormatter.format(date) : '';
   }
 
+  isGroupedResult(result: any): boolean {
+    return (this.groupSize ?? 1) > 1 && result?.group !== undefined;
+  }
+
   private getImageDate(result: any): Date | undefined {
     return this.parseDateValue(result?.datetime)
       ?? this.parseDateValue(result?.timestamp)

@@ -5,10 +5,10 @@
          [class.shift]="shortcutService.shiftKeyIsPressedSubject | async"
          [class.zoom]="data.selectedResult === result && (shortcutService.isZPressed | async)"
          [class.selected]="data.selectedResult === result"
-         [class.group-first]="result.group_first"
-         [class.group-last]="result.group_last"
-         [class.group-element]="result.group !== undefined"
-         [style.border-color]="result.group | intToColor"
+         [class.group-first]="isGroupedResult(result) && result.group_first"
+         [class.group-last]="isGroupedResult(result) && result.group_last"
+         [class.group-element]="isGroupedResult(result)"
+         [style.border-color]="isGroupedResult(result) ? (result.group | intToColor) : null"
          (click)="clickResult(result)"
          *ngFor="let result of results; let i = index"
          #resultElement
@@ -16,7 +16,7 @@
       <div class="image-container">
         <img src="{{result.filepath}}">
         <div *ngIf="data.selectedResult === result" class="selected-cover"></div>
-        <div *ngIf="result.group !== undefined"
+        <div *ngIf="isGroupedResult(result)"
              class="group-tag"
              [style.background-color]="result.group | intToColor"
         ></div>
