@@ -1,46 +1,71 @@
 <div class="content-container">
-  <div class="image"><img src="{{result.filepath | expImageUrl}}"></div>
-  <div class="metadata">
-    <h3>Metadata</h3>
-    <ng-container *ngIf="imageDate">
-      <strong>{{imageDate | date}} - {{imageDate | date: 'EEEE'}} - {{ imageDate | date:"HH:mm"}}</strong><br>
-    </ng-container>
-    <ng-container *ngIf="result.gpt_description?.description as descr">
-      <strong>GPT Description:</strong> {{descr}}<br>
-    </ng-container>
-    <ng-container *ngIf="result.blip2caption as descr">
-      <strong>BLIP2 Description:</strong> {{descr}}<br>
-    </ng-container>
-    <ng-container *ngIf="result.gpt_description?.reference_similarity as similarity">
-      <strong>GPT Similarity:</strong> {{similarity}}<br>
-    </ng-container>
-    <ng-container *ngIf="result.gpt_description?.referenced_by as referencedBy">
-      <strong>GPT Referenced By:</strong> {{referencedBy}}<br>
-    </ng-container>
-    <div *ngIf="result.heart_rate" class="heart-rate-container">
-      <mat-icon fontIcon="favorite" style="color: red; animation: pulseAnimation {{60/result.heart_rate}}s infinite;"></mat-icon>
-      {{result.heart_rate}}
-    </div>
-    <strong>MSCaption:</strong> {{result.mscaption}}<br>
-    <strong>Filepath:</strong> {{result.filepath}}<br>
-    <strong>Coordinates:</strong> {{result.location?.coordinates}}<br>
-      <strong>Address:</strong> {{result.location_metadata?.address}}<br>
-    <h3>Objects</h3>
-    <div class="objects metadata-tags">
-      <div *ngFor="let obj of result.objects" class="metadata-tag exp-clickable exp-hover-scale">{{obj.object}}</div>
-    </div>
-    <h3>Concepts</h3>
-    <div class="objects metadata-tags">
-      <div *ngFor="let obj of result.concepts" class="metadata-tag exp-clickable exp-hover-scale">{{obj.concept}}</div>
-    </div>
-    <h3>Places</h3>
-    <div class="objects metadata-tags">
-      <div *ngFor="let obj of result.places" class="metadata-tag exp-clickable exp-hover-scale">{{obj.place}}</div>
-    </div>
-    <h3>Texts</h3>
-    <div class="objects metadata-tags">
-      <div *ngFor="let obj of result.texts" class="metadata-tag exp-clickable exp-hover-scale">{{obj.text}}</div>
-    </div>
-    <app-map *ngIf="result.location.coordinates[0] !== 0" [coordinates]="result.location.coordinates"></app-map>
+  <div class="image-stage">
+    <img [src]="result.filepath | expImageUrl" alt="Selected result preview">
   </div>
+  <aside class="metadata">
+    <div class="metadata-header">
+      <h3>Metadata</h3>
+      <div *ngIf="result.heart_rate" class="heart-rate-container">
+        <mat-icon fontIcon="favorite" style="color: red; animation: pulseAnimation {{60/result.heart_rate}}s infinite;"></mat-icon>
+        {{result.heart_rate}}
+      </div>
+    </div>
+
+    <div class="metadata-summary">
+      <div *ngIf="imageDate" class="date-line">{{imageDate | date}} · {{imageDate | date: 'EEEE'}} · {{ imageDate | date:"HH:mm"}}</div>
+      <div *ngIf="result.filepath" class="filepath">{{result.filepath}}</div>
+      <div *ngIf="result.location_metadata?.address" class="address">{{result.location_metadata?.address}}</div>
+    </div>
+
+    <details *ngIf="result.blip2caption as descr" class="metadata-accordion">
+      <summary>BLIP2 Description</summary>
+      <p>{{descr}}</p>
+    </details>
+    <section *ngIf="result.gpt_description?.description as descr">
+      <h4>GPT Description</h4>
+      <p>{{descr}}</p>
+    </section>
+    <section *ngIf="result.mscaption">
+      <h4>MSCaption</h4>
+      <p>{{result.mscaption}}</p>
+    </section>
+    <section *ngIf="result.gpt_description?.reference_similarity as similarity">
+      <h4>GPT Similarity</h4>
+      <p>{{similarity}}</p>
+    </section>
+    <section *ngIf="result.gpt_description?.referenced_by as referencedBy">
+      <h4>GPT Referenced By</h4>
+      <p>{{referencedBy}}</p>
+    </section>
+
+    <section *ngIf="result.objects?.length">
+      <h4>Objects</h4>
+      <div class="metadata-tags">
+        <div *ngFor="let obj of result.objects" class="metadata-tag exp-clickable exp-hover-scale">{{obj.object}}</div>
+      </div>
+    </section>
+    <section *ngIf="result.concepts?.length">
+      <h4>Concepts</h4>
+      <div class="metadata-tags">
+        <div *ngFor="let obj of result.concepts" class="metadata-tag exp-clickable exp-hover-scale">{{obj.concept}}</div>
+      </div>
+    </section>
+    <section *ngIf="result.places?.length">
+      <h4>Places</h4>
+      <div class="metadata-tags">
+        <div *ngFor="let obj of result.places" class="metadata-tag exp-clickable exp-hover-scale">{{obj.place}}</div>
+      </div>
+    </section>
+    <section *ngIf="result.texts?.length">
+      <h4>Texts</h4>
+      <div class="metadata-tags">
+        <div *ngFor="let obj of result.texts" class="metadata-tag exp-clickable exp-hover-scale">{{obj.text}}</div>
+      </div>
+    </section>
+
+    <section *ngIf="result.location?.coordinates?.[0] !== 0">
+      <h4>Map</h4>
+      <app-map [coordinates]="result.location.coordinates"></app-map>
+    </section>
+  </aside>
 </div>

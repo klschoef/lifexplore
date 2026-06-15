@@ -4,13 +4,14 @@ expl-dialog {
   --app-modal-background: var(--exp-color-light);
   --app-modal-header-body-margin: 0;
   --body-overflow: hidden;
-  --max-height: auto;
+  --width: min(1320px, calc(100vw - 48px));
+  --max-height: calc(100vh - 48px);
 }
 
 .preview-container {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  max-height: calc(100vh - 48px);
   width: 100%;
 
   .nav-bar {
@@ -20,7 +21,8 @@ expl-dialog {
     align-items: center;
     background: var(--exp-color-primary);
     color: white;
-    padding: 8px;
+    min-height: 54px;
+    padding: 8px 12px;
 
     .submission-text {
       font-size: 20px;
@@ -50,6 +52,7 @@ expl-dialog {
       display: flex;
       flex-direction: row;
       gap: 8px;
+      flex-wrap: wrap;
 
       .active-tab {
         color: var(--exp-color-secondary);
@@ -67,13 +70,41 @@ expl-dialog {
       padding: 4px;
       flex-grow: 1;
       text-align: center;
+      min-width: 120px;
+      font-weight: 700;
     }
   }
 
   .content {
-    overflow: scroll;
-    max-height: 80vh;
-    min-width: 400px;
-    min-height: 400px;
+    overflow: hidden;
+    min-width: 0;
+    min-height: 0;
+    max-height: calc(100vh - 118px);
+  }
+}
+
+@media (max-width: 760px) {
+  expl-dialog {
+    --width: calc(100vw - 16px);
+    --max-height: calc(100vh - 16px);
+  }
+
+  .preview-container {
+    max-height: calc(100vh - 16px);
+
+    .nav-bar {
+      align-items: flex-start;
+      flex-wrap: wrap;
+
+      .title-container {
+        order: 3;
+        width: 100%;
+        text-align: left;
+      }
+    }
+
+    .content {
+      max-height: calc(100vh - 118px);
+    }
   }
 }
