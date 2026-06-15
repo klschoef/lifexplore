@@ -45,11 +45,28 @@ expl-dialog {
 
 .server-endpoint-controls {
   display: grid;
-  grid-template-columns: 86px minmax(180px, 1fr) 86px 92px;
+  grid-template-columns: 72px 86px minmax(180px, 1fr) 86px 92px;
   gap: 8px;
 
   .server-port-input {
     text-align: right;
+  }
+}
+
+.server-active-button {
+  height: 34px;
+  border: 1px solid rgba(15, 23, 42, 0.28);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.72);
+  color: rgba(15, 23, 42, 0.7);
+  font-size: 13px;
+  cursor: pointer;
+
+  &.active {
+    border-color: rgba(0, 128, 0, 0.72);
+    background: var(--exp-color-success);
+    color: var(--exp-color-light);
+    font-weight: 600;
   }
 }
 

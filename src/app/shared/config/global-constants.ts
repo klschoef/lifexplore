@@ -1,13 +1,48 @@
 import { LocalConfig } from "./local-config";
 
-function buildWebSocketURL(serverPrefix: 'NODE' | 'CLIP') {
-  const protocol = (LocalConfig as any)[`config_${serverPrefix}_SERVER_PROTOCOL`] ?? 'wss://';
-  const host = (LocalConfig as any)[`config_${serverPrefix}_SERVER_HOST`];
-  const port = (LocalConfig as any)[`config_${serverPrefix}_SERVER_PORT`];
-  const path = (LocalConfig as any)[`config_${serverPrefix}_SERVER_PATH`] ?? '';
+function buildWebSocketURL(serverPrefix: 'NODE' | 'NODE_SECONDARY' | 'CLIP') {
+  const keys = getWebSocketConfigKeys(serverPrefix);
+  const protocol = (LocalConfig as any)[keys.protocolKey] ?? 'wss://';
+  const host = (LocalConfig as any)[keys.hostKey];
+  const port = (LocalConfig as any)[keys.portKey];
+  const path = (LocalConfig as any)[keys.pathKey] ?? '';
   const normalizedPath = path === '/ws' ? '/ws' : '';
 
   return `${protocol}${host}:${port}${normalizedPath}`;
+}
+
+function buildNodeServerURL() {
+  const secondaryConfigured = !!(LocalConfig as any).config_NODE_SERVER_SECONDARY_HOST && !!(LocalConfig as any).config_NODE_SERVER_SECONDARY_PORT;
+  const serverPrefix = (LocalConfig as any).config_NODE_SERVER_ACTIVE === 'secondary' && secondaryConfigured ? 'NODE_SECONDARY' : 'NODE';
+
+  return buildWebSocketURL(serverPrefix);
+}
+
+function getWebSocketConfigKeys(serverPrefix: 'NODE' | 'NODE_SECONDARY' | 'CLIP') {
+  switch (serverPrefix) {
+    case 'NODE_SECONDARY':
+      return {
+        protocolKey: 'config_NODE_SERVER_SECONDARY_PROTOCOL',
+        hostKey: 'config_NODE_SERVER_SECONDARY_HOST',
+        portKey: 'config_NODE_SERVER_SECONDARY_PORT',
+        pathKey: 'config_NODE_SERVER_SECONDARY_PATH',
+      };
+    case 'CLIP':
+      return {
+        protocolKey: 'config_CLIP_SERVER_PROTOCOL',
+        hostKey: 'config_CLIP_SERVER_HOST',
+        portKey: 'config_CLIP_SERVER_PORT',
+        pathKey: 'config_CLIP_SERVER_PATH',
+      };
+    case 'NODE':
+    default:
+      return {
+        protocolKey: 'config_NODE_SERVER_PROTOCOL',
+        hostKey: 'config_NODE_SERVER_HOST',
+        portKey: 'config_NODE_SERVER_PORT',
+        pathKey: 'config_NODE_SERVER_PATH',
+      };
+  }
 }
 
 //console.log(videoShots)
@@ -70,7 +105,7 @@ export class GlobalConstants {
   public static configVBSSERVER = 'https://vbs.videobrowsing.org';
 
   public static clipServerURL: string = buildWebSocketURL('CLIP');
-  public static nodeServerURL: string = buildWebSocketURL('NODE');
+  public static nodeServerURL: string = buildNodeServerURL();
   public static dataHost = LocalConfig.config_DATA_BASE_URL;
   public static uploadServerURL = LocalConfig.config_UPLOAD_URL;
 

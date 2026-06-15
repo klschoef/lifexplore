@@ -115,6 +115,12 @@
           <label class="field-row" *ngFor="let serverConfig of serverEndpointConfigs">
             <span>{{ serverConfig.label }}</span>
             <div class="server-endpoint-controls">
+              <button type="button"
+                      class="server-active-button"
+                      [class.active]="configDraft.config_NODE_SERVER_ACTIVE === serverConfig.id"
+                      (click)="configDraft.config_NODE_SERVER_ACTIVE = serverConfig.id; configSaved = false">
+                Active
+              </button>
               <select [(ngModel)]="configDraft[serverConfig.protocolKey]" (ngModelChange)="configSaved = false">
                 <option *ngFor="let protocol of serverProtocolOptions" [ngValue]="protocol">{{ protocol }}</option>
               </select>

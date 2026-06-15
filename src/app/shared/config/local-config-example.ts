@@ -8,6 +8,11 @@ export class LocalConfig {
   public static config_NODE_SERVER_PORT = '8080';
   public static config_NODE_SERVER_PROTOCOL = 'wss://';
   public static config_NODE_SERVER_PATH = '/ws';
+  public static config_NODE_SERVER_ACTIVE = 'primary';
+  public static config_NODE_SERVER_SECONDARY_HOST = 'localhost';
+  public static config_NODE_SERVER_SECONDARY_PORT = '8080';
+  public static config_NODE_SERVER_SECONDARY_PROTOCOL = 'wss://';
+  public static config_NODE_SERVER_SECONDARY_PATH = '/ws';
 
   public static config_DATA_BASE_URL = 'http://localhost:8089/';
   public static config_DATA_BASE_URL_THUMBS = 'http://localhost:8089/';

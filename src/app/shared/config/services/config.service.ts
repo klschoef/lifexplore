@@ -4,7 +4,13 @@ import { GlobalConstants } from '../global-constants';
 import {BehaviorSubject} from 'rxjs';
 
 export const LOCALSTORAGE_FIELDNAME = 'lifeXploreConfig';
-type WebSocketServerPrefix = 'NODE' | 'CLIP';
+type WebSocketServerPrefix = 'NODE' | 'NODE_SECONDARY' | 'CLIP';
+type WebSocketConfigKeys = {
+  protocolKey: string;
+  hostKey: string;
+  portKey: string;
+  pathKey: string;
+};
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +46,11 @@ export class ConfigService {
       config_NODE_SERVER_PORT: LocalConfig.config_NODE_SERVER_PORT,
       config_NODE_SERVER_PROTOCOL: (LocalConfig as any).config_NODE_SERVER_PROTOCOL ?? 'wss://',
       config_NODE_SERVER_PATH: (LocalConfig as any).config_NODE_SERVER_PATH ?? '/ws',
+      config_NODE_SERVER_ACTIVE: (LocalConfig as any).config_NODE_SERVER_ACTIVE ?? 'primary',
+      config_NODE_SERVER_SECONDARY_HOST: (LocalConfig as any).config_NODE_SERVER_SECONDARY_HOST ?? LocalConfig.config_NODE_SERVER_HOST,
+      config_NODE_SERVER_SECONDARY_PORT: (LocalConfig as any).config_NODE_SERVER_SECONDARY_PORT ?? LocalConfig.config_NODE_SERVER_PORT,
+      config_NODE_SERVER_SECONDARY_PROTOCOL: (LocalConfig as any).config_NODE_SERVER_SECONDARY_PROTOCOL ?? ((LocalConfig as any).config_NODE_SERVER_PROTOCOL ?? 'wss://'),
+      config_NODE_SERVER_SECONDARY_PATH: (LocalConfig as any).config_NODE_SERVER_SECONDARY_PATH ?? ((LocalConfig as any).config_NODE_SERVER_PATH ?? '/ws'),
       config_DATA_BASE_URL: LocalConfig.config_DATA_BASE_URL,
       config_DATA_BASE_URL_THUMBS: LocalConfig.config_DATA_BASE_URL_THUMBS,
       config_USER: LocalConfig.config_USER,
@@ -66,7 +77,7 @@ export class ConfigService {
   }
 
   getNodeServerURL() {
-    return this.buildWebSocketURL(this.config, 'NODE');
+    return this.buildNodeServerURL(this.config);
   }
 
   getKeyframeBaseUrl() {
@@ -82,7 +93,7 @@ export class ConfigService {
   }
 
   private applyConfig(config: any) {
-    GlobalConstants.nodeServerURL = this.buildWebSocketURL(config, 'NODE');
+    GlobalConstants.nodeServerURL = this.buildNodeServerURL(config);
     GlobalConstants.clipServerURL = this.buildWebSocketURL(config, 'CLIP');
     GlobalConstants.dataHost = config.config_DATA_BASE_URL;
     GlobalConstants.uploadServerURL = config.config_UPLOAD_URL;
@@ -92,15 +103,50 @@ export class ConfigService {
   }
 
   private buildWebSocketURL(config: any, serverPrefix: WebSocketServerPrefix) {
-    const protocol = config[`config_${serverPrefix}_SERVER_PROTOCOL`] ?? 'wss://';
-    const host = String(config[`config_${serverPrefix}_SERVER_HOST`] ?? '')
+    const keys = this.getWebSocketConfigKeys(serverPrefix);
+    const protocol = config[keys.protocolKey] ?? 'wss://';
+    const host = String(config[keys.hostKey] ?? '')
       .trim()
       .replace(/^wss?:\/\//i, '')
       .replace(/\/.*$/, '');
-    const port = config[`config_${serverPrefix}_SERVER_PORT`];
-    const path = config[`config_${serverPrefix}_SERVER_PATH`] ?? '';
+    const port = config[keys.portKey];
+    const path = config[keys.pathKey] ?? '';
     const normalizedPath = path === '/ws' ? '/ws' : '';
 
     return `${protocol}${host}:${port}${normalizedPath}`;
+  }
+
+  private buildNodeServerURL(config: any) {
+    const secondaryConfigured = !!config.config_NODE_SERVER_SECONDARY_HOST && !!config.config_NODE_SERVER_SECONDARY_PORT;
+    const serverPrefix = config.config_NODE_SERVER_ACTIVE === 'secondary' && secondaryConfigured ? 'NODE_SECONDARY' : 'NODE';
+
+    return this.buildWebSocketURL(config, serverPrefix);
+  }
+
+  private getWebSocketConfigKeys(serverPrefix: WebSocketServerPrefix): WebSocketConfigKeys {
+    switch (serverPrefix) {
+      case 'NODE_SECONDARY':
+        return {
+          protocolKey: 'config_NODE_SERVER_SECONDARY_PROTOCOL',
+          hostKey: 'config_NODE_SERVER_SECONDARY_HOST',
+          portKey: 'config_NODE_SERVER_SECONDARY_PORT',
+          pathKey: 'config_NODE_SERVER_SECONDARY_PATH',
+        };
+      case 'CLIP':
+        return {
+          protocolKey: 'config_CLIP_SERVER_PROTOCOL',
+          hostKey: 'config_CLIP_SERVER_HOST',
+          portKey: 'config_CLIP_SERVER_PORT',
+          pathKey: 'config_CLIP_SERVER_PATH',
+        };
+      case 'NODE':
+      default:
+        return {
+          protocolKey: 'config_NODE_SERVER_PROTOCOL',
+          hostKey: 'config_NODE_SERVER_HOST',
+          portKey: 'config_NODE_SERVER_PORT',
+          pathKey: 'config_NODE_SERVER_PATH',
+        };
+    }
   }
 }

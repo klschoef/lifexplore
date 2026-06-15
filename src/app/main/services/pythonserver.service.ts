@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { WSServerStatus } from "../../shared/config/global-constants";
-import {BehaviorSubject, filter, tap} from 'rxjs';
+import {BehaviorSubject, distinctUntilChanged, filter, tap} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {QueryEventCategory} from '../../../../openapi/dres';
 import {VBSServerConnectionService} from './vbsserver-connection.service';
@@ -20,6 +20,7 @@ export interface Message {
 export class PythonServerService {
 
   private socket: WebSocket | undefined;
+  private connectedSocketUrl: string | undefined;
   public receivedMessages: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   public receivedMetadata = this.receivedMessages.pipe(
     tap((msg: any) => console.log('receivedMetadata', msg)),
@@ -34,10 +35,15 @@ export class PythonServerService {
     private configService: ConfigService
   ) {
     this.initializeWebSocket();
+    this.configService.config$.pipe(
+      map(() => this.configService.getNodeServerURL()),
+      distinctUntilChanged(),
+      filter((socketUrl) => socketUrl !== this.connectedSocketUrl),
+    ).subscribe((socketUrl) => this.reconnectWebSocket(socketUrl));
   }
 
-  private initializeWebSocket(): void {
-    const socketUrl = this.configService.getNodeServerURL();
+  private initializeWebSocket(socketUrl = this.configService.getNodeServerURL()): void {
+    this.connectedSocketUrl = socketUrl;
     console.log(`will connect to python server: ${socketUrl}`)
 
     this.socket = new WebSocket(socketUrl);
@@ -67,6 +73,7 @@ export class PythonServerService {
     this.socket.onclose = () => {
       console.log('WebSocket disconnected');
       this.connectionState = WSServerStatus.DISCONNECTED;
+      this.connectedSocketUrl = undefined;
     };
 
     this.socket.onerror = (error) => {
@@ -89,5 +96,20 @@ export class PythonServerService {
         value: JSON.stringify(message)
       }
     ]);
+  }
+
+  private reconnectWebSocket(socketUrl: string): void {
+    console.log(`backend URL changed, reconnecting to python server: ${socketUrl}`);
+
+    if (this.socket) {
+      this.socket.onopen = null;
+      this.socket.onmessage = null;
+      this.socket.onclose = null;
+      this.socket.onerror = null;
+      this.socket.close();
+    }
+
+    this.connectionState = WSServerStatus.UNSET;
+    this.initializeWebSocket(socketUrl);
   }
 }

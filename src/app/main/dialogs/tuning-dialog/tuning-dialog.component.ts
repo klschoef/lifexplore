@@ -21,6 +21,7 @@ interface ConfigField {
 
 interface ServerEndpointConfig {
   label: string;
+  id: 'primary' | 'secondary';
   protocolKey: string;
   hostKey: string;
   portKey: string;
@@ -117,19 +118,31 @@ export class TuningDialogComponent {
   ];
   serverEndpointConfigs: ServerEndpointConfig[] = [
     {
-      label: 'Node server Host',
+      label: 'Node server 1 Host',
+      id: 'primary',
       protocolKey: 'config_NODE_SERVER_PROTOCOL',
       hostKey: 'config_NODE_SERVER_HOST',
       portKey: 'config_NODE_SERVER_PORT',
       pathKey: 'config_NODE_SERVER_PATH',
     },
     {
+      label: 'Node server 2 Host',
+      id: 'secondary',
+      protocolKey: 'config_NODE_SERVER_SECONDARY_PROTOCOL',
+      hostKey: 'config_NODE_SERVER_SECONDARY_HOST',
+      portKey: 'config_NODE_SERVER_SECONDARY_PORT',
+      pathKey: 'config_NODE_SERVER_SECONDARY_PATH',
+    },
+    /*
+    {
       label: 'CLIP server Host',
+      id: 'primary',
       protocolKey: 'config_CLIP_SERVER_PROTOCOL',
       hostKey: 'config_CLIP_SERVER_HOST',
       portKey: 'config_CLIP_SERVER_PORT',
       pathKey: 'config_CLIP_SERVER_PATH',
     },
+    */
   ];
   connectionConfigFields: ConfigField[] = [
     {key: 'config_DATA_BASE_URL', label: 'Data Base URL', type: 'url'},
@@ -270,7 +283,9 @@ export class TuningDialogComponent {
   saveLocalConfig() {
     const normalizedConfig = {...this.configDraft};
     this.serverEndpointConfigs.forEach((serverConfig) => {
-      normalizedConfig[serverConfig.portKey] = Number(normalizedConfig[serverConfig.portKey]);
+      normalizedConfig[serverConfig.portKey] = normalizedConfig[serverConfig.portKey] === ''
+        ? ''
+        : Number(normalizedConfig[serverConfig.portKey]);
     });
 
     [...this.connectionConfigFields, ...this.displayConfigFields, ...this.credentialConfigFields]
