@@ -1,5 +1,80 @@
 <expl-dialog title="Tuning" (clickOnClose)="clickOnClose.emit($event)" *ngIf="currentL2Type$ | async as currentL2Type">
   <div class="tuning-content">
+    <section class="settings-section local-config-section">
+      <div class="section-heading with-action">
+        <h3>Local Configuration</h3>
+        <div class="save-state" *ngIf="configSaved">Saved</div>
+      </div>
+
+      <div class="config-group">
+        <h4>Connections</h4>
+        <div class="server-endpoint-list">
+          <label class="field-row" *ngFor="let serverConfig of serverEndpointConfigs">
+            <span>{{ serverConfig.label }}</span>
+            <div class="server-endpoint-controls">
+              <button type="button"
+                      class="server-active-button"
+                      [class.active]="configDraft.config_NODE_SERVER_ACTIVE === serverConfig.id"
+                      (click)="configDraft.config_NODE_SERVER_ACTIVE = serverConfig.id; configSaved = false">
+                Active
+              </button>
+              <select [(ngModel)]="configDraft[serverConfig.protocolKey]" (ngModelChange)="configSaved = false">
+                <option *ngFor="let protocol of serverProtocolOptions" [ngValue]="protocol">{{ protocol }}</option>
+              </select>
+              <input type="text"
+                     [(ngModel)]="configDraft[serverConfig.hostKey]"
+                     (ngModelChange)="configSaved = false">
+              <input type="number"
+                     class="server-port-input"
+                     [(ngModel)]="configDraft[serverConfig.portKey]"
+                     (ngModelChange)="configSaved = false">
+              <select [(ngModel)]="configDraft[serverConfig.pathKey]" (ngModelChange)="configSaved = false">
+                <option *ngFor="let pathOption of serverPathOptions" [ngValue]="pathOption.value">{{ pathOption.label }}</option>
+              </select>
+            </div>
+          </label>
+        </div>
+        <div class="settings-grid">
+          <label class="field-row" *ngFor="let field of connectionConfigFields">
+            <span>{{ field.label }}</span>
+            <input [type]="field.type" [(ngModel)]="configDraft[field.key]" (ngModelChange)="configSaved = false">
+          </label>
+        </div>
+      </div>
+
+      <div class="config-group">
+        <h4>Display And Results</h4>
+        <label class="field-row checkbox-row dimension-link-row">
+          <span>Link thumbnail width and height</span>
+          <input type="checkbox"
+                 [ngModel]="configDraft.config_LINK_THUMB_DIMENSIONS ?? true"
+                 (ngModelChange)="onLinkThumbnailDimensionsChange($event)">
+        </label>
+        <div class="settings-grid">
+          <label class="field-row" *ngFor="let field of displayConfigFields">
+            <span>{{ field.label }}</span>
+            <input [type]="field.type"
+                   [ngModel]="configDraft[field.key]"
+                   (ngModelChange)="onConfigFieldChange(field.key, $event)">
+          </label>
+        </div>
+      </div>
+
+      <div class="config-group">
+        <h4>Credentials</h4>
+        <div class="settings-grid">
+          <label class="field-row" *ngFor="let field of credentialConfigFields">
+            <span>{{ field.label }}</span>
+            <input [type]="field.type" [(ngModel)]="configDraft[field.key]" (ngModelChange)="configSaved = false">
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-actions">
+        <button type="button" class="save-button" (click)="saveLocalConfig()">Save Configuration</button>
+      </div>
+    </section>
+
     <section class="settings-section">
       <div class="section-heading">
         <h3>Distinctive</h3>
@@ -103,79 +178,5 @@
       </div>
     </section>
 
-    <section class="settings-section local-config-section">
-      <div class="section-heading with-action">
-        <h3>Local Configuration</h3>
-        <div class="save-state" *ngIf="configSaved">Saved</div>
-      </div>
-
-      <div class="config-group">
-        <h4>Connections</h4>
-        <div class="server-endpoint-list">
-          <label class="field-row" *ngFor="let serverConfig of serverEndpointConfigs">
-            <span>{{ serverConfig.label }}</span>
-            <div class="server-endpoint-controls">
-              <button type="button"
-                      class="server-active-button"
-                      [class.active]="configDraft.config_NODE_SERVER_ACTIVE === serverConfig.id"
-                      (click)="configDraft.config_NODE_SERVER_ACTIVE = serverConfig.id; configSaved = false">
-                Active
-              </button>
-              <select [(ngModel)]="configDraft[serverConfig.protocolKey]" (ngModelChange)="configSaved = false">
-                <option *ngFor="let protocol of serverProtocolOptions" [ngValue]="protocol">{{ protocol }}</option>
-              </select>
-              <input type="text"
-                     [(ngModel)]="configDraft[serverConfig.hostKey]"
-                     (ngModelChange)="configSaved = false">
-              <input type="number"
-                     class="server-port-input"
-                     [(ngModel)]="configDraft[serverConfig.portKey]"
-                     (ngModelChange)="configSaved = false">
-              <select [(ngModel)]="configDraft[serverConfig.pathKey]" (ngModelChange)="configSaved = false">
-                <option *ngFor="let pathOption of serverPathOptions" [ngValue]="pathOption.value">{{ pathOption.label }}</option>
-              </select>
-            </div>
-          </label>
-        </div>
-        <div class="settings-grid">
-          <label class="field-row" *ngFor="let field of connectionConfigFields">
-            <span>{{ field.label }}</span>
-            <input [type]="field.type" [(ngModel)]="configDraft[field.key]" (ngModelChange)="configSaved = false">
-          </label>
-        </div>
-      </div>
-
-      <div class="config-group">
-        <h4>Display And Results</h4>
-        <label class="field-row checkbox-row dimension-link-row">
-          <span>Link thumbnail width and height</span>
-          <input type="checkbox"
-                 [ngModel]="configDraft.config_LINK_THUMB_DIMENSIONS ?? true"
-                 (ngModelChange)="onLinkThumbnailDimensionsChange($event)">
-        </label>
-        <div class="settings-grid">
-          <label class="field-row" *ngFor="let field of displayConfigFields">
-            <span>{{ field.label }}</span>
-            <input [type]="field.type"
-                   [ngModel]="configDraft[field.key]"
-                   (ngModelChange)="onConfigFieldChange(field.key, $event)">
-          </label>
-        </div>
-      </div>
-
-      <div class="config-group">
-        <h4>Credentials</h4>
-        <div class="settings-grid">
-          <label class="field-row" *ngFor="let field of credentialConfigFields">
-            <span>{{ field.label }}</span>
-            <input [type]="field.type" [(ngModel)]="configDraft[field.key]" (ngModelChange)="configSaved = false">
-          </label>
-        </div>
-      </div>
-
-      <div class="settings-actions">
-        <button type="button" class="save-button" (click)="saveLocalConfig()">Save Configuration</button>
-      </div>
-    </section>
   </div>
 </expl-dialog>
