@@ -194,7 +194,10 @@ export class QueryComponent implements AfterViewInit, OnInit {
   }
 
   requestTaskInfo() {
-    this.vbsService.getClientTaskInfo(this.vbsService.serverRunIDs[0], this);
+    const selectedEvaluation = this.vbsService.selectedEvaluation ?? this.vbsService.serverRunIDs[0];
+    if (selectedEvaluation) {
+      this.vbsService.getClientTaskInfo(selectedEvaluation, this);
+    }
   }
 
   displayFullImage(url: string, index: number) {
@@ -466,7 +469,9 @@ export class QueryComponent implements AfterViewInit, OnInit {
   }
 
   selectRun() {
-
+    if (this.vbsService.selectedEvaluation !== undefined) {
+      this.vbsService.changeAndSaveSelectedEvaluation(this.vbsService.selectedEvaluation);
+    }
   }
 
   getHistory() {
@@ -698,7 +703,7 @@ export class QueryComponent implements AfterViewInit, OnInit {
   submitResult(index: number) {
     const imageID = this.getFilenameFromItem(this.resultURLs[index])
     console.log(`${imageID}`);
-    //this.vbsService.submitImageID(imageID); OLD VERSION OF DRES
+    this.vbsService.submitImageID(imageID);
 
     this.queryEventLogService.logSubmit(`result:${index}`);
     this.expLogService.submitLog();

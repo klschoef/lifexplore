@@ -40,7 +40,7 @@ export class ResultDetailComponent implements OnChanges, OnInit, OnDestroy {
     map(log => (log[this.vbsServerConnectionService.selectedEvaluation!] ?? {})[this.vbsServerConnectionService.currentTaskState$.value?.taskId!]),
     filter(log => log),
     tap(log => console.log("SUBMISSION ENTRY", log, this.selectedResult.filename)),
-    map(log => log.find((entry: any) => entry.image === this.selectedResult.filename))
+    map(log => log.find((entry: any) => entry.image === this.getSubmissionImageID()))
   );
   destroy$ = new Subject<void>();
 
@@ -171,7 +171,13 @@ export class ResultDetailComponent implements OnChanges, OnInit, OnDestroy {
 
   submitImage() {
     console.log("SUBMIT IMAGE", this.selectedResult);
-    this.vbsServerConnectionService.submitImageID(this.selectedResult.filename);
+    this.vbsServerConnectionService.submitImageID(this.getSubmissionImageID());
+  }
+
+  private getSubmissionImageID() {
+    const imagePath = this.selectedResult.originalFilepath ?? this.selectedResult.filename ?? '';
+
+    return this.vbsServerConnectionService.normalizeMediaItemName(imagePath);
   }
 
   deleteImage(filepath: string) {

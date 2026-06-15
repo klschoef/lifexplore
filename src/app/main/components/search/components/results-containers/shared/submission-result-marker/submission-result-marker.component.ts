@@ -34,11 +34,12 @@ export class SubmissionResultMarkerComponent implements OnInit, OnDestroy {
       const taskId = this.vbsServerConnection.currentTaskState$.value?.taskId;
       if (this.vbsServerConnection.selectedEvaluation) {
         const log = (submissionLog[this.vbsServerConnection.selectedEvaluation] ?? {})[taskId!];
+        const resultImage = this.vbsServerConnection.normalizeMediaItemName(this.result.originalFilepath ?? this.result.filename ?? '');
         if (log && log.some) {
           let found = false;
           for (let i = 0; i < log.length; i++) {
             const entry = log[i];
-            if (entry.image === this.result.filename) {
+            if (entry.image === resultImage) {
               console.log("catched entry for evaluation", entry, this.vbsServerConnection.selectedEvaluation);
               if (entry.success == true) {
                 this.cssClass = 'submitted-success';

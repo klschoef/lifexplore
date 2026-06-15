@@ -305,6 +305,7 @@ export class VBSServerConnectionService {
   }
 
   submitImageID(imageID: string) {
+    const normalizedImageID = this.normalizeMediaItemName(imageID);
     // === Submission ===
     //'00:00:10:00', // timecode - in this case, we use the timestamp in the form HH:MM:SS:FF
     console.log("runids", this.serverRunIDs, this.selectedEvaluation);
@@ -314,7 +315,7 @@ export class VBSServerConnectionService {
           {
             answers: [
               {
-                mediaItemName: imageID
+                mediaItemName: normalizedImageID
               }
             ]
           } as ApiClientAnswerSet
@@ -328,13 +329,13 @@ export class VBSServerConnectionService {
         const indeterminate = status.submission === ApiVerdictStatus.INDETERMINATE;
         const undecidable = status.submission === ApiVerdictStatus.UNDECIDABLE;
         if (success) {
-          this.handleSubmissionSuccess(status, ''+imageID);
+          this.handleSubmissionSuccess(status, ''+normalizedImageID);
         } else {
           console.error('Submission failed');
         }
 
         this.submissionLogService.addEntryToLog({
-          image: imageID,
+          image: normalizedImageID,
           success: success,
           indeterminate: indeterminate,
           undecidable: undecidable,
@@ -349,13 +350,13 @@ export class VBSServerConnectionService {
             timestamp: Date.now(),
             category: QueryEventCategory.IMAGE,
             type: "submitImage",
-            value: imageID
+            value: normalizedImageID
           }
         ]);
       }),
       catchError(err => {
         this.submissionLogService.addEntryToLog({
-            image: imageID,
+            image: normalizedImageID,
             success: false,
             indeterminate: false,
             undecidable: false,
@@ -368,6 +369,13 @@ export class VBSServerConnectionService {
         return this.handleSubmissionError(err);
       })
     ).subscribe()
+  }
+
+  normalizeMediaItemName(mediaItemName: string) {
+    return mediaItemName
+      .split('/')
+      .pop()!
+      .replace(/\.(jpg|jpeg|png)$/i, '');
   }
 
 

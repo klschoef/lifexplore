@@ -145,8 +145,8 @@
   <span class="spacer">&nbsp;</span>
 
   <span>
-    <select class="grayBackground" [(ngModel)]="this.selectedServerRun" value="0" (change)="selectRun()">
-      <option *ngFor="let r of this.vbsService.serverRuns; let i = index" [ngValue]="i" [selected]="(i === 0 && this.selectedServerRun === undefined) || (i === +this.selectedServerRun!)">{{r}}</option>
+    <select class="grayBackground" [(ngModel)]="this.vbsService.selectedEvaluation" (change)="selectRun()">
+      <option *ngFor="let evaluation of this.vbsService.evaluations" [ngValue]="evaluation.id">{{evaluation.name}} ({{evaluation.status}})</option>
     </select>
   </span>
   &nbsp;

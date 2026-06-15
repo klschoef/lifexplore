@@ -6,7 +6,7 @@
       <div *ngIf="{val: logToDRES$ | async} as logToDRES" class="no-log-info exp-clickable" [class.active-log]="logToDRES.val" (click)="changeLogToDRES()">{{logToDRES.val ? '' : 'No '}}Log</div>
     </div>
     <select (change)="changeEvaluation($event)" [ngModel]="vbsServerConnectionService.selectedEvaluation">
-      <option *ngFor="let v of vbsServerConnectionService.evaluations" [value]="v.id">{{ v.name }}</option>
+      <option *ngFor="let v of vbsServerConnectionService.evaluations" [value]="v.id">{{ v.name }} ({{ v.status }})</option>
     </select>
     <div class="submission-container" help="State">
       <div class="success" *ngIf="{val: submissionLogSuccessCount$ | async } as data">{{ data.val ?? 0 }}</div>
