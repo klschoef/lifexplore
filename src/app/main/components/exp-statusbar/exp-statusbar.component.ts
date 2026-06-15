@@ -8,6 +8,7 @@ import {combineLatest, filter, Subject, switchMap, takeUntil, tap} from 'rxjs';
 import {GlobalConstantsService} from '../../../shared/config/services/global-constants.service';
 import {ShortcutService} from '../../services/shortcut.service';
 import {SettingsService} from '../../services/settings.service';
+import {ResultPresenterService} from '../../services/result-presenter.service';
 
 @Component({
   selector: 'exp-statusbar',
@@ -56,6 +57,7 @@ export class ExpStatusbarComponent implements OnInit, OnDestroy {
   );
 
   destroy$ = new Subject<void>();
+  topicAnswer = '';
   @ViewChild('topicInput') topicInput!: ElementRef;
 
     constructor(
@@ -64,7 +66,8 @@ export class ExpStatusbarComponent implements OnInit, OnDestroy {
       public vbsServerConnectionService: VBSServerConnectionService,
       private submissionLogService: SubmissionLogService,
       private shortcutService: ShortcutService,
-      private settingsService: SettingsService
+      private settingsService: SettingsService,
+      private resultPresenterService: ResultPresenterService
     ) { }
 
   ngOnInit() {
@@ -77,6 +80,13 @@ export class ExpStatusbarComponent implements OnInit, OnDestroy {
           }),
           takeUntil(this.destroy$)
       ).subscribe();
+
+      this.resultPresenterService.estimatedAnswer$.pipe(
+        filter((value): value is string => !!value),
+        takeUntil(this.destroy$)
+      ).subscribe((value) => {
+        this.topicAnswer = value;
+      });
   }
 
   ngOnDestroy() {
@@ -100,6 +110,7 @@ export class ExpStatusbarComponent implements OnInit, OnDestroy {
       this.vbsServerConnectionService.submitText(inputVal);
 
       this.topicInput.nativeElement.value = '';
+      this.topicAnswer = '';
       this.topicInput.nativeElement.blur();
   }
 

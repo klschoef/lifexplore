@@ -16,6 +16,8 @@ export class ResultPresenterService {
   showHelp$ = new BehaviorSubject<boolean>(false);
   showTuning$ = new BehaviorSubject<boolean>(false);
   triggerSearch$ = new BehaviorSubject<boolean>(false);
+  translatedQuery$ = new BehaviorSubject<string | undefined>(undefined);
+  estimatedAnswer$ = new BehaviorSubject<string | undefined>(undefined);
 
   constructor() { }
 

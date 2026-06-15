@@ -114,6 +114,14 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
           this.onSearchChange();
         });
 
+    this.resultPresenterService.translatedQuery$.pipe(
+      filter((value): value is string => !!value),
+      takeUntil(this.destroy$)
+    ).subscribe((value) => {
+      this.searchValue = value;
+      this.searchValueChange.emit(value);
+    });
+
     this.shortcutService.isRAndShiftIsPressed.pipe(
       skip(1),
       takeUntil(this.destroy$)

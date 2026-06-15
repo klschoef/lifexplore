@@ -48,6 +48,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     }),
     filter((msg) => msg && msg.results && !msg.type && msg.requestId === this.requestId),
     tap((msg) => {
+      this.applyBackendQueryAssistance(msg);
       this.groupSize = msg.group_size;
       this.totalResults = msg.totalresults ?? 0;
       this.totalPages = Math.ceil(this.totalResults / this.getResultsPerPage());
@@ -224,6 +225,21 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   protected readonly WSServerStatus = WSServerStatus;
+
+  private applyBackendQueryAssistance(msg: any) {
+    if (typeof msg.translated_query === 'string' && msg.translated_query.trim()) {
+      this.resultPresenterService.translatedQuery$.next(msg.translated_query.trim());
+      this.lastValue = msg.translated_query.trim();
+    }
+
+    if (
+      typeof msg.estimated_answer === 'string'
+      && msg.estimated_answer.trim()
+      && msg.estimated_answer.trim() !== 'Not determinable from the top results.'
+    ) {
+      this.resultPresenterService.estimatedAnswer$.next(msg.estimated_answer.trim());
+    }
+  }
 
   private getResultsPerPage() {
     const settings = this.settingsService.settings$.value;

@@ -24,6 +24,7 @@
   <div class="submit-container" help="QA-Answer">
     Topic Answer
     <input #topicInput class="exp-textfield" type="text"
+           [(ngModel)]="topicAnswer"
            placeholder="QA Answer"
            (focusin)="focusTopicInput(true)"
            (focusout)="focusTopicInput(false)" >
