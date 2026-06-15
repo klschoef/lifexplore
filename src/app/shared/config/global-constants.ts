@@ -1,5 +1,15 @@
 import { LocalConfig } from "./local-config";
 
+function buildWebSocketURL(serverPrefix: 'NODE' | 'CLIP') {
+  const protocol = (LocalConfig as any)[`config_${serverPrefix}_SERVER_PROTOCOL`] ?? 'wss://';
+  const host = (LocalConfig as any)[`config_${serverPrefix}_SERVER_HOST`];
+  const port = (LocalConfig as any)[`config_${serverPrefix}_SERVER_PORT`];
+  const path = (LocalConfig as any)[`config_${serverPrefix}_SERVER_PATH`] ?? '';
+  const normalizedPath = path === '/ws' ? '/ws' : '';
+
+  return `${protocol}${host}:${port}${normalizedPath}`;
+}
+
 //console.log(videoShots)
 
 //export var vbsServerConnectionService: VBSServerConnectionService | undefined;
@@ -59,8 +69,8 @@ export interface ResultLog {
 export class GlobalConstants {
   public static configVBSSERVER = 'https://vbs.videobrowsing.org';
 
-  public static clipServerURL: string = 'wss://' + LocalConfig.config_CLIP_SERVER_HOST + ':' + LocalConfig.config_CLIP_SERVER_PORT;
-  public static nodeServerURL: string = 'wss://' + LocalConfig.config_NODE_SERVER_HOST + ':' + LocalConfig.config_NODE_SERVER_PORT;
+  public static clipServerURL: string = buildWebSocketURL('CLIP');
+  public static nodeServerURL: string = buildWebSocketURL('NODE');
   public static dataHost = LocalConfig.config_DATA_BASE_URL;
   public static uploadServerURL = LocalConfig.config_UPLOAD_URL;
 

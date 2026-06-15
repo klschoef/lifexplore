@@ -111,6 +111,26 @@
 
       <div class="config-group">
         <h4>Connections</h4>
+        <div class="server-endpoint-list">
+          <label class="field-row" *ngFor="let serverConfig of serverEndpointConfigs">
+            <span>{{ serverConfig.label }}</span>
+            <div class="server-endpoint-controls">
+              <select [(ngModel)]="configDraft[serverConfig.protocolKey]" (ngModelChange)="configSaved = false">
+                <option *ngFor="let protocol of serverProtocolOptions" [ngValue]="protocol">{{ protocol }}</option>
+              </select>
+              <input type="text"
+                     [(ngModel)]="configDraft[serverConfig.hostKey]"
+                     (ngModelChange)="configSaved = false">
+              <input type="number"
+                     class="server-port-input"
+                     [(ngModel)]="configDraft[serverConfig.portKey]"
+                     (ngModelChange)="configSaved = false">
+              <select [(ngModel)]="configDraft[serverConfig.pathKey]" (ngModelChange)="configSaved = false">
+                <option *ngFor="let pathOption of serverPathOptions" [ngValue]="pathOption.value">{{ pathOption.label }}</option>
+              </select>
+            </div>
+          </label>
+        </div>
         <div class="settings-grid">
           <label class="field-row" *ngFor="let field of connectionConfigFields">
             <span>{{ field.label }}</span>

@@ -38,6 +38,21 @@ expl-dialog {
   gap: 10px 16px;
 }
 
+.server-endpoint-list {
+  display: grid;
+  gap: 10px;
+}
+
+.server-endpoint-controls {
+  display: grid;
+  grid-template-columns: 86px minmax(180px, 1fr) 86px 92px;
+  gap: 8px;
+
+  .server-port-input {
+    text-align: right;
+  }
+}
+
 .field-row {
   display: flex;
   flex-direction: column;
@@ -149,5 +164,9 @@ expl-dialog {
 
   .settings-grid {
     grid-template-columns: 1fr;
+  }
+
+  .server-endpoint-controls {
+    grid-template-columns: 1fr 1fr;
   }
 }

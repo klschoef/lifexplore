@@ -19,6 +19,14 @@ interface ConfigField {
   type: 'text' | 'number' | 'password' | 'url';
 }
 
+interface ServerEndpointConfig {
+  label: string;
+  protocolKey: string;
+  hostKey: string;
+  portKey: string;
+  pathKey: string;
+}
+
 @Component({
   selector: 'lx-tuning-dialog',
   templateUrl: './tuning-dialog.component.html',
@@ -102,11 +110,28 @@ export class TuningDialogComponent {
   );
   configDraft: any = {};
   configSaved = false;
+  serverProtocolOptions = ['ws://', 'wss://'];
+  serverPathOptions = [
+    {label: 'no /ws', value: ''},
+    {label: '/ws', value: '/ws'},
+  ];
+  serverEndpointConfigs: ServerEndpointConfig[] = [
+    {
+      label: 'Node server Host',
+      protocolKey: 'config_NODE_SERVER_PROTOCOL',
+      hostKey: 'config_NODE_SERVER_HOST',
+      portKey: 'config_NODE_SERVER_PORT',
+      pathKey: 'config_NODE_SERVER_PATH',
+    },
+    {
+      label: 'CLIP server Host',
+      protocolKey: 'config_CLIP_SERVER_PROTOCOL',
+      hostKey: 'config_CLIP_SERVER_HOST',
+      portKey: 'config_CLIP_SERVER_PORT',
+      pathKey: 'config_CLIP_SERVER_PATH',
+    },
+  ];
   connectionConfigFields: ConfigField[] = [
-    {key: 'config_NODE_SERVER_HOST', label: 'Node Server Host', type: 'text'},
-    {key: 'config_NODE_SERVER_PORT', label: 'Node Server Port', type: 'number'},
-    {key: 'config_CLIP_SERVER_HOST', label: 'CLIP Server Host', type: 'text'},
-    {key: 'config_CLIP_SERVER_PORT', label: 'CLIP Server Port', type: 'number'},
     {key: 'config_DATA_BASE_URL', label: 'Data Base URL', type: 'url'},
     {key: 'config_DATA_BASE_URL_THUMBS', label: 'Thumbnail Base URL', type: 'url'},
     {key: 'config_UPLOAD_URL', label: 'Upload URL', type: 'url'},
@@ -244,6 +269,9 @@ export class TuningDialogComponent {
 
   saveLocalConfig() {
     const normalizedConfig = {...this.configDraft};
+    this.serverEndpointConfigs.forEach((serverConfig) => {
+      normalizedConfig[serverConfig.portKey] = Number(normalizedConfig[serverConfig.portKey]);
+    });
 
     [...this.connectionConfigFields, ...this.displayConfigFields, ...this.credentialConfigFields]
       .filter((field) => field.type === 'number')

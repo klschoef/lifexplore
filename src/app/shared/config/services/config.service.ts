@@ -4,6 +4,7 @@ import { GlobalConstants } from '../global-constants';
 import {BehaviorSubject} from 'rxjs';
 
 export const LOCALSTORAGE_FIELDNAME = 'lifeXploreConfig';
+type WebSocketServerPrefix = 'NODE' | 'CLIP';
 
 @Injectable({
   providedIn: 'root'
@@ -33,8 +34,12 @@ export class ConfigService {
     return {
       config_CLIP_SERVER_HOST: LocalConfig.config_CLIP_SERVER_HOST,
       config_CLIP_SERVER_PORT: LocalConfig.config_CLIP_SERVER_PORT,
+      config_CLIP_SERVER_PROTOCOL: (LocalConfig as any).config_CLIP_SERVER_PROTOCOL ?? 'wss://',
+      config_CLIP_SERVER_PATH: (LocalConfig as any).config_CLIP_SERVER_PATH ?? '',
       config_NODE_SERVER_HOST: LocalConfig.config_NODE_SERVER_HOST,
       config_NODE_SERVER_PORT: LocalConfig.config_NODE_SERVER_PORT,
+      config_NODE_SERVER_PROTOCOL: (LocalConfig as any).config_NODE_SERVER_PROTOCOL ?? 'wss://',
+      config_NODE_SERVER_PATH: (LocalConfig as any).config_NODE_SERVER_PATH ?? '/ws',
       config_DATA_BASE_URL: LocalConfig.config_DATA_BASE_URL,
       config_DATA_BASE_URL_THUMBS: LocalConfig.config_DATA_BASE_URL_THUMBS,
       config_USER: LocalConfig.config_USER,
@@ -61,10 +66,7 @@ export class ConfigService {
   }
 
   getNodeServerURL() {
-    //use the first line below for the original FAISS and the second for the new answer.py
-    //return `ws://${this.config.config_NODE_SERVER_HOST}:${this.config.config_NODE_SERVER_PORT}`;
-    return `wss://${this.config.config_NODE_SERVER_HOST}:${this.config.config_NODE_SERVER_PORT}/ws`;
-    //return GlobalConstants.nodeServerURL;
+    return this.buildWebSocketURL(this.config, 'NODE');
   }
 
   getKeyframeBaseUrl() {
@@ -80,11 +82,25 @@ export class ConfigService {
   }
 
   private applyConfig(config: any) {
-    GlobalConstants.nodeServerURL = `ws://${config.config_NODE_SERVER_HOST}:${config.config_NODE_SERVER_PORT}`;
+    GlobalConstants.nodeServerURL = this.buildWebSocketURL(config, 'NODE');
+    GlobalConstants.clipServerURL = this.buildWebSocketURL(config, 'CLIP');
     GlobalConstants.dataHost = config.config_DATA_BASE_URL;
     GlobalConstants.uploadServerURL = config.config_UPLOAD_URL;
     GlobalConstants.keyframeBaseURL = config.config_DATA_BASE_URL;
     GlobalConstants.keyframeThumbsBaseURL = config.config_DATA_BASE_URL_THUMBS;
     GlobalConstants.MAX_RESULTS_TO_DISPLAY = config.config_MAX_RESULTS_TO_DISPLAY;
+  }
+
+  private buildWebSocketURL(config: any, serverPrefix: WebSocketServerPrefix) {
+    const protocol = config[`config_${serverPrefix}_SERVER_PROTOCOL`] ?? 'wss://';
+    const host = String(config[`config_${serverPrefix}_SERVER_HOST`] ?? '')
+      .trim()
+      .replace(/^wss?:\/\//i, '')
+      .replace(/\/.*$/, '');
+    const port = config[`config_${serverPrefix}_SERVER_PORT`];
+    const path = config[`config_${serverPrefix}_SERVER_PATH`] ?? '';
+    const normalizedPath = path === '/ws' ? '/ws' : '';
+
+    return `${protocol}${host}:${port}${normalizedPath}`;
   }
 }
