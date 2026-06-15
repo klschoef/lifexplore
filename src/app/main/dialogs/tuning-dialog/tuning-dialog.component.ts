@@ -111,6 +111,7 @@ export class TuningDialogComponent {
   );
   configDraft: any = {};
   configSaved = false;
+  private thumbnailAspectRatio = 1;
   serverProtocolOptions = ['ws://', 'wss://'];
   serverPathOptions = [
     {label: 'no /ws', value: ''},
@@ -168,6 +169,7 @@ export class TuningDialogComponent {
     public shortcutService: ShortcutService,
   ) {
     this.configDraft = {...this.configService.getConfiguration()};
+    this.thumbnailAspectRatio = this.getThumbnailAspectRatio();
   }
 
   clickOnDistinctiveType(l2Type: TuningL2Type) {
@@ -278,6 +280,57 @@ export class TuningDialogComponent {
       ...this.settingsService.getQuerySettings(),
       textCommandPrefix: event.target.value
     })
+  }
+
+  onConfigFieldChange(key: string, value: any) {
+    if (key === 'config_THUMB_WIDTH' || key === 'config_THUMB_HEIGHT') {
+      this.onThumbnailDimensionChange(key, value);
+      return;
+    }
+
+    this.configDraft[key] = value;
+    this.configSaved = false;
+  }
+
+  onLinkThumbnailDimensionsChange(checked: boolean) {
+    this.configDraft.config_LINK_THUMB_DIMENSIONS = checked;
+    this.configSaved = false;
+
+    if (checked) {
+      this.thumbnailAspectRatio = this.getThumbnailAspectRatio();
+    }
+  }
+
+  private onThumbnailDimensionChange(key: string, value: any) {
+    const numericValue = Number(value);
+    this.configDraft[key] = Number.isFinite(numericValue) ? numericValue : value;
+
+    if (!this.configDraft.config_LINK_THUMB_DIMENSIONS) {
+      this.thumbnailAspectRatio = this.getThumbnailAspectRatio();
+      this.configSaved = false;
+      return;
+    }
+
+    if (!Number.isFinite(numericValue) || numericValue <= 0) {
+      this.configSaved = false;
+      return;
+    }
+
+    const aspectRatio = this.thumbnailAspectRatio || this.getThumbnailAspectRatio();
+    if (key === 'config_THUMB_WIDTH') {
+      this.configDraft.config_THUMB_HEIGHT = Math.max(1, Math.round(numericValue / aspectRatio));
+    } else {
+      this.configDraft.config_THUMB_WIDTH = Math.max(1, Math.round(numericValue * aspectRatio));
+    }
+
+    this.configSaved = false;
+  }
+
+  private getThumbnailAspectRatio() {
+    const width = Number(this.configDraft.config_THUMB_WIDTH);
+    const height = Number(this.configDraft.config_THUMB_HEIGHT);
+
+    return width > 0 && height > 0 ? width / height : 1;
   }
 
   saveLocalConfig() {

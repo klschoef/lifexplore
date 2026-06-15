@@ -34,6 +34,12 @@ export class DefaultResultContainerComponent implements OnInit, OnDestroy, After
   disableControls$ = new BehaviorSubject<boolean>(false); //to disable navigation like when we have another result open
   pageSwitchFlag = 0; // 0: no page switch, 1: next page, -1: previous page
   destroy$ = new Subject<void>();
+  private dateFormatter = new Intl.DateTimeFormat(undefined, {
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
   gridSettings$ = this.settingsService.settings$.pipe(
     map((settings) => {
       const config = settings[SettingsService.LOCAL_CONFIG_SETTINGS] ?? {};
@@ -41,13 +47,13 @@ export class DefaultResultContainerComponent implements OnInit, OnDestroy, After
       const thumbWidth = Number(config.config_THUMB_WIDTH ?? 250);
       const thumbHeight = Number(config.config_THUMB_HEIGHT ?? 200);
       const resultWidth = Math.max(thumbWidth, 120);
-      const rowGap = this.groupSize ? 0 : 32;
+      const gridGap = 14;
       const safeImagesPerRow = Math.max(imagesPerRow, 1);
 
       return {
         '--result-width': `${resultWidth}px`,
         '--img-height': `${Math.max(thumbHeight, 60)}px`,
-        '--container-max-width': `${(resultWidth * safeImagesPerRow) + (rowGap * (safeImagesPerRow - 1))}px`,
+        '--container-max-width': `${(resultWidth * safeImagesPerRow) + (gridGap * (safeImagesPerRow - 1))}px`,
       };
     })
   );
@@ -231,5 +237,124 @@ export class DefaultResultContainerComponent implements OnInit, OnDestroy, After
   openCurrentDetail() {
     this.openNewResultTrigger$.next(this.selectedResult$.value);
     this.openSelectedResultInDetail$.next(true);
+  }
+
+  getResultDateLabel(result: any): string {
+    const date = this.getImageDate(result);
+    return date ? this.dateFormatter.format(date) : '';
+  }
+
+  getResultLocationLabel(result: any): string {
+    const location = result?.location_metadata ?? result?.locationMeta ?? result?.metadata?.location_metadata ?? {};
+    const address = this.firstTextValue(
+        result?.place_label,
+        result?.placeLabel,
+        result?.place_labels,
+        result?.placeLabels,
+        result?.metadata?.place_label,
+        result?.metadata?.placeLabel,
+        location.address,
+        result?.address,
+        result?.metadata?.address,
+        location.display_name,
+        location.name,
+        result?.location_name
+      );
+
+    if (address) {
+      return address;
+    }
+
+    const cityCountry = [location.city ?? result?.city, location.country ?? result?.country]
+      .map((value) => this.firstTextValue(value))
+      .filter((value) => value)
+        .join(', ');
+    if (cityCountry) {
+      return cityCountry;
+    }
+
+    return this.firstTextValue(result?.places?.[0]?.place, result?.place);
+  }
+
+  private getImageDate(result: any): Date | undefined {
+    return this.parseDateValue(result?.datetime)
+      ?? this.parseDateValue(result?.timestamp)
+      ?? this.parseDateValue(result?.date)
+      ?? this.parseDateFromPath(result?.originalFilepath ?? result?.filepath ?? result?.filename);
+  }
+
+  private parseDateValue(value: unknown): Date | undefined {
+    if (value === undefined || value === null || value === '' || value === 0 || value === '0') {
+      return undefined;
+    }
+
+    if (typeof value === 'number') {
+      const timestamp = value < 10000000000 ? value * 1000 : value;
+      return this.validDate(new Date(timestamp));
+    }
+
+    if (typeof value !== 'string') {
+      return undefined;
+    }
+
+    const trimmedValue = value.trim();
+    const filenameDate = this.parseDateFromPath(trimmedValue);
+    if (filenameDate) {
+      return filenameDate;
+    }
+
+    return this.validDate(new Date(trimmedValue));
+  }
+
+  private parseDateFromPath(path?: string): Date | undefined {
+    const match = path?.match(/(\d{8})[_-](\d{6})/);
+    if (!match) {
+      return undefined;
+    }
+
+    const datePart = match[1];
+    const timePart = match[2];
+    const year = Number(datePart.substring(0, 4));
+    const month = Number(datePart.substring(4, 6)) - 1;
+    const day = Number(datePart.substring(6, 8));
+    const hours = Number(timePart.substring(0, 2));
+    const minutes = Number(timePart.substring(2, 4));
+    const seconds = Number(timePart.substring(4, 6));
+
+    return this.validDate(new Date(year, month, day, hours, minutes, seconds));
+  }
+
+  private validDate(date: Date): Date | undefined {
+    return Number.isNaN(date.getTime()) ? undefined : date;
+  }
+
+  private firstTextValue(...values: unknown[]): string {
+    for (const value of values) {
+      if (typeof value === 'string' && value.trim()) {
+        return value.trim();
+      }
+
+      if (Array.isArray(value)) {
+        const arrayValue = this.firstTextValue(...value);
+        if (arrayValue) {
+          return arrayValue;
+        }
+      }
+
+      if (value && typeof value === 'object') {
+        const objectValue = this.firstTextValue(
+          (value as any).label,
+          (value as any).name,
+          (value as any).place,
+          (value as any).address,
+          (value as any).value
+        );
+        if (objectValue) {
+          return objectValue;
+        }
+      }
+    }
+
+    return '';
   }
 }

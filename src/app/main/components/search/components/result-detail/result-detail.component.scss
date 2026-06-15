@@ -17,15 +17,17 @@ expl-dialog {
   .nav-bar {
     display: flex;
     flex-direction: row;
-    gap: 8px;
+    gap: 12px;
     align-items: center;
     background: var(--exp-color-primary);
     color: white;
-    min-height: 54px;
-    padding: 8px 12px;
+    min-height: 58px;
+    padding: 10px 14px;
 
     .submission-text {
-      font-size: 20px;
+      font-size: 15px;
+      font-weight: 700;
+      white-space: nowrap;
 
       &.request-error {
         color: var(--exp-color-request-failure);
@@ -51,11 +53,36 @@ expl-dialog {
     .mode-container {
       display: flex;
       flex-direction: row;
-      gap: 8px;
+      gap: 4px;
       flex-wrap: wrap;
+      padding: 3px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+
+      .mode-tab {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 30px;
+        padding: 3px 10px;
+        border-radius: 6px;
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1;
+        transition: background 120ms ease, color 120ms ease;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.1);
+          color: white;
+        }
+      }
 
       .active-tab {
-        color: var(--exp-color-secondary);
+        background: rgba(255, 255, 255, 0.92);
+        color: #111827;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
       }
     }
 
@@ -67,11 +94,61 @@ expl-dialog {
     }
 
     .title-container {
-      padding: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      padding: 2px 8px;
       flex-grow: 1;
       text-align: center;
       min-width: 120px;
       font-weight: 700;
+
+      .title-date {
+        color: rgba(255, 255, 255, 0.95);
+        font-size: 15px;
+        line-height: 1.15;
+      }
+
+      .title-location {
+        max-width: min(420px, 42vw);
+        color: rgba(255, 255, 255, 0.62);
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.15;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
+    .nav-action {
+      min-width: 88px;
+      height: 36px;
+      border: 0;
+      border-radius: 7px;
+      padding: 0 14px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: filter 120ms ease, transform 120ms ease, box-shadow 120ms ease;
+
+      &:hover {
+        filter: brightness(1.04);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.24);
+      }
+    }
+
+    .delete {
+      background: #ef4444;
+      color: white;
+    }
+
+    .secondary {
+      background: var(--exp-color-success);
+      color: var(--exp-color-light);
     }
   }
 
@@ -100,6 +177,11 @@ expl-dialog {
         order: 3;
         width: 100%;
         text-align: left;
+        align-items: flex-start;
+
+        .title-location {
+          max-width: 100%;
+        }
       }
     }
 

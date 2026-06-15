@@ -147,10 +147,18 @@
 
       <div class="config-group">
         <h4>Display And Results</h4>
+        <label class="field-row checkbox-row dimension-link-row">
+          <span>Link thumbnail width and height</span>
+          <input type="checkbox"
+                 [ngModel]="configDraft.config_LINK_THUMB_DIMENSIONS ?? true"
+                 (ngModelChange)="onLinkThumbnailDimensionsChange($event)">
+        </label>
         <div class="settings-grid">
           <label class="field-row" *ngFor="let field of displayConfigFields">
             <span>{{ field.label }}</span>
-            <input [type]="field.type" [(ngModel)]="configDraft[field.key]" (ngModelChange)="configSaved = false">
+            <input [type]="field.type"
+                   [ngModel]="configDraft[field.key]"
+                   (ngModelChange)="onConfigFieldChange(field.key, $event)">
           </label>
         </div>
       </div>

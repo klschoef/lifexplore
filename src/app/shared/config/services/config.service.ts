@@ -58,6 +58,7 @@ export class ConfigService {
       config_UPLOAD_URL: LocalConfig.config_UPLOAD_URL,
       config_THUMB_WIDTH: LocalConfig.config_THUMB_WIDTH,
       config_THUMB_HEIGHT: LocalConfig.config_THUMB_HEIGHT,
+      config_LINK_THUMB_DIMENSIONS: (LocalConfig as any).config_LINK_THUMB_DIMENSIONS ?? true,
       config_MAX_RESULTS_TO_RETURN: LocalConfig.config_MAX_RESULTS_TO_RETURN,
       config_RESULTS_PER_PAGE: LocalConfig.config_RESULTS_PER_PAGE,
       config_IMAGES_PER_ROW: LocalConfig.config_IMAGES_PER_ROW,
