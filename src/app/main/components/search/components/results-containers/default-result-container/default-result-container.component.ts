@@ -35,6 +35,7 @@ export class DefaultResultContainerComponent implements OnInit, OnDestroy, After
   pageSwitchFlag = 0; // 0: no page switch, 1: next page, -1: previous page
   destroy$ = new Subject<void>();
   private dateFormatter = new Intl.DateTimeFormat(undefined, {
+    year: 'numeric',
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
@@ -244,38 +245,6 @@ export class DefaultResultContainerComponent implements OnInit, OnDestroy, After
     return date ? this.dateFormatter.format(date) : '';
   }
 
-  getResultLocationLabel(result: any): string {
-    const location = result?.location_metadata ?? result?.locationMeta ?? result?.metadata?.location_metadata ?? {};
-    const address = this.firstTextValue(
-        result?.place_label,
-        result?.placeLabel,
-        result?.place_labels,
-        result?.placeLabels,
-        result?.metadata?.place_label,
-        result?.metadata?.placeLabel,
-        location.address,
-        result?.address,
-        result?.metadata?.address,
-        location.display_name,
-        location.name,
-        result?.location_name
-      );
-
-    if (address) {
-      return address;
-    }
-
-    const cityCountry = [location.city ?? result?.city, location.country ?? result?.country]
-      .map((value) => this.firstTextValue(value))
-      .filter((value) => value)
-        .join(', ');
-    if (cityCountry) {
-      return cityCountry;
-    }
-
-    return this.firstTextValue(result?.places?.[0]?.place, result?.place);
-  }
-
   private getImageDate(result: any): Date | undefined {
     return this.parseDateValue(result?.datetime)
       ?? this.parseDateValue(result?.timestamp)
@@ -326,35 +295,5 @@ export class DefaultResultContainerComponent implements OnInit, OnDestroy, After
 
   private validDate(date: Date): Date | undefined {
     return Number.isNaN(date.getTime()) ? undefined : date;
-  }
-
-  private firstTextValue(...values: unknown[]): string {
-    for (const value of values) {
-      if (typeof value === 'string' && value.trim()) {
-        return value.trim();
-      }
-
-      if (Array.isArray(value)) {
-        const arrayValue = this.firstTextValue(...value);
-        if (arrayValue) {
-          return arrayValue;
-        }
-      }
-
-      if (value && typeof value === 'object') {
-        const objectValue = this.firstTextValue(
-          (value as any).label,
-          (value as any).name,
-          (value as any).place,
-          (value as any).address,
-          (value as any).value
-        );
-        if (objectValue) {
-          return objectValue;
-        }
-      }
-    }
-
-    return '';
   }
 }

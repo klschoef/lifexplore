@@ -22,9 +22,8 @@
         ></div>
         <div *ngIf="shortcutService.isFPressed | async" class="fast-submit-mode">Click to Submit</div>
         <app-submission-result-marker [result]="result"></app-submission-result-marker>
-        <div *ngIf="getResultDateLabel(result) || getResultLocationLabel(result)" class="result-overlays">
+        <div *ngIf="getResultDateLabel(result)" class="result-overlays">
           <div *ngIf="getResultDateLabel(result)" class="result-meta-line date">{{getResultDateLabel(result)}}</div>
-          <div *ngIf="getResultLocationLabel(result)" class="result-meta-line location">{{getResultLocationLabel(result)}}</div>
         </div>
       </div>
     </div>

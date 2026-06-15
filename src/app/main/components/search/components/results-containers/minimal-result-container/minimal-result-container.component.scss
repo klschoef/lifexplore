@@ -5,6 +5,14 @@
   padding-bottom: 53px;
   max-width: var(--container-max-width, none);
 
+  &.local-mode {
+    max-width: none;
+    max-height: calc(100vh - 190px);
+    overflow: auto;
+    padding: 8px 0 24px;
+    overscroll-behavior: contain;
+  }
+
 
   .lifelog-search-result {
     width: var(--result-width, 180px);

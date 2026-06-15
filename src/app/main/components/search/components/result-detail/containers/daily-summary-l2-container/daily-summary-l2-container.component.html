@@ -1,9 +1,15 @@
-<ng-container *ngIf="results$ | async as results;">
+<div class="daily-results-panel" *ngIf="results$ | async as results;">
   <div class="daily-header">
     <div class="previous-next-container">
-      <mat-icon class="exp-clickable exp-hover-scale" (click)="decreaseDateByOneDay()" aria-hidden="false" fontIcon="arrow_back"></mat-icon>
-      {{navigated_date | date}}
-      <mat-icon class="exp-clickable exp-hover-scale" (click)="increaseDateByOneDay()" aria-hidden="false" fontIcon="arrow_forward"></mat-icon>
+      <button type="button" class="day-nav-button exp-clickable" (click)="decreaseDateByOneDay()">
+        <mat-icon aria-hidden="true" fontIcon="chevron_left"></mat-icon>
+        Previous day
+      </button>
+      <div class="current-day">{{navigated_date | date}}</div>
+      <button type="button" class="day-nav-button exp-clickable" (click)="increaseDateByOneDay()">
+        Next day
+        <mat-icon aria-hidden="true" fontIcon="chevron_right"></mat-icon>
+      </button>
     </div>
     <div class="pages-container" *ngIf="pages">
       <div
@@ -26,9 +32,8 @@
         ...{{ totalPages }}
       </div>
     </div>
-    <div class="exp-clickable exp-hover-scale sorting-container" (click)="changeSorting()">
-      <mat-icon class="first" [class.active]="ascending" aria-hidden="false" fontIcon="arrow_upward"></mat-icon>
-      <mat-icon [class.active]="!ascending" aria-hidden="false" fontIcon="arrow_downward"></mat-icon>
+    <div class="exp-clickable sorting-container" (click)="changeSorting()">
+      {{ ascending ? 'Oldest first' : 'Newest first' }}
     </div>
   </div>
   <app-minimal-result-container
@@ -40,4 +45,4 @@
     [lockEscapeInParent$]="lockEscapeInParent$"
     [detailModes]="detailModes"
     [initialSelectedResult]="result"/>
-</ng-container>
+</div>
