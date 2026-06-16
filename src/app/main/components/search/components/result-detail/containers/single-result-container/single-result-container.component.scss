@@ -1,7 +1,14 @@
+:host {
+  display: block;
+  height: 100%;
+  min-height: 0;
+}
+
 .content-container {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
-  max-height: inherit;
+  height: 100%;
+  max-height: 100%;
   min-height: 0;
   background: #111827;
   align-items: stretch;
@@ -16,13 +23,13 @@
     background: #0f172a;
     align-self: stretch;
     box-sizing: border-box;
-    max-height: inherit;
+    max-height: 100%;
 
     img {
       display: block;
       width: 100%;
       height: auto;
-      max-height: calc(100vh - 150px);
+      max-height: 100%;
       min-height: 0;
       object-fit: contain;
     }
@@ -31,7 +38,7 @@
   .metadata {
     min-width: 0;
     min-height: 0;
-    max-height: inherit;
+    max-height: 100%;
     overflow: auto;
     padding: 18px;
     background: var(--exp-color-light);

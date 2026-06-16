@@ -157,6 +157,7 @@ expl-dialog {
     overflow: hidden;
     min-width: 0;
     min-height: 0;
+    height: calc(100vh - 118px);
     max-height: calc(100vh - 118px);
   }
 }
@@ -187,6 +188,7 @@ expl-dialog {
     }
 
     .content {
+      height: calc(100vh - 118px);
       max-height: calc(100vh - 118px);
     }
   }
