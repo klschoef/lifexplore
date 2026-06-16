@@ -39,6 +39,9 @@
           <div help="x" class="first-per-day-container">
             FPD <input type="checkbox" [ngModel]="firstPerDay$ | async" (change)="onChangeFirstPerDay($event)">
           </div>
+          <div class="first-per-day-container">
+            TD <input type="checkbox" [ngModel]="temporalDiversity$ | async" (change)="onChangeTemporalDiversity($event)">
+          </div>
           <div help="h">
             <mat-icon class="exp-clickable exp-hover-scale"
                       aria-hidden="false"

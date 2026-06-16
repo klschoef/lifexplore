@@ -82,10 +82,15 @@ export class PythonServerService {
   }
 
   sendMessage(message: any,  source: string = 'appcomponent', logType: string = 'search'): void {
+    const content = {
+      ...message,
+      username: message?.username ?? this.configService.getConfiguration().config_USER
+    };
     let request = {
       source: source,
-      content: message
+      content
     };
+    console.log('server message:', request);
     this.socket?.send(JSON.stringify(request));
 
     this.vbsServer.submitQueryResultLogDirectly('interaction', [], [
@@ -93,7 +98,7 @@ export class PythonServerService {
         timestamp: Date.now(),
         category: QueryEventCategory.BROWSING,
         type: logType,
-        value: JSON.stringify(message)
+        value: JSON.stringify(content)
       }
     ]);
   }

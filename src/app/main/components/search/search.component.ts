@@ -199,7 +199,8 @@ export class SearchComponent implements OnInit, OnDestroy {
         selectedpage: this.currentPage.toString(),
         queryMode: this.queryModes[0].name,
         requestId: this.requestId,
-        ...querySettings
+        ...querySettings,
+        temporalDiversity: querySettings?.temporalDiversity ?? false
       };
 
       this.lastValue = value;

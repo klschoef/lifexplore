@@ -33,10 +33,15 @@ export class NodeServerConnectionService {
   }
 
   public sendToNodeServer(msg:any, source: string = 'appcomponent') {
+      const content = {
+          ...msg,
+          username: msg?.username ?? this.configService.getConfiguration().config_USER
+      };
       let message = {
           source: source,
-          content: msg
+          content
       };
+      console.log('server message:', message);
       this.messages.next(message);
   }
 

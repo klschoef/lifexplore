@@ -94,15 +94,13 @@ export class AppComponent implements AfterViewInit {
     }
   }
 
-  @HostListener('document:focusin', ['$event'])
-  onFocus(event: FocusEvent): void {
-    console.log("focus on", event);
+  @HostListener('document:focusin')
+  onFocus(): void {
     this.shortcutService.isInputFocusedSubject.next(true);
   }
 
-  @HostListener('document:focusout', ['$event'])
-  onBlur(event: FocusEvent): void {
-    console.log("focus out", event);
+  @HostListener('document:focusout')
+  onBlur(): void {
     this.shortcutService.isInputFocusedSubject.next(false);
   }
 

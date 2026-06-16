@@ -63,6 +63,10 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
     filter((l2dist) => l2dist !== undefined),
   );
 
+  temporalDiversity$ = this.settingsService.settings$.pipe(
+    map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.temporalDiversity ?? false),
+  );
+
   textCommandPrefix$ = this.settingsService.settings$.pipe(
     map((settings) => settings[SettingsService.LOCAL_QUERY_SETTINGS]?.textCommandPrefix ?? '-'),
     filter((res) => res !== undefined),
@@ -189,6 +193,10 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
     })
     this.settingsService.saveQuerySettings({
       ...this.settingsService.getQuerySettings(),
+      temporalDiversity: false
+    })
+    this.settingsService.saveQuerySettings({
+      ...this.settingsService.getQuerySettings(),
       temporalPrefetchMode: true
     })
     this.settingsService.saveQuerySettings({
@@ -223,6 +231,7 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
       this.settingsService.saveQuerySettings({
         l2dist: item.l2dist,
         firstPerDay: item.firstPerDay,
+        temporalDiversity: item.temporalDiversity ?? false,
       })
       this.graphical_content = JsonToGraphicalQueryTransformer.transformJsonArrayToGraphical(item.query_dicts);
     } else {
@@ -239,6 +248,7 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
       queryDefaultModel: item.queryDefaultModel ?? (item.useGPTasDefault ? QueryDefaultModel.gpt : QueryDefaultModel.clip),
       useGPTasDefault: item.useGPTasDefault ?? false,
       firstPerDay: item.firstPerDay ?? false,
+      temporalDiversity: item.temporalDiversity ?? false,
       l2dist: item.l2dist,
     });
     this.onSearchChange();
@@ -314,6 +324,13 @@ export class ExpSearchAreaComponent implements OnInit, OnDestroy {
     this.settingsService.saveQuerySettings({
       ...this.settingsService.getQuerySettings(),
       firstPerDay: event.target.checked
+    })
+  }
+
+  onChangeTemporalDiversity(event: any) {
+    this.settingsService.saveQuerySettings({
+      ...this.settingsService.getQuerySettings(),
+      temporalDiversity: event.target.checked
     })
   }
 
